@@ -1,0 +1,46 @@
+# Construct3-Cookbook
+
+**English** | [中文](README_CN.md)
+
+Construct3-Cookbook holds what an AI agent reads before it writes [Construct 3](https://editor.construct.net/) event sheets: how to think an interaction through, the runtime pitfalls with their sources, the style of the official examples, and recipes for game feel, menus, dialogue and the project files.
+
+The [`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) skill reads these guides from a clone of this repository. They live here, apart from the plugin, so that a new pitfall reaches you with `git pull`, without a plugin release.
+
+## What is here
+
+| Folder | What it holds |
+|--------|---------------|
+| [`guides/event-sheets/design/`](guides/event-sheets/design/thinking.md) | `thinking.md`, how to design events before writing them; `style.md`, how the official examples organise, name and comment a sheet |
+| [`guides/event-sheets/pitfalls/`](guides/event-sheets/pitfalls/README.md) | Runtime behaviour of events that differs from what a programmer expects. `README.md` is the index, one conclusion per pitfall; each topic file has the cases and the sources |
+| [`guides/event-sheets/recipes/`](guides/event-sheets/recipes/feel.md) | Game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound, flat layers in depth under a 3D camera, and a worked slot grid |
+| [`guides/event-sheets/project-files/`](guides/event-sheets/project-files/hand-editing.md) | Editing `eventSheets/`, `layouts/` and `objectTypes/` JSON by hand, and the sheets, layers and look of a new project |
+
+## Use it with the skill
+
+Clone it beside the clone of Construct3-Agent-Skills or Construct3-RAG, under the name `Construct3-Cookbook`:
+
+```bash
+git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <folder that holds Construct3-Agent-Skills>/Construct3-Cookbook
+```
+
+The skill's scripts then find it on their own. For a clone elsewhere, name it in one of these ways, which the scripts try in this order:
+
+1. `--cookbook <folder>` on `search_guides.py`;
+2. the environment variable `CONSTRUCT3_COOKBOOK`;
+3. a line in the game project's `AGENTS.md` or `CLAUDE.md`:
+
+   ```markdown
+   - Construct3-Cookbook: D:/GitHub/Construct3-Cookbook
+   ```
+
+`install.py` of the skill writes that line into the project's block. Without a clone, `search_guides.py` and `check_project.py` print the `git clone` command and run the rest of their work.
+
+To get new pitfalls, run `git pull` in the clone.
+
+## Contribute
+
+A pitfall is a runtime behaviour of events that changes which events an agent writes, with its source. [AGENTS.md](AGENTS.md) says where an entry goes and what it needs. Run `python scripts/check.py` before a pull request; CI runs it too.
+
+## Licence
+
+[MIT](LICENSE).
