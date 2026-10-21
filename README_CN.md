@@ -4,7 +4,7 @@
 
 Construct3-Cookbook 收录 AI agent 写 [Construct 3](https://editor.construct.net/) 事件表之前要读的指引：带出处的事件陷阱、事件的设计方法、做法示例，以及手改工程文件的方法。
 
-[`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) skill 从这个仓库的克隆里读取指引。指引放在单独的仓库里，所以在克隆里 `git pull` 就能更新指引，不用等插件发版。
+[Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) 的 `construct3-agent-plugin` skill 在这个仓库的本地克隆里搜索指引，输出里会注明每条结果出自哪一页。
 
 ## 安装
 

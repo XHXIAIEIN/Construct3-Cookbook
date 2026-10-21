@@ -4,7 +4,7 @@
 
 Construct3-Cookbook holds the guides that an AI agent reads before it writes [Construct 3](https://editor.construct.net/) event sheets: the pitfalls of events with their sources, how to design events, recipes, and how to hand-edit project files.
 
-The [`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) skill reads the guides from a clone of this repository. Because the guides live in their own repository, `git pull` in the clone updates the guides without a plugin release.
+The `construct3-agent-plugin` skill of [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) searches the guides in a local clone of this repository, and its output names the page that each result comes from.
 
 ## Set it up
 
