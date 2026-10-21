@@ -6,9 +6,19 @@ Construct3-Cookbook is the companion guide collection for [Construct3-Agent-Skil
 
 ## Installation
 
-### Clone the repository
+### Clone with the setup script
 
-Clone this repository into a folder named `Construct3-Cookbook` next to your Construct3-Agent-Skills or Construct3-RAG clone. The skill finds a clone in this location without further configuration.
+Construct3-Agent-Skills includes a setup script that clones this repository together with the other repositories the skill reads. Run it from your Construct3-Agent-Skills clone:
+
+```bash
+python scripts/bootstrap.py
+```
+
+The script clones each missing repository into the folder that contains Construct3-Agent-Skills and leaves existing clones unchanged. You can run the script again at any time to add a missing clone.
+
+### Clone manually
+
+To clone this repository without the setup script, clone it into a folder named `Construct3-Cookbook` next to your Construct3-Agent-Skills or Construct3-RAG clone. The skill finds a clone in this location without further configuration.
 
 ```bash
 git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <parent-folder>/Construct3-Cookbook

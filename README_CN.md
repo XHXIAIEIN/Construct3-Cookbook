@@ -6,9 +6,19 @@ Construct3-Cookbook 是 [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/C
 
 ## 安装
 
-### 克隆仓库
+### 使用安装脚本克隆
 
-将本仓库克隆到名为 `Construct3-Cookbook` 的文件夹，并与 Construct3-Agent-Skills 或 Construct3-RAG 的克隆放在同一目录下。放在此位置时，skill 无需额外配置即可找到它。
+Construct3-Agent-Skills 自带一个安装脚本，会把本仓库和 skill 读取的其他仓库一起克隆下来。在 Construct3-Agent-Skills 的克隆中运行：
+
+```bash
+python scripts/bootstrap.py
+```
+
+脚本会把缺少的仓库克隆到存放 Construct3-Agent-Skills 的文件夹中，已有的克隆保持不变。脚本可以随时重新运行，以补上缺少的克隆。
+
+### 手动克隆
+
+如果不使用安装脚本，将本仓库克隆到名为 `Construct3-Cookbook` 的文件夹，并与 Construct3-Agent-Skills 或 Construct3-RAG 的克隆放在同一目录下。放在此位置时，skill 无需额外配置即可找到它。
 
 ```bash
 git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <parent-folder>/Construct3-Cookbook
