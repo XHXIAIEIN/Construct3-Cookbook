@@ -13,4 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # The page names are ids of Construct3-RAG and pages of the manual, read from clones beside this one
+      - run: git clone --quiet --depth 1 https://github.com/XHXIAIEIN/Construct3-RAG "$GITHUB_WORKSPACE/../Construct3-RAG"
+      - run: git clone --quiet --depth 1 https://github.com/XHXIAIEIN/Construct3-Manual "$GITHUB_WORKSPACE/../Construct3-Manual"
       - run: python scripts/check.py

@@ -10,10 +10,13 @@ The [`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Sk
 
 | Folder | What it holds |
 |--------|---------------|
-| [`guides/event-sheets/design/`](guides/event-sheets/design/thinking.md) | `thinking.md`, how to design events before writing them; `style.md`, how the official examples organise, name and comment a sheet |
-| [`guides/event-sheets/pitfalls/`](guides/event-sheets/pitfalls/README.md) | Runtime behaviour of events that differs from what a programmer expects. `README.md` is the index, one conclusion per pitfall; each topic file has the cases and the sources |
-| [`guides/event-sheets/recipes/`](guides/event-sheets/recipes/feel.md) | Game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound, flat layers in depth under a 3D camera, and a worked slot grid |
-| [`guides/event-sheets/project-files/`](guides/event-sheets/project-files/hand-editing.md) | Editing `eventSheets/`, `layouts/` and `objectTypes/` JSON by hand, and the sheets, layers and look of a new project |
+| [`guides/pitfalls.md`](guides/pitfalls.md) | The index of the pitfalls: runtime behaviour of events that differs from what a programmer expects, one conclusion per pitfall, grouped by page |
+| `guides/plugins/`, `guides/behaviors/` | The pitfalls of one plugin or behavior, a page per Construct id such as `plugins/system.md` or `behaviors/tween.md`, each entry with its cases and its source |
+| `guides/behavior-category/`, `guides/plugin-category/` | The pitfalls of choosing between objects for one goal, such as `behavior-category/movements.md` |
+| `guides/primitives/` | The pitfalls of the event engine and the runtime world, on the manual's page names, such as `primitives/events/how-events-work.md` |
+| [`guides/design/`](guides/design/thinking.md) | `thinking.md`, how to design events before writing them; `style.md`, how the official examples organise, name and comment a sheet |
+| [`guides/recipes/`](guides/recipes/feel.md) | Game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound, flat layers in depth under a 3D camera, and a worked slot grid |
+| [`guides/project-files/`](guides/project-files/hand-editing.md) | Editing `eventSheets/`, `layouts/` and `objectTypes/` JSON by hand, and the sheets, layers and look of a new project |
 
 ## Use it with the skill
 
@@ -41,7 +44,7 @@ To get new pitfalls, run `git pull` in the clone.
 
 ## Contribute
 
-A pitfall is a runtime behaviour of events that changes which events an agent writes, with its source. [AGENTS.md](AGENTS.md) says where an entry goes and what it needs. Run `python scripts/check.py` before a pull request; CI runs it too.
+A pitfall is a runtime behaviour of events that changes which events an agent writes, with its source. [AGENTS.md](AGENTS.md) says how pages are named, where an entry goes and what it needs. Run `python scripts/check.py` before a pull request; CI runs it too.
 
 ## Licence
 
