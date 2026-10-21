@@ -8,35 +8,86 @@ clone.
 
 | Path | What it holds |
 |------|---------------|
-| `guides/event-sheets/design/thinking.md` | How to design events before you write them |
-| `guides/event-sheets/design/style.md` | How the official examples organise, name and comment a sheet |
-| `guides/event-sheets/pitfalls/README.md` | The index of the pitfalls: one conclusion line per entry, grouped by topic, and the section "Adding an entry" |
-| `guides/event-sheets/pitfalls/*.md` | One topic file per group, each entry with its cases and its source |
-| `guides/event-sheets/recipes/` | Recipes for feel, menus, sequences and dialogue, sound, progress bars and layers in depth |
-| `guides/event-sheets/project-files/` | How to hand-edit project JSON, and the sheets, layers and look of a new project |
-| `scripts/check.py` | The check that CI runs on the links and on the index against its topic files |
+| `guides/pitfalls.md` | The index of the pitfalls: one conclusion line per entry, a group per page, and the section "Adding an entry" |
+| `guides/plugins/{id}.md`, `guides/behaviors/{id}.md`, `guides/effects/{id}.md` | The pitfalls of one plugin, behavior or effect |
+| `guides/{behavior,plugin,effect}-category/{id}.md` | The pitfalls of a choice between objects for one goal |
+| `guides/primitives/` | The pitfalls of the event engine and the runtime world that belong to no add-on, on the manual's page names |
+| `guides/design/thinking.md`, `guides/design/style.md` | How to design events before you write them, and how the official examples organise, name and comment a sheet |
+| `guides/recipes/` | Recipes for feel, menus, sequences and dialogue, sound, progress bars and layers in depth |
+| `guides/project-files/` | How to hand-edit project JSON, and the sheets, layers and look of a new project |
+| `scripts/check.py` | The check that CI runs on the links, on the index against its pages and on the names of the pages |
 
-Keep these paths stable. The skill's scripts recognise a clone by the file
-`guides/event-sheets/pitfalls/README.md` and cite the guides by these
+Keep these paths stable. The skill's scripts recognise a clone by
+`guides/pitfalls.md`, search the pitfall pages and cite them by these
 paths. So if you move or rename one of them, change
 Construct3-Agent-Skills to match.
+
+## Naming
+
+Take the path of a page from one of these three sources only, never from
+a noun of your own:
+
+1. **Construct3-RAG ids.** `plugins/{id}.md`, `behaviors/{id}.md` and
+   `effects/{id}.md` use the id exactly as `data/c3-schemas/_index.json` of
+   Construct3-RAG writes it, in lowercase: `tween`, `eightdir`,
+   `spritefont2`, `arr`, `system`. What every object shares goes on
+   `_common`.
+2. **c3-lang category ids.** A page about a choice between objects for one
+   goal is `behavior-category/{id}.md`, `plugin-category/{id}.md` or
+   `effect-category/{id}.md`. Its id is a key of `text.model.<kind>` in
+   Construct3-RAG's `data/c3-lang/en-US.json`: `movements`, `input`,
+   `data-and-storage`. If no category matches the choice, put it on the
+   page of the first object that it would go wrong in, and link to it from
+   the pages of the other objects.
+3. **Manual page names.** What belongs to no add-on goes under
+   `primitives/`, which mirrors the manual's `project-primitives/`:
+   `primitives/events/how-events-work.md`,
+   `primitives/objects/containers.md`, `primitives/layers.md`.
+
+Create a file only when it holds an entry. The schemas do not say which
+add-on belongs to which category, so place a category page by hand.
+
+Use the manual's words in the text: instance, object type, family,
+container, hierarchy, sub-event, top-level event, tick, global layer,
+template, custom action, image point, time scale. If the manual spells a
+word two ways, use the more frequent one: sub-event and time scale, with
+`timescale` only as the expression. Name an ACE or an object by its schema
+`display-text` and its c3-lang name: *Set animation*, Sprite Font,
+9-patch, 8 Direction, Drag & Drop.
+
+## Where an entry goes
+
+- If an entry is about what one ACE does, put it on the page of the schema
+  that holds the ACE. System ACEs go on `plugins/system.md`, and the ACEs
+  that every object shares go on `plugins/_common.md`. To find the schema,
+  run the skill's `lookup_ace.py`, which prints the add-on that holds an
+  ACE.
+- If an entry is about how the event engine treats a whole class of things
+  (picking, triggers, Else, sub-event order, scope, functions), or about
+  the runtime world with no ACE (coordinates, angles, global layers), put
+  it under `primitives/`, on the manual page that covers it.
+- If an entry is about a choice between objects for one goal, put it on
+  the category page.
+- Give each entry one page. Link to it from the other pages that it
+  concerns.
 
 ## Add a pitfall
 
 A pitfall is a runtime behaviour of events that changes which events an
 agent writes. If a lesson is about the project file format, the editor,
 the preview or the look, put it where "Adding an entry" in
-`guides/event-sheets/pitfalls/README.md` says.
+`guides/pitfalls.md` says.
 
-1. Write the entry into the topic file of its group. State the fact and
-   its consequence, and end the entry with its source in brackets, such
-   as `[manual: <page>]`, an official example id, a schema file or
+1. Write the entry on its page. State the fact and its consequence, and
+   end the entry with its source in brackets, such as `[manual: <page>]`,
+   an official example id, a schema file or
    `[observed in a game project, <date>]`.
-2. Add the conclusion of the entry as one line to its group in the
-   index, at the same position as the entry in the topic file. Keep the
-   fix in the conclusion, not only the prohibition.
-3. If a fact fits no group, give it a topic file of its own. Then add a
-   group to the index that says when to read that file.
+2. Add the conclusion of the entry as one line to the page's group in
+   `guides/pitfalls.md`, at the same position as the entry on the page.
+   Keep the fix in the conclusion, not only the prohibition.
+3. If you create a page, start it with the title and the line back to the
+   index that the other pages have. Then add a group to the index that
+   says when to read the page.
 
 If sources disagree, manual wording outranks an observation, and an
 observation outranks intuition.
@@ -50,9 +101,9 @@ python scripts/check.py
 git diff --check
 ```
 
-`check.py` reports a broken link or anchor, a group whose conclusion
-lines differ in number from the entries of its topic file, a topic file
-that the index does not link, and an entry without a source.
+`check.py` reads the ids from a Construct3-RAG clone and the manual's
+pages from a Construct3-Manual clone beside this one. If a clone is
+missing, the check skips that part and prints the command that clones it.
 
 ## Language and commit messages
 

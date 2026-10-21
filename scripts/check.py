@@ -1,22 +1,37 @@
-"""Check the guides: every relative link resolves, and the pitfalls index matches its topic files.
+"""Check the guides: links, the pitfalls index against its pages, and the names of the pages.
 
     python scripts/check.py
 
 A link resolves when its file or folder exists beside the linking file. If
 the link carries a #fragment, the target Markdown file must also have a
-heading with that GitHub slug. In the pitfalls index, every group has one
-conclusion line per entry of the topic file that it links, and every entry
-ends with its source. If the check finds a problem, it prints each problem
-and exits with 1.
+heading with that GitHub slug. In the pitfalls index, guides/pitfalls.md,
+every page has one group with one conclusion line per entry of the page,
+and every entry ends with its source.
+
+A page's path names what the page is about, and it comes from one of three
+sources (AGENTS.md, "Naming"). plugins/, behaviors/ and effects/ take an id
+of the Construct3-RAG clone's data/c3-schemas/_index.json. *-category/ takes
+a category key of its data/c3-lang/en-US.json. primitives/ takes the path of
+a page under the manual's project-primitives/ in the Construct3-Manual clone.
+The check reads each clone beside this repository. If a clone is missing,
+the check skips its part and prints the clone command. If the check finds a
+problem, it prints each problem and exits with 1.
 """
+import json
 import re
 import sys
 from pathlib import Path
 from urllib.parse import unquote
 
 REPO = Path(__file__).resolve().parent.parent
-PITFALLS = REPO / "guides" / "event-sheets" / "pitfalls"
-INDEX = PITFALLS / "README.md"
+GUIDES = REPO / "guides"
+INDEX = GUIDES / "pitfalls.md"
+ADDONS = ("plugins", "behaviors", "effects")
+CATEGORIES = ("behavior-category", "plugin-category", "effect-category")
+PAGE_FOLDERS = (*ADDONS, *CATEGORIES, "primitives")
+RAG = REPO.parent / "Construct3-RAG"
+MANUAL = REPO.parent / "Construct3-Manual"
+CLONE = {RAG: "https://github.com/XHXIAIEIN/Construct3-RAG", MANUAL: "https://github.com/XHXIAIEIN/Construct3-Manual"}
 
 FENCE = re.compile(r"^ {0,3}(```|~~~)")
 CODE_SPAN = re.compile(r"(`+)(?:(?!\1).)+?\1")
@@ -95,38 +110,76 @@ def bullets(text: str) -> list[str]:
     return [entry for entry in entries if entry]
 
 
-def pitfall_problems() -> list[str]:
+def pages() -> dict[str, Path]:
+    """The pitfall pages by their path under guides/."""
+    return {p.relative_to(GUIDES).as_posix(): p for folder in PAGE_FOLDERS for p in (GUIDES / folder).rglob("*.md")}
+
+
+def index_problems() -> list[str]:
     text = INDEX.read_text(encoding="utf-8")
     problems, linked = [], set()
     topics = text.split("\n## Topics\n", 1)[1].split("\n## ", 1)[0]
     for block in topics.split("\n### ")[1:]:
         title, body = block.split("\n", 1)
-        links = [link for link in MD_LINK.findall(body) if "/" not in link]
+        links = [link for link in MD_LINK.findall(body.split("\n- ", 1)[0]) if link.split("/")[0] in PAGE_FOLDERS]
         if len(links) != 1:
-            problems.append(f"group {title!r} links {links}, not one topic file")
+            problems.append(f"pitfalls.md: group {title!r} links {links}, not one page")
             continue
         linked.add(links[0])
-        topic = PITFALLS / links[0]
-        if topic.exists():
-            lines, entries = len(bullets(body)), len(bullets(topic.read_text(encoding="utf-8")))
+        page = GUIDES / links[0]
+        if page.exists():
+            lines, entries = len(bullets(body)), len(bullets(page.read_text(encoding="utf-8")))
             if lines != entries:
-                problems.append(f"group {title!r}: {lines} conclusion lines in the index, {entries} entries in {links[0]}")
-    on_disk = {p.name for p in PITFALLS.glob("*.md") if p != INDEX}
-    problems += [f"the index links {name}, which does not exist" for name in sorted(linked - on_disk)]
-    problems += [f"the index does not link {name}" for name in sorted(on_disk - linked)]
-    files = {"README.md": text.split("\n## Topics\n", 1)[0]}
-    files.update({p.name: p.read_text(encoding="utf-8") for p in PITFALLS.glob("*.md") if p != INDEX})
+                problems.append(f"pitfalls.md: group {title!r}: {lines} conclusion lines, {entries} entries in {links[0]}")
+    on_disk = pages()
+    problems += [f"pitfalls.md links {name}, which does not exist" for name in sorted(linked - set(on_disk))]
+    problems += [f"pitfalls.md does not link {name}" for name in sorted(set(on_disk) - linked)]
+    files = {"pitfalls.md": text.split("\n## Topics\n", 1)[0]}
+    files.update({name: p.read_text(encoding="utf-8") for name, p in on_disk.items()})
     for name, body in files.items():
         problems += [f"{name}: no source in {entry.splitlines()[0]!r}" for entry in bullets(body)
                      if not SOURCE.search(entry)]
-    return [f"pitfalls/{p}" for p in problems]
+    return problems
+
+
+def name_problems() -> tuple[list[str], list[str]]:
+    """The pages whose path is not an id, a category key or a manual page; and a note per missing clone."""
+    problems, skipped = [], []
+    names = pages()
+    if (RAG / "data" / "c3-schemas" / "_index.json").is_file():
+        index = json.loads((RAG / "data" / "c3-schemas" / "_index.json").read_text(encoding="utf-8"))
+        model = json.loads((RAG / "data" / "c3-lang" / "en-US.json").read_text(encoding="utf-8-sig"))["text"]["model"]
+        schemas = RAG / "data" / "c3-schemas" / "en-US"
+        for name in names:
+            kind, _, rest = name.partition("/")
+            stem = rest[:-3]
+            if kind in ADDONS and stem not in index[kind] and not (schemas / kind / f"{stem}.json").is_file():
+                problems.append(f"{name}: {stem} is not a {kind[:-1]} id of Construct3-RAG")
+            if kind in CATEGORIES and stem not in model[kind]:
+                problems.append(f"{name}: {stem} is not a key of text.model.{kind} in c3-lang")
+    else:
+        skipped.append(RAG)
+    primitives = MANUAL / "Construct3-Manual" / "project-primitives"
+    if primitives.is_dir():
+        problems += [f"{name}: the manual has no project-primitives/{name.partition('/')[2]}"
+                     for name in names if name.startswith("primitives/")
+                     and not (primitives / name.partition("/")[2]).is_file()]
+    else:
+        skipped.append(MANUAL)
+    return problems, [f'note: skipped the names that {c.name} holds; git clone --depth 1 {CLONE[c]} "{c.as_posix()}"'
+                      for c in skipped]
 
 
 def main() -> int:
-    documents = sorted(p for p in REPO.rglob("*.md") if ".git" not in p.parts)
+    # Hidden folders hold no guides: .git, and the worktrees a session makes under .claude/
+    documents = sorted(p for p in REPO.rglob("*.md") if not any(x.startswith(".") for x in p.relative_to(REPO).parts))
     problems = [f"{path.relative_to(REPO).as_posix()} {p}" for path in documents for p in broken_links(path)]
-    problems += pitfall_problems()
-    print("\n".join(problems) or f"{len(documents)} documents checked, no problems")
+    problems += [f"guides/{p}" for p in index_problems()]
+    named, notes = name_problems()
+    problems += [f"guides/{p}" for p in named]
+    print("\n".join(notes + problems) if notes or problems else "", end="\n" if notes or problems else "")
+    if not problems:
+        print(f"{len(documents)} documents checked, no problems")
     return 1 if problems else 0
 
 
