@@ -76,16 +76,14 @@ Sources and the rule for adding an entry are in the index,
   before the tick finishes what it reports, or if no later event or trigger
   runs a step that picks the instances a trigger created. For example, *On
   keyframe reached* fires before the keyframe's values are written (see
-  [Timeline controller](timeline.md)). Ashley's tutorial says "until the end of the
-  event sheet", which is Construct 2 wording. [runtime: exported c3runtime.js
+  [Timeline controller](timeline.md)). [runtime: exported c3runtime.js
   r503, `Wait` calls `AddScheduledWait`, `RunScheduledWaits` is called only
   from `Step_BeforePreTick`, ahead of `Step_RunEventsEtc` and `Render`;
   `ScheduledWait._Init` saves SOL, parameters and locals;
   `ClearAllScheduledWaits` on layout end; read from source, not observed.
   Ashley: "rarely any need to use Wait 0 seconds", forum
   construct-2/general-discussion-17/wait-59374; *Wait for previous actions*
-  "always runs at the end of the tick", Scirra/Construct-bugs#3948;
-  construct.net tutorial system-wait-action-63, updated 2019]
+  "always runs at the end of the tick", Scirra/Construct-bugs#3948]
 
 - *Set time scale* 0 also stops every animation. So a cutscene, an
   ultimate's full-screen animation or a pause menu's own animation stops

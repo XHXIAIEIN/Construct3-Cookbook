@@ -84,7 +84,7 @@ Sources and the rule for adding an entry are in the index,
   the scheduling lead. Compute a beat grid from `CurrentTime` minus a stored
   start time. Test grid points by integer step numbers, never by `%` on
   float seconds. [runtime: main.js `Play()` sets `_playStartTime` at the
-  call; reported as Scirra/Construct-bugs#9290, open]
+  call; reported as Scirra/Construct-bugs#9290]
 
 - *Set playback rate* changes every instance whose tags match, including
   sounds that still play from earlier plays. So if each play needs its own
@@ -160,7 +160,7 @@ Sources and the rule for adding an entry are in the index,
   stays marked to resume. [runtime:
   main.js `_SetSuspended` calls each instance's `SetSuspended`; `Stop()`
   leaves `_resumeMe`; the *Stop* case reported as
-  Scirra/Construct-bugs#9289, open]
+  Scirra/Construct-bugs#9289]
 
 - *Stereo pan* goes through a `StereoPannerNode`, which mixes one channel
   of a stereo sound into the other. At ±20, the near channel gets the far
