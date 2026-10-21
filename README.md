@@ -23,7 +23,7 @@ Clone it beside the clone of Construct3-Agent-Skills or Construct3-RAG, under th
 git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <folder that holds Construct3-Agent-Skills>/Construct3-Cookbook
 ```
 
-The skill's scripts then find it on their own. For a clone elsewhere, name it in one of these ways, which the scripts try in this order:
+The scripts look for the clone in this order, so a clone elsewhere is named by one of the first three:
 
 1. `--cookbook <folder>` on `search_guides.py`;
 2. the environment variable `CONSTRUCT3_COOKBOOK`;
@@ -32,6 +32,8 @@ The skill's scripts then find it on their own. For a clone elsewhere, name it in
    ```markdown
    - Construct3-Cookbook: D:/GitHub/Construct3-Cookbook
    ```
+
+4. a `Construct3-Cookbook` folder beside the Construct3-RAG or Construct3-Agent-Skills clone.
 
 `install.py` of the skill writes that line into the project's block. Without a clone, `search_guides.py` and `check_project.py` print the `git clone` command and run the rest of their work.
 

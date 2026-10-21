@@ -23,7 +23,7 @@ Construct3-Cookbook 收的是 AI agent 写 [Construct 3](https://editor.construc
 git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <放 Construct3-Agent-Skills 的文件夹>/Construct3-Cookbook
 ```
 
-这样 skill 的脚本会自己找到它。克隆放在别处时，用下面任一方式指给脚本，脚本按这个顺序找：
+脚本按下面的顺序找克隆；放在别处的克隆，用前三种方式之一指给它：
 
 1. `search_guides.py` 的 `--cookbook <文件夹>`；
 2. 环境变量 `CONSTRUCT3_COOKBOOK`；
@@ -32,6 +32,8 @@ git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <放 Constr
    ```markdown
    - Construct3-Cookbook: D:/GitHub/Construct3-Cookbook
    ```
+
+4. 放在 Construct3-RAG 或 Construct3-Agent-Skills 克隆旁边的 `Construct3-Cookbook` 文件夹。
 
 skill 的 `install.py` 会把这一行写进项目的 Construct 3 块。没有克隆时，`search_guides.py` 和 `check_project.py` 会打印 `git clone` 命令，其余工作照常进行。
 
