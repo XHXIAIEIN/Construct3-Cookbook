@@ -2,7 +2,9 @@
 
 **English** | [中文](README_CN.md)
 
-Construct3-Cookbook holds the guides that an AI agent reads before it writes [Construct 3](https://editor.construct.net/) event sheets. The [`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) skill reads them from a clone of this repository. The guides live apart from the plugin, so `git pull` in the clone brings each added pitfall without a plugin release.
+Construct3-Cookbook holds the guides that an AI agent reads before it writes [Construct 3](https://editor.construct.net/) event sheets. Events often run differently from what a programmer expects. For example, a pick that narrows an object type does not narrow its family, and a destroyed instance still counts until the top-level event ends. The guides record each of these pitfalls with its source, so the agent writes events that run as intended.
+
+The [`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) skill reads the guides from a clone of this repository. Because the guides live in their own repository, `git pull` in the clone updates the guides without a plugin release.
 
 ## Set it up
 
@@ -14,35 +16,37 @@ git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <folder tha
 
 The skill's scripts look for the clone in this order. If your clone is in another folder, name that folder with one of the first three:
 
-1. `--cookbook <folder>` on `search_guides.py`;
-2. the environment variable `CONSTRUCT3_COOKBOOK`;
-3. a line in the game project's `AGENTS.md` or `CLAUDE.md`:
+1. The `--cookbook <folder>` option of `search_guides.py`.
+2. The environment variable `CONSTRUCT3_COOKBOOK`.
+3. A line in the game project's `AGENTS.md` or `CLAUDE.md`:
 
    ```markdown
    - Construct3-Cookbook: D:/GitHub/Construct3-Cookbook
    ```
 
-4. a `Construct3-Cookbook` folder beside the Construct3-RAG or Construct3-Agent-Skills clone.
+4. A `Construct3-Cookbook` folder beside the Construct3-RAG or Construct3-Agent-Skills clone.
 
-The skill's `install.py` writes the line of step 3 into the Construct 3 block of the project's `AGENTS.md`. If `search_guides.py` and `check_project.py` find no clone, they print the `git clone` command and still do the rest of their work.
+The skill's `install.py` writes the line of step 3 into the Construct 3 block of the project's `AGENTS.md`. If `search_guides.py` or `check_project.py` finds no clone, it prints the `git clone` command and still does the rest of its work.
 
 To update the guides, run `git pull` in the clone.
 
 ## What is here
 
-| Folder | What it holds |
-|--------|---------------|
-| [`guides/pitfalls.md`](guides/pitfalls.md) | The index of the pitfalls: runtime behaviour of events that differs from what a programmer expects. It holds one conclusion per pitfall, grouped by page |
-| `guides/plugins/`, `guides/behaviors/` | The pitfalls of one plugin or behavior, with one page per Construct id, such as `plugins/system.md` or `behaviors/tween.md`. Each entry holds its cases and its source |
+| Path | What it holds |
+|------|---------------|
+| [`guides/pitfalls.md`](guides/pitfalls.md) | The index of the pitfalls. It has a group per page and one conclusion per pitfall, and each group says when to open its page |
+| `guides/plugins/`, `guides/behaviors/` | The pitfalls of one plugin or behavior, on a page named by its Construct id, such as `plugins/system.md` or `behaviors/tween.md`. Each entry holds its cases and its source |
 | `guides/behavior-category/`, `guides/plugin-category/` | The pitfalls of a choice between objects for one goal, such as `behavior-category/movements.md` |
 | `guides/primitives/` | The pitfalls of the event engine and the runtime world, on the manual's page names, such as `primitives/events/how-events-work.md` |
-| [`guides/design/`](guides/design/thinking.md) | `thinking.md`: how to design events before you write them. `style.md`: how the official examples organise, name and comment a sheet |
-| [`guides/recipes/`](guides/recipes/feel.md) | Game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound, flat layers in depth under a 3D camera, and a worked slot grid |
+| [`guides/design/`](guides/design/thinking.md) | `thinking.md`: how to design events before you write them. `style.md`: how the official examples organise, name and comment a sheet. `native-first.json`: the superseded addons and the built-in feature that replaces each |
+| [`guides/recipes/`](guides/recipes/feel.md) | Recipes for game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound and flat layers in depth under a 3D camera, and a worked slot grid |
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | How to edit the JSON of `eventSheets/`, `layouts/` and `objectTypes/` by hand, and the sheets, layers and look of a new project |
 
 ## Contribute
 
-A pitfall is a runtime behaviour of events that changes which events an agent writes, and every pitfall carries its source. [AGENTS.md](AGENTS.md) says how pages are named, where an entry goes and what it needs. Before you open a pull request, run `python scripts/check.py`. CI runs the same check on every pull request and on every push to `main`.
+A pitfall is a runtime behaviour of events that changes which events an agent writes. Each entry states the fact, its consequence and its source. [AGENTS.md](AGENTS.md) says how a page is named and where an entry goes.
+
+Before you open a pull request, run `python scripts/check.py`. It checks the links, the index against its pages and the names of the pages. For the names, it reads the Construct3-RAG and Construct3-Manual clones beside this repository. If a clone is missing, it skips that part and prints the command that clones it. CI runs the same check, with both clones, on every pull request and on every push to `main`.
 
 ## Licence
 
