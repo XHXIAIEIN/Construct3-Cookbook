@@ -12,7 +12,7 @@ line, then `Problem`, `Evidence` when it is not in the problem, `Options`,
 `Decision`, and `Re-evaluate when`.
 
 - A record states what holds now. When a decision changes, rewrite the
-  record. A record whose subject is gone is deleted, and the commit that
+  record; do not append a dated update. A record whose subject is gone is deleted, and the commit that
   deletes it says why.
 - A record moved here from Construct3-Agent-Skills says so under its title,
   with the commit it left from. Its history stays in that repository.
@@ -31,4 +31,4 @@ lines.
 
 - [The Guides Are Named by Construct's Own Ids, Categories and Manual Pages](guides-layout.md) — 2026-10-21
 - [Design and Style Prompts Keep What Every Task Reads](prompt-references-by-task.md) — 2026-09-30
-- [The Pitfalls Are an Index with Topic Files](pitfalls-index-and-topics.md) — 2026-09-29
+- [The Pitfalls Are an Index of Conclusion Lines over Their Pages](pitfalls-index-and-topics.md) — 2026-09-29

@@ -1,8 +1,8 @@
-# The Pitfalls Are an Index with Topic Files
+# The Pitfalls Are an Index of Conclusion Lines over Their Pages
 
 Moved from Construct3-Agent-Skills at commit 46bf73f, where its history stays.
 
-Date: 2026-09-29
+Date: 2026-09-29, revised 2026-10-21
 
 ## Problem
 
@@ -61,8 +61,17 @@ each conclusion line keeps the fix and not only the prohibition.
 
 Option 3. `guides/pitfalls.md` keeps its opening rules. Each group is a
 `###` heading, a when-to-read line linking its page under `guides/`, and
-one conclusion line per entry in the page's order, the picking and
-trigger pages included. A conclusion keeps the fix: "a tween's *On
+one conclusion line per entry in the page's order. A page is what owns its
+entries ([guides-layout.md](guides-layout.md)): an addon's id
+(`guides/plugins/system.md`, `guides/behaviors/tween.md`), a c3-lang
+category key (`guides/behavior-category/movements.md`) or a page of the
+manual's `project-primitives/`
+(`guides/primitives/events/how-events-work.md`), so a group is smaller
+than a topic of this repository's own was: 45 groups where there were 18.
+Picking is now `primitives/events/how-events-work.md` and
+`primitives/objects/containers.md`, and Triggers and Else is
+`primitives/events/conditions.md`, besides the entries that went to an
+addon's page; these are pages too, with groups in the index like the rest. A conclusion keeps the fix: "a tween's *On
 finished* is a top-level event of its own that calls the next function",
 not only "no trigger inside a function".
 
@@ -95,24 +104,6 @@ A new entry goes onto its page with its source, and its conclusion into the
 index. `scripts/check.py` fails when a page is not linked from the index,
 when a group's conclusion lines and the page's entries differ in number, or
 when an entry has no source.
-
-## Since 2026-10-21: one page per owner
-
-The topic files are gone. The layout of 2026-10-21
-([guides-layout.md](guides-layout.md)) put each entry on the page of what
-owns it: an addon's id (`guides/plugins/system.md`,
-`guides/behaviors/tween.md`), a c3-lang category key
-(`guides/behavior-category/movements.md`) or a page of the manual's
-`project-primitives/` (`guides/primitives/events/how-events-work.md`).
-Picking became `primitives/events/how-events-work.md` and
-`primitives/objects/containers.md`, and Triggers and Else became
-`primitives/events/conditions.md`, besides the entries that went to an
-addon's page.
-
-The index works as this record decided: a group per page, a when-to-read
-line, one conclusion line per entry that keeps its fix. Only what a group
-is changed, from a topic of this repository's own to a page with an owner,
-so the groups are more and smaller: 18 groups became 45.
 
 ## Re-evaluate when
 
