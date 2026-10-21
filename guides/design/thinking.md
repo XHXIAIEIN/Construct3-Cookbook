@@ -1,9 +1,13 @@
 # Construct 3 Event Sheet — Design Guide
 
 Use this guide to decide which events a sheet needs before you write
-them. [pitfalls/README.md](../pitfalls.md) lists, one line each,
-the runtime facts that intuition gets wrong. For each group that the
-events touch, it names the topic file under `pitfalls/` to open.
+them. [pitfalls.md](../pitfalls.md) lists, one line each,
+the runtime facts that intuition gets wrong, in one group per page. A page
+is named by the id of the addon that owns its entries, as in Construct3-RAG
+(`plugins/system.md`, `behaviors/tween.md`), or else by a c3-lang category
+(`behavior-category/movements.md`) or a page of the manual
+(`primitives/events/conditions.md`). For each group that the events touch,
+open the page it links.
 Before the events go into a project or a generator, read
 [design/style.md](style.md). It says how the official
 examples organise, name and comment a sheet, and which habits the checker
@@ -250,8 +254,8 @@ If a draft matches one row, redesign it instead of patching it.
    [design/style.md](style.md) says.
 4. Read the manual page for each mechanism that you plan to use.
 5. Write the draft. Before you show it, check it against the smell table
-   and the [pitfalls](../pitfalls.md), with the topic file of each
-   group that it touches.
+   and the [pitfalls](../pitfalls.md), with the page of each group
+   that it touches.
 6. Only then verify every name with `python
    <Construct3-Agent-Skills>/plugin/skills/construct3-agent-plugin/scripts/lookup_ace.py
    OBJECT WORDS`. It prints the matching conditions, actions and

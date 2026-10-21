@@ -218,7 +218,7 @@ in
 [reading-the-runtime.md](https://github.com/XHXIAIEIN/Construct3-Agent-Skills/blob/main/plugin/skills/construct3-agent-plugin/references/reading-the-runtime.md).
 [manual: plugin-reference/audio.md "Preloading sounds", "Categorise audio
 files correctly"; Web Audio spec, AudioBuffer: 32-bit linear PCM;
-pitfalls/audio.md, the unload entry; observed in Edge 155, 2026-10-02: a
+plugins/audio.md, the unload entry; observed in Edge 155, 2026-10-02: a
 64 kb/s mono stem decoded to 1 channel of 998,400 samples; observed in a
 minimal project, r504 preview in Edge, 2026-10-05: a mono file of the
 Sounds folder decoded to one channel at 48 kHz]
@@ -254,5 +254,5 @@ Sounds folder decoded to one channel at 48 kHz]
   - the loudness on the speaker and in headphones
 
 [manual: plugin-reference/audio.md "Schedule next play", "Autoplay
-restrictions", "Tags"; pitfalls/audio.md; observed in a game project, r504
+restrictions", "Tags"; plugins/audio.md; observed in a game project, r504
 preview and an offline mix of 73 assertions, 2026-09-30 to 2026-10-01]

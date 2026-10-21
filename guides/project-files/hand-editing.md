@@ -439,7 +439,7 @@ game project that the editor r504 opened and previewed on 2026-09-30.
   keyframe, `closest`, `clockwise` or `anti-clockwise`, and extra
   `revolutions`. The runtime turns in that direction even when it is the
   longer way. So write the direction of the change to the next keyframe,
-  or `closest` ([pitfalls/timeline.md](../plugins/timeline.md)). A
+  or `closest` ([plugins/timeline.md](../plugins/timeline.md)). A
   keyframe's `ease` is a built-in ease id or a custom ease's name.
 - The editor saves *Use system timescale* as `ignoreSystemTimescale`, and
   the name is inverted. `true` follows the system time scale, `false`

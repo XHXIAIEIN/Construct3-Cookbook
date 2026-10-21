@@ -42,7 +42,7 @@ Tween "ghost" is playing`. It starts a 0.5 s Timer, and its *On timer*
 tweens the ghost's width to `target` in 0.4 s. A second event tests the same
 timer and tween conditions and `Ghost: Compare width > target`. It sets the
 width to `target`, because a tween can end slightly off its end value
-([pitfalls/tween.md](../behaviors/tween.md)). During a gain, the ghost stands
+([behaviors/tween.md](../behaviors/tween.md)). During a gain, the ghost stands
 at `target`, ahead of the growing fill, so draw the ghost under the heal part
 described below. [observed in a minimal project, stable editor preview,
 2026-10-07: the *On timer* event was written above the start event; two hits
@@ -52,7 +52,7 @@ equal to the fill on every bar]
 A loss cuts the fill at once, and a gain grows it with a tween. For a loss,
 the event with `Fill.Width > target` runs `Fill: Set width to target` and
 *Stop* "grow". The *Stop* ends a growth in progress, so that its rest is not
-added after the cut ([pitfalls/tween.md](../behaviors/tween.md)). For a
+added after the cut ([behaviors/tween.md](../behaviors/tween.md)). For a
 gain, the event with `Fill.Width < target - 0.5` and
 `NOT Fill: Is playing "grow"` tweens the fill's width to `target` in 0.3 s. A third event, with `Fill.Width < target`
 and `NOT Is playing "grow"`, sets the width to `target`. It closes the gap
@@ -115,7 +115,7 @@ border:
 2. In a second event, put the condition `ceil(Frame.maxHp / step) - 1 >= 1`
    before `For i = 1 to ceil(Frame.maxHp / step) - 1`, because *For* counts
    down when its end is below its start
-   ([pitfalls/expressions.md](../primitives/events/variables.md)). Put *For each*
+   ([primitives/events/variables.md](../primitives/events/variables.md)). Put *For each*
    `Frame` first, so that each frame reads its own `maxHp`.
 3. In the loop, create a tick on the frame's layer, with `Frame.LayerName` as
    the layer parameter, at X `round(Frame.X + pad + (Frame.Width - 2 * pad) *
@@ -126,7 +126,7 @@ border:
 Call the action at layout start and whenever the maximum changes. For a
 thicker tick at every 1000, set the width to `(loopindex("i") * step) % 1000
 = 0 ? 4 : 2`. Keep the parentheses, because `%` is applied before `*`
-([pitfalls/expressions.md](../primitives/events/variables.md)).
+([primitives/events/variables.md](../primitives/events/variables.md)).
 
 A Drawing Canvas over the fill draws the same ticks with one object per
 bar. First draw a *Dashed line* through the canvas, as thick as the canvas,
@@ -185,11 +185,11 @@ hierarchy for a HUD of several parts whose count changes:
 - **Container.** Put the bar in the object's container. The bar is
   created, picked and destroyed with its object, and an event on the
   object reaches its own bar. Through a family, pick the type first
-  ([pitfalls/picking.md](../primitives/events/how-events-work.md), containers).
+  ([primitives/events/how-events-work.md](../primitives/events/how-events-work.md), containers).
 - **Hierarchy.** Make the HUD a child of the object, in the layout or with
   *Add child*. It moves with the object and is destroyed with it. Initialise
   it in *On hierarchy ready*
-  ([pitfalls/creating-objects.md](../plugins/system.md)).
+  ([plugins/system.md](../plugins/system.md)).
 
   To update the HUD, keep `hp` and `maxHp` on a family of the objects. A
   custom action on the family changes them, then calls the HUD's `Update`
