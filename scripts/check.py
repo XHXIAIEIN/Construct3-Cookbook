@@ -142,6 +142,16 @@ def index_problems() -> list[str]:
     return problems
 
 
+def addons(path: Path) -> list[str]:
+    """The ids of the `addons:` line between the `---` fences a page opens with; [] without one."""
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return []
+    head = text[4:].split("\n---", 1)[0]
+    line = next((l for l in head.splitlines() if l.startswith("addons:")), "addons:")
+    return [x.strip().lower() for x in line[len("addons:"):].split(",") if x.strip()]
+
+
 def name_problems() -> tuple[list[str], list[str]]:
     """The pages whose path is not an id, a category key or a manual page; and a note per missing clone."""
     problems, skipped = [], []
@@ -157,6 +167,16 @@ def name_problems() -> tuple[list[str], list[str]]:
                 problems.append(f"{name}: {stem} is not a {kind[:-1]} id of Construct3-RAG")
             if kind in CATEGORIES and stem not in model[kind]:
                 problems.append(f"{name}: {stem} is not a key of text.model.{kind} in c3-lang")
+            # The addons: line names an addon id, or an addon's ACE as addon/ace-id
+            for ref in addons(names[name]):
+                addon, _, ace = ref.partition("/")
+                schema = next((schemas / k / f"{addon}.json" for k in ("plugins", "behaviors")
+                               if (schemas / k / f"{addon}.json").is_file()), None)
+                if schema is None:
+                    problems.append(f"{name}: addons: {addon} is not a plugin or behavior id of Construct3-RAG")
+                elif ace and ace not in {e["id"] for part in ("conditions", "actions", "expressions")
+                                         for e in json.loads(schema.read_text(encoding="utf-8")).get(part, [])}:
+                    problems.append(f"{name}: addons: {ace} is not an ACE of {addon}")
     else:
         skipped.append(RAG)
     primitives = MANUAL / "Construct3-Manual" / "project-primitives"

@@ -1,3 +1,7 @@
+---
+addons: keyboard, gamepad
+---
+
 # Event Sheet Pitfalls: Input plugins
 
 Sources and the rule for adding an entry are in the index,

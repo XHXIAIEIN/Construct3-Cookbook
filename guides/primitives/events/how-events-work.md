@@ -1,3 +1,7 @@
+---
+addons: system/pick-all, system/set-group-active
+---
+
 # Event Sheet Pitfalls: How events work
 
 Sources and the rule for adding an entry are in the index,

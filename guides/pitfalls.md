@@ -465,3 +465,9 @@ page. A conclusion keeps the fix, not only the prohibition. If the page
 does not exist, create it with the name that `AGENTS.md` gives it, and add
 a group here that says when to read it. Link the entry from the other
 pages that it concerns.
+
+The skill's `lookup_ace.py` ends the entry of an addon with the page that
+its id names. A category page or a `primitives/` page names the addons and
+ACEs that it covers in an `addons:` line between `---` fences at its top
+(`eightdir`, `system/else`), and the lookup ends their entries with that
+page too.

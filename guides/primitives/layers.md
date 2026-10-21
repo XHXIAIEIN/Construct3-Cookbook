@@ -1,3 +1,7 @@
+---
+addons: system/set-layer-interactive, _common/move-to-top
+---
+
 # Event Sheet Pitfalls: Layers
 
 Sources and the rule for adding an entry are in the index,

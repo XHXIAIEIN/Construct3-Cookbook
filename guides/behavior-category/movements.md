@@ -1,3 +1,7 @@
+---
+addons: eightdir, moveto, follow, pathfinding, platform/simulate-control, eightdir/simulate-control
+---
+
 # Event Sheet Pitfalls: Movements behaviors
 
 Sources and the rule for adding an entry are in the index,

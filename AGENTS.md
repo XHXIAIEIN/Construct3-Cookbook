@@ -70,6 +70,12 @@ word two ways, use the more frequent one: sub-event and time scale, with
   the category page.
 - Give each entry one page. Link to it from the other pages that it
   concerns.
+- If a category page or a `primitives/` page holds an entry about an addon
+  or one of its ACEs, add the id to the `addons:` line between `---` fences
+  at the top of the page: `eightdir`, or `system/else` for one ACE.
+  `lookup_ace.py` ends that addon's or ACE's entries with the page, as it
+  does with the page that an addon's id names. `check.py` fails on an id
+  that the schemas do not hold.
 
 ## Add a pitfall
 

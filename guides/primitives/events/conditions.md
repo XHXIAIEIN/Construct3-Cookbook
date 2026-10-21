@@ -1,3 +1,7 @@
+---
+addons: system/else, system/trigger-once-while-true, system/every-x-seconds
+---
+
 # Event Sheet Pitfalls: Conditions
 
 Sources and the rule for adding an entry are in the index,
