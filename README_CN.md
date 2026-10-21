@@ -61,6 +61,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | [`guides/design/`](guides/design/thinking.md) | 事件设计指引：`thinking.md` 介绍编写事件之前如何规划，`style.md` 介绍官方示例如何组织、命名和注释事件表，`native-first.json` 列出已被取代的 addon 及其内置替代方案。 |
 | [`guides/recipes/`](guides/recipes/feel.md) | 实现示例，涵盖手感、打击感、菜单、进度条、脚本化序列与对话、声音、3D 相机下的分层纵深，并附一个完整的格子案例。 |
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | 手动编辑 `eventSheets/`、`layouts/`、`objectTypes/` 中 JSON 的规范，以及新工程默认的事件表、图层和视觉风格。 |
+| [`docs/decisions/`](docs/decisions/README.md) | 决策记录：指引为什么这样分布、命名和建索引，以及依据和权衡过的方案。 |
 | [`scripts/check.py`](scripts/check.py) | CI 运行的校验脚本。 |
 
 ## 贡献
@@ -78,6 +79,7 @@ python scripts/check.py
 该脚本会检查以下内容：
 
 - 每个相对链接和标题锚点都能解析。
+- 每份决策记录在 `docs/decisions/README.md` 中都有一行，按日期从新到旧排列，并且每一行都对应一份记录。
 - 每个陷阱页面在 `guides/pitfalls.md` 中都有一组，每条条目对应一行结论，并且每条条目都以来源结尾。
 - 每个页面名都是 Construct3-RAG 中的 addon ID、其 c3-lang 数据中的分类键，或 Construct 3 手册中的页面。
 - 页面 `addons:` 行中的每个 ID 都是 Construct3-RAG schema 中的插件、行为或 ACE。

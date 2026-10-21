@@ -15,7 +15,8 @@ This file describes how to name, place and add entries, and which checks to run 
 | `guides/design/` | `thinking.md` (how to design events before writing them), `style.md` (how the official examples organise, name and comment event sheets) and `native-first.json` (superseded addons, each mapped to the row of the "Native first" table in `thinking.md` that replaces it) |
 | `guides/recipes/` | Recipes for game feel, menus, sequences and dialogue, sound, progress bars and layered depth |
 | `guides/project-files/` | Conventions for hand-editing project JSON, and the defaults of a new project |
-| `scripts/check.py` | The validation script that CI runs on links, on the index against its pages and on page names |
+| `docs/decisions/` | The decision records of the guides' layout, naming and index, with their evidence, options and trade-offs, listed in `docs/decisions/README.md` |
+| `scripts/check.py` | The validation script that CI runs on links, on the index against its pages, on page names and on the index of the decision records |
 
 Keep these paths stable. The skill's scripts recognise a clone by `guides/pitfalls.md`, search and cite the pitfall pages by path, and read `guides/design/native-first.json`. If you move or rename any of these files, update Construct3-Agent-Skills in the same change.
 
@@ -50,6 +51,10 @@ Each entry lives on exactly one page. Link to it from any other page it concerns
 When `lookup_ace.py` prints an ACE and a matching page exists, it ends the output with a `pitfalls:` line that lists the pages to read before writing that ACE. The script finds the page named by the addon's ID on its own. It finds a category page or a `primitives/` page only through the `addons:` line between the `---` fences at the top of that page.
 
 If a category page or a `primitives/` page holds an entry about an addon or one of its ACEs, add the ID to the page's `addons:` line. Write `eightdir` for the whole addon, or `system/else` for a single ACE. `check.py` fails if an ID is not in the schemas.
+
+## Recording a decision
+
+If a choice about how the guides are laid out, named or written has a visible effect, record its evidence, options and trade-offs in `docs/decisions/`, and add its line to `docs/decisions/README.md` in the same change. That README states the form of a record. A record about the skill's scripts, the plugin or the checker belongs to Construct3-Agent-Skills; link it from here rather than copying it.
 
 ## Adding a pitfall
 

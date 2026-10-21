@@ -61,6 +61,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | [`guides/design/`](guides/design/thinking.md) | Event design guidance: `thinking.md` covers planning events before you write them, `style.md` covers how the official examples organise, name and comment event sheets, and `native-first.json` lists superseded addons with their built-in replacements. |
 | [`guides/recipes/`](guides/recipes/feel.md) | Implementation recipes for game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound, and layered depth under a 3D camera, with a worked slot grid example. |
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | Conventions for editing the JSON in `eventSheets/`, `layouts/` and `objectTypes/` by hand, and the default event sheets, layers and visual style of a new project. |
+| [`docs/decisions/`](docs/decisions/README.md) | The decision records: why the guides are laid out, named and indexed as they are, with the evidence and the options weighed. |
 | [`scripts/check.py`](scripts/check.py) | The validation script that CI runs. |
 
 ## Contributing
@@ -78,6 +79,7 @@ python scripts/check.py
 The script verifies that:
 
 - Every relative link and heading anchor resolves.
+- Every decision record has its line in `docs/decisions/README.md`, newest first, and every line has a record.
 - Every pitfall page has one group in `guides/pitfalls.md`, with one conclusion line per entry, and every entry ends with a source.
 - Every page name is an addon ID from Construct3-RAG, a category key from its c3-lang data, or a page of the Construct 3 manual.
 - Every ID in a page's `addons:` line is a plugin, a behavior or an ACE in the Construct3-RAG schemas.

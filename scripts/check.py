@@ -1,4 +1,5 @@
-"""Check the guides: links, the pitfalls index against its pages, and the names of the pages.
+"""Check the guides: links, the pitfalls index against its pages, the names of the pages, and the index of
+the decision records.
 
     python scripts/check.py
 
@@ -17,6 +18,10 @@ The check reads each clone beside this repository, or beside the main
 working tree when it runs in a git worktree. If a clone is missing,
 the check skips its part and prints the clone command. If the check finds a
 problem, it prints each problem and exits with 1.
+
+The index of the decision records, docs/decisions/README.md, holds one line
+per record, newest first, as "- [<the record's H1>](<file>.md) — <date>",
+where the date is the first one of the record's "Date:" line.
 """
 import json
 import re
@@ -27,6 +32,8 @@ from urllib.parse import unquote
 REPO = Path(__file__).resolve().parent.parent
 GUIDES = REPO / "guides"
 INDEX = GUIDES / "pitfalls.md"
+DECISIONS = REPO / "docs" / "decisions"
+DECISION_INDEX = DECISIONS / "README.md"
 ADDONS = ("plugins", "behaviors", "effects")
 CATEGORIES = ("behavior-category", "plugin-category", "effect-category")
 PAGE_FOLDERS = (*ADDONS, *CATEGORIES, "primitives")
@@ -61,6 +68,9 @@ HTML_ANCHOR = re.compile(r"<a\s+(?:id|name)=\"([^\"]+)\"")
 MD_LINK = re.compile(r"\]\(([^)#\s]+\.md)(?:#[^)]*)?\)")
 # A source is a bracketed span that is not a Markdown link's text.
 SOURCE = re.compile(r"\[[^\]]+\](?!\()")
+# A line of the decision index, and the first ISO date of a record's "Date:" line
+DECISION_LINE = re.compile(r"^- \[.*\]\(([^)\s]+)\) — \S")
+DATE = re.compile(r"^Date: (\d{4}-\d\d-\d\d)", re.MULTILINE)
 
 
 def prose_lines(text: str) -> list[str]:
@@ -207,11 +217,35 @@ def name_problems() -> tuple[list[str], list[str]]:
                       for c in skipped]
 
 
+def decision_problems() -> list[str]:
+    """Every record has its own line in the index and every line a record, newest first, then by file name."""
+    problems, expected = [], []
+    for path in sorted(p for p in DECISIONS.glob("*.md") if p != DECISION_INDEX):
+        text = path.read_text(encoding="utf-8")
+        title, date = text.splitlines()[0], DATE.search(text)
+        if not title.startswith("# ") or not date:
+            problems.append(f"{path.name}: the first line is not an H1 title, or no 'Date: YYYY-MM-DD' line")
+            continue
+        expected.append(f"- [{title[2:]}]({path.name}) — {date.group(1)}")
+    expected.sort(key=lambda line: line.rsplit(" — ", 1)[1], reverse=True)
+    lines = [l for l in DECISION_INDEX.read_text(encoding="utf-8").splitlines() if l.startswith("- [")]
+    for line in lines:
+        match = DECISION_LINE.match(line)
+        if not match:
+            problems.append(f"README.md: not '- [title](file.md) — date': {line!r}")
+        elif not (DECISIONS / match.group(1)).is_file():
+            problems.append(f"README.md links {match.group(1)}, which is missing")
+    if not problems and lines != expected:
+        problems.append("README.md: the lines differ from the records; they should read:\n" + "\n".join(expected))
+    return problems
+
+
 def main() -> int:
     # Hidden folders hold no guides: .git, and the worktrees a session makes under .claude/
     documents = sorted(p for p in REPO.rglob("*.md") if not any(x.startswith(".") for x in p.relative_to(REPO).parts))
     problems = [f"{path.relative_to(REPO).as_posix()} {p}" for path in documents for p in broken_links(path)]
     problems += [f"guides/{p}" for p in index_problems()]
+    problems += [f"docs/decisions/{p}" for p in decision_problems()]
     named, notes = name_problems()
     problems += [f"guides/{p}" for p in named]
     print("\n".join(notes + problems) if notes or problems else "", end="\n" if notes or problems else "")
