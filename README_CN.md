@@ -2,7 +2,7 @@
 
 [English](README.md) | **中文**
 
-Construct3-Cookbook 收录 AI agent 写 [Construct 3](https://editor.construct.net/) 事件表之前要读的指引。事件的运行方式常常和程序员的预期不一样。比如，缩小了某个对象类型的选取，它所在 family 的选取并不跟着缩小；一个被销毁的实例，在顶层事件结束之前仍然算在数量里。指引把这些陷阱连同出处一条条记下来，让 agent 写出的事件按预期运行。
+Construct3-Cookbook 收录 AI agent 写 [Construct 3](https://editor.construct.net/) 事件表之前要读的指引：带出处的事件陷阱、事件的设计方法、做法示例，以及手改工程文件的方法。
 
 [`construct3-agent-plugin`](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) skill 从这个仓库的克隆里读取指引。指引放在单独的仓库里，所以在克隆里 `git pull` 就能更新指引，不用等插件发版。
 

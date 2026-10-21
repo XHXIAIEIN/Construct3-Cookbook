@@ -133,8 +133,8 @@ git diff --check
 ```
 
 `check.py` reads the ids from a Construct3-RAG clone and the manual's
-pages from a Construct3-Manual clone beside this repository. If a clone
-is missing, the check skips that part and prints the command that clones
+pages from a Construct3-Manual clone beside this repository. In a git
+worktree, it looks beside the main working tree. If a clone is missing, the check skips that part and prints the command that clones
 it.
 
 ## Language and commit messages

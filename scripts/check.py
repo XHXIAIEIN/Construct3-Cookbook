@@ -13,7 +13,8 @@ sources (AGENTS.md, "Naming"). plugins/, behaviors/ and effects/ take an id
 of the Construct3-RAG clone's data/c3-schemas/_index.json. *-category/ takes
 a category key of its data/c3-lang/en-US.json. primitives/ takes the path of
 a page under the manual's project-primitives/ in the Construct3-Manual clone.
-The check reads each clone beside this repository. If a clone is missing,
+The check reads each clone beside this repository, or beside the main
+working tree when it runs in a git worktree. If a clone is missing,
 the check skips its part and prints the clone command. If the check finds a
 problem, it prints each problem and exits with 1.
 """
@@ -29,8 +30,24 @@ INDEX = GUIDES / "pitfalls.md"
 ADDONS = ("plugins", "behaviors", "effects")
 CATEGORIES = ("behavior-category", "plugin-category", "effect-category")
 PAGE_FOLDERS = (*ADDONS, *CATEGORIES, "primitives")
-RAG = REPO.parent / "Construct3-RAG"
-MANUAL = REPO.parent / "Construct3-Manual"
+
+
+def siblings_folder() -> Path:
+    """The folder that holds the sibling clones: the parent of this clone. A git worktree lies inside the
+    clone it belongs to, so for a worktree it is the parent of the main working tree. The worktree's .git
+    file points to its git folder, and the commondir file there points to the main .git folder."""
+    link = REPO / ".git"
+    if link.is_file():
+        gitdir = REPO / link.read_text(encoding="utf-8").partition("gitdir:")[2].strip()
+        common = gitdir / "commondir"
+        if common.is_file():
+            return (gitdir / common.read_text(encoding="utf-8").strip()).resolve().parent.parent
+    return REPO.parent
+
+
+SIBLINGS = siblings_folder()
+RAG = SIBLINGS / "Construct3-RAG"
+MANUAL = SIBLINGS / "Construct3-Manual"
 CLONE = {RAG: "https://github.com/XHXIAIEIN/Construct3-RAG", MANUAL: "https://github.com/XHXIAIEIN/Construct3-Manual"}
 
 FENCE = re.compile(r"^ {0,3}(```|~~~)")
