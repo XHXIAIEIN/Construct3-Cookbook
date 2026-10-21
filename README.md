@@ -2,9 +2,7 @@
 
 **English** | [中文](README_CN.md)
 
-Construct3-Cookbook is a collection of reference guides for AI agents that write [Construct 3](https://editor.construct.net/) event sheets. The guides document runtime pitfalls of the event system, practices for designing events, implementation recipes, and conventions for editing project files by hand.
-
-The guides are read by the skill in [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills). The skill searches a local clone of this repository and cites the source page of each result.
+Construct3-Cookbook is the companion guide collection for [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills). AI agents consult it before they write [Construct 3](https://editor.construct.net/) event sheets. The guides cover runtime pitfalls of the event system, practices for designing events, implementation recipes, and conventions for editing project files by hand.
 
 ## Installation
 

@@ -2,9 +2,7 @@
 
 [English](README.md) | **中文**
 
-Construct3-Cookbook 是一套参考指引，供编写 [Construct 3](https://editor.construct.net/) 事件表的 AI agent 使用。指引涵盖事件系统的运行时陷阱、事件设计方法、实现示例，以及手动编辑工程文件的规范。
-
-[Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) 中的 skill 会读取这些指引。该 skill 在本仓库的本地克隆中搜索，并为每条结果注明来源页面。
+Construct3-Cookbook 是 [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) 的配套指引库，供 AI agent 在编写 [Construct 3](https://editor.construct.net/) 事件表之前查阅。指引涵盖事件系统的运行时陷阱、事件设计方法、实现示例，以及手动编辑工程文件的规范。
 
 ## 安装
 
