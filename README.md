@@ -2,52 +2,87 @@
 
 **English** | [中文](README_CN.md)
 
-Construct3-Cookbook holds the guides that an AI agent reads before it writes [Construct 3](https://editor.construct.net/) event sheets: the pitfalls of events with their sources, how to design events, recipes, and how to hand-edit project files.
+Construct3-Cookbook is a collection of reference guides for AI agents that write [Construct 3](https://editor.construct.net/) event sheets. The guides document runtime pitfalls of the event system, practices for designing events, implementation recipes, and conventions for editing project files by hand.
 
-The `construct3-agent-plugin` skill of [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills) searches the guides in a local clone of this repository, and its output names the page that each result comes from.
+The guides are read by the `construct3-agent-plugin` skill in [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/Construct3-Agent-Skills). The skill searches a local clone of this repository and cites the source page of each result.
 
-## Set it up
+## Installation
 
-Clone this repository into a folder named `Construct3-Cookbook`, beside your clone of Construct3-Agent-Skills or Construct3-RAG:
+### Prerequisites
+
+- Git
+- A clone of Construct3-Agent-Skills or Construct3-RAG
+
+### Clone the repository
+
+Clone this repository into a folder named `Construct3-Cookbook` next to your Construct3-Agent-Skills or Construct3-RAG clone. The skill finds a clone in this location without further configuration.
 
 ```bash
-git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <folder that holds Construct3-Agent-Skills>/Construct3-Cookbook
+git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <parent-folder>/Construct3-Cookbook
 ```
 
-The skill's scripts look for the clone in this order. If your clone is in another folder, name that folder with one of the first three:
+Replace `<parent-folder>` with the folder that contains your Construct3-Agent-Skills clone.
 
-1. The `--cookbook <folder>` option of `search_guides.py`.
-2. The environment variable `CONSTRUCT3_COOKBOOK`.
-3. A line in the game project's `AGENTS.md` or `CLAUDE.md`:
+### Use a custom location
 
-   ```markdown
-   - Construct3-Cookbook: D:/GitHub/Construct3-Cookbook
-   ```
+To keep the clone in another folder, point the skill to it with one of the methods below. The skill checks them in order of priority and uses the first folder that contains `guides/pitfalls.md`.
 
-4. A `Construct3-Cookbook` folder beside the Construct3-RAG or Construct3-Agent-Skills clone.
+| Priority | Method | Example |
+|----------|--------|---------|
+| 1 | The `--cookbook` option of `search_guides.py` | `--cookbook D:/GitHub/Construct3-Cookbook` |
+| 2 | The `CONSTRUCT3_COOKBOOK` environment variable | `CONSTRUCT3_COOKBOOK=D:/GitHub/Construct3-Cookbook` |
+| 3 | A line in the game project's `AGENTS.md` or `CLAUDE.md` | `- Construct3-Cookbook: D:/GitHub/Construct3-Cookbook` |
+| 4 | The default location | A `Construct3-Cookbook` folder next to the Construct3-RAG or Construct3-Agent-Skills clone |
 
-The skill's `install.py` writes the line of step 3 into the Construct 3 block of the project's `AGENTS.md`. If `search_guides.py` or `check_project.py` finds no clone, it prints the `git clone` command and still does the rest of its work.
+The skill's `install.py` writes the line for method 3 into the Construct 3 block of the game project's `AGENTS.md`.
 
-To update the guides, run `git pull` in the clone.
+> [!NOTE]
+> If `search_guides.py` or `check_project.py` cannot find a clone, it prints the `git clone` command to run and completes the rest of its work.
 
-## What is here
+### Update the guides
 
-| Path | What it holds |
-|------|---------------|
-| [`guides/pitfalls.md`](guides/pitfalls.md) | The index of the pitfalls. It has a group per page and one conclusion per pitfall, and each group says when to open its page |
-| `guides/plugins/`, `guides/behaviors/` | The pitfalls of one plugin or behavior, on a page named by its Construct id, such as `plugins/system.md` or `behaviors/tween.md`. Each entry holds its cases and its source |
-| `guides/behavior-category/`, `guides/plugin-category/` | The pitfalls of a choice between objects for one goal, such as `behavior-category/movements.md` |
-| `guides/primitives/` | The pitfalls of the event engine and the runtime world, on the manual's page names, such as `primitives/events/how-events-work.md` |
-| [`guides/design/`](guides/design/thinking.md) | `thinking.md`: how to design events before you write them. `style.md`: how the official examples organise, name and comment a sheet. `native-first.json`: the superseded addons and the built-in feature that replaces each |
-| [`guides/recipes/`](guides/recipes/feel.md) | Recipes for game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound and flat layers in depth under a 3D camera, and a worked slot grid |
-| [`guides/project-files/`](guides/project-files/hand-editing.md) | How to edit the JSON of `eventSheets/`, `layouts/` and `objectTypes/` by hand, and the sheets, layers and look of a new project |
+Pull the latest changes in your clone:
 
-## Contribute
+```bash
+git -C <parent-folder>/Construct3-Cookbook pull
+```
 
-A pitfall is a runtime behaviour of events that changes which events an agent writes. Each entry states the fact, its consequence and its source. [AGENTS.md](AGENTS.md) says how a page is named and where an entry goes.
+## Repository structure
 
-Before you open a pull request, run `python scripts/check.py`. It checks the links, the index against its pages and the names of the pages. For the names, it reads the Construct3-RAG and Construct3-Manual clones beside this repository. If a clone is missing, it skips that part and prints the command that clones it. CI runs the same check, with both clones, on every pull request and on every push to `main`.
+| Path | Contents |
+|------|----------|
+| [`guides/pitfalls.md`](guides/pitfalls.md) | The index of all pitfalls. It has one group per page, with a one-line conclusion for each pitfall and a note on when to read the page. |
+| `guides/plugins/`, `guides/behaviors/` | Pitfalls of a single plugin or behavior. Each page is named after the addon's Construct ID, for example `plugins/system.md` or `behaviors/tween.md`. |
+| `guides/behavior-category/`, `guides/plugin-category/` | Pitfalls that arise when choosing between several objects for the same goal, for example `behavior-category/movements.md`. |
+| `guides/primitives/` | Pitfalls of the event engine and the runtime that belong to no single addon. Page paths follow the Construct 3 manual, for example `primitives/events/how-events-work.md`. |
+| [`guides/design/`](guides/design/thinking.md) | Event design guidance: `thinking.md` covers planning events before you write them, `style.md` covers how the official examples organise, name and comment event sheets, and `native-first.json` lists superseded addons with their built-in replacements. |
+| [`guides/recipes/`](guides/recipes/feel.md) | Implementation recipes for game feel, attack feel, menus, progress bars, scripted sequences and dialogue, sound, and layered depth under a 3D camera, with a worked slot grid example. |
+| [`guides/project-files/`](guides/project-files/hand-editing.md) | Conventions for editing the JSON in `eventSheets/`, `layouts/` and `objectTypes/` by hand, and the default event sheets, layers and visual style of a new project. |
+| [`scripts/check.py`](scripts/check.py) | The validation script that CI runs. |
 
-## Licence
+## Contributing
 
-[MIT](LICENSE).
+A pitfall is a runtime behaviour of the event system that changes which events an agent should write. Each entry states the behaviour, its consequence and its source. See [AGENTS.md](AGENTS.md) for page naming, entry placement and the required format.
+
+### Run the checks
+
+Before you open a pull request, run the validation script from the repository root:
+
+```bash
+python scripts/check.py
+```
+
+The script verifies that:
+
+- Every relative link and heading anchor resolves.
+- Every pitfall page has one group in `guides/pitfalls.md`, with one conclusion line per entry, and every entry ends with a source.
+- Every page name is an addon ID from Construct3-RAG, a category key from its c3-lang data, or a page of the Construct 3 manual.
+- Every ID in a page's `addons:` line is a plugin, a behavior or an ACE in the Construct3-RAG schemas.
+
+The last two checks read the Construct3-RAG and Construct3-Manual clones next to this repository. When the script runs in a git worktree, it looks next to the main working tree instead. If a clone is missing, the script skips the checks that need it and prints the command that clones it.
+
+CI runs the same script, with both clones present, on every pull request and on every push to `main`.
+
+## License
+
+Construct3-Cookbook is released under the [MIT License](LICENSE).
