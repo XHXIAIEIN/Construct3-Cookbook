@@ -8,17 +8,17 @@ editor. Put events into a sheet with the
 plan, gives them their sids and checks the result before it writes. This file
 says how to write each entry of such a plan or of a hand edit. Clipboard
 payloads use the same condition and action entries, and
-`Construct3-Clipboard/docs/clipboard-format.md` documents their envelope.
+`<Construct3-Clipboard>/docs/clipboard-format.md` documents their envelope.
 
 ## The project folder
 
 Scirra's guide [Construct's project format](https://www.construct.net/en/tutorials/constructs-project-format-3275)
 states what follows. The `llm-context.md` the editor writes into every
-project links it, and this repository keeps a copy in
-`data/c3-guides/constructs-project-format.md`. The format has no published
-specification and changes between releases. An invalid edit can leave a
-project that does not open, so end every hand edit with the checks at the
-end of this file.
+project links it, and Construct3-RAG keeps a copy under the guide's licence,
+CC BY 4.0, in `<Construct3-RAG>/data/c3-guides/constructs-project-format.md`.
+The format has no published specification and changes between releases. An
+invalid edit can leave a project that does not open, so end every hand edit
+with the checks at the end of this file.
 
 - `project.c3proj` lists every object type, family, layout, event sheet,
   timeline, flowchart, 3D model, script, sound, music, video, font, icon and
@@ -70,7 +70,8 @@ end of this file.
 ## Encodings
 
 Each rule was read from the editor's loaders, from files it saved or from the
-official examples (`docs/decisions/checker-editor-load-rules.md`).
+official examples
+(`<Construct3-Agent-Skills>/docs/decisions/checker-editor-load-rules.md`).
 
 ### Every file
 
@@ -82,7 +83,7 @@ official examples (`docs/decisions/checker-editor-load-rules.md`).
   layout uid alone can collide with it. With UID numbering set to Random
   (`"uidAllocationMode": "random"`), Construct gives new instances six-digit
   random uids, which keep two branches of a project under source control apart
-  (`docs/decisions/random-uid-allocation.md`).
+  (`<Construct3-Agent-Skills>/docs/decisions/random-uid-allocation.md`).
 - Files are UTF-8 with raw non-ASCII, tab indent, LF, no trailing newline and
   no byte order mark. Python `json.dumps(obj, indent="\t", ensure_ascii=False)`
   reproduces the editor's output byte for byte. A file that starts with a byte
@@ -111,8 +112,8 @@ official examples (`docs/decisions/checker-editor-load-rules.md`).
 - Everything that is not an expression has no inner quotes: a combo item
   (`"mouse-button": "left"`, `"loop": "no"`), an object, a layout, a variable,
   an ease id (`"ease": "easeoutback"`, the ids under `ui/bars/timeline/eases`
-  in `data/c3-lang/en-US.json`). The editor loads a quoted combo value without
-  an error and keeps the combo's default item. A key is its key code as a JSON
+  in `<Construct3-RAG>/data/c3-lang/en-US.json`). The editor loads a quoted
+  combo value without an error and keeps the combo's default item. A key is its key code as a JSON
   number (`"key": 32`); a string stops the load with `expected finite number`.
   A JSON string `"false"` in a boolean parameter reads as true.
 - An event variable's `initialValue` is text whatever its `type`: `"0"`,
@@ -297,8 +298,8 @@ official examples (`docs/decisions/checker-editor-load-rules.md`).
 ### Object types, families and `project.c3proj`
 
 - `plugin-id`, `behaviorId` and the `id` of a `usedAddons` entry use the
-  editor's exact spelling, `originalId` in `data/c3-schemas/_index.json`. `Arr`
-  is Array, `Json` JSON, `TiledBg` Tiled Background, `EightDir` 8 Direction and
+  editor's exact spelling, `originalId` in
+  `<Construct3-RAG>/data/c3-schemas/_index.json`. `Arr` is Array, `Json` JSON, `TiledBg` Tiled Background, `EightDir` 8 Direction and
   `Sin` Sine. `solid`, `scrollto`, `jumpthru`, `bound`, `wrap`, `destroy` and
   `gamepad` are lowercase. Any other spelling stops the load with
   `missing plugin id`.
@@ -453,11 +454,11 @@ place here with `--project <folder>`. It checks that:
 - every `objectClass`, instance variable and behavior name exists, families
   included
 - `sid`, `uid` and `imageSpriteId` are unique
-- every ACE `id` and parameter key is in `data/c3-schemas/`
+- every ACE `id` and parameter key is in `<Construct3-RAG>/data/c3-schemas/`
 - every called function is defined with the right parameter count
 - every object created at runtime has a template instance in some layout
 - the project follows the rules the editor applies on opening, the table in
-  `skills/construct3-agent-plugin/references/checker-rules.md`
+  `<Construct3-Agent-Skills>/plugin/skills/construct3-agent-plugin/references/checker-rules.md`
 
 If it passes, open and preview the project with the skill's
 `scripts/open_in_editor.py --preview`. It prints `opened`, or the editor's own
