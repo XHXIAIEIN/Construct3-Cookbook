@@ -54,34 +54,30 @@ Sources and the rule for adding an entry are in the index,
   timelines per sword, each reached by its own tag]
 
 - To find an instance's copy of a timeline, the runtime looks for a copy
-  whose name, such as `HeroAttack:3`, contains the timeline's name. So a
-  timeline named `Attack` also matches the copies of `HeroAttack` played on
-  that instance. If two timelines play on the same object, name them so
-  that neither name contains the other. [runtime: exported
-  c3runtime.js r504, `TimelineManager.GetTimelineOfTemplateForInstances` tests
-  `t.GetName().includes(e.GetName())`; reported as Scirra/Construct-bugs#9288,
-  closed 2026-10-01 as fixed in the next beta after r504]
+  whose name, such as `HeroAttack:3`, contains the timeline's name followed
+  by a colon. So a timeline named `Attack` also matches the copies of
+  `HeroAttack` that play on that instance. If two timelines play on the
+  same object, name them so that neither name ends with the other.
+  [runtime: r506.3 CDN `preview/timelines/timelineManager.js`,
+  `GetTimelineOfTemplateForInstances` tests `includes(name + ":")` on the
+  copy's name]
 
 - *Stop* moves the playhead back to 0 and applies that pose in the same
   tick. So if a relative timeline stops midway, it takes its offsets back.
-  This also holds when the timeline is paused, set by *Set time*, playing
-  backwards or layered with another relative timeline on the instance. A
-  finished timeline ignores *Stop* and keeps its end pose, so the offsets of
-  a relative track stay on the instance. *Set time* 0 takes them back.
-  *Pause* keeps the pose where it is. *Resume* does nothing after a
-  non-looping timeline has reached its end, so first move the playhead back
-  with *Set time*. [runtime: r504 preview,
-  Timeline plugin `StopTimeline` calls `Reset()`, `PauseTimeline` calls
-  `Stop()`; `TimelineState.Reset` returns when `IsComplete()`, `_CanResume` is
-  false when the time is at the total time; observed in a game project, r504
-  preview, 2026-09-30: the second slash only started after *Set time* 0 moved
-  the playhead off the end; observed in a minimal project, r495.2 and r504
+  This holds in every state: playing, paused, set by *Set time*, playing
+  backwards, layered with another relative timeline on the instance, and
+  finished. *Pause* keeps the pose where it is. *Resume* does nothing after
+  a non-looping timeline has reached its end, so first move the playhead
+  back with *Set time*. [runtime: r506.3 CDN
+  `plugins/general/timelineController/c3runtime/runtime.js`, `StopTimeline`
+  calls `Reset()`, then `SetTime(0)` if the timeline was not playing;
+  `PauseTimeline` calls `Stop()`; `TimelineState._CanResume` is false when
+  the time is at the total time; observed in a game project, r504 preview,
+  2026-09-30: the second slash only started after *Set time* 0 moved the
+  playhead off the end; observed in a minimal project, r495.2 and r504
   preview, 2026-10-01: a relative X track at +121 px and an angle track at
   −57°, on a hierarchy child too, read 0 in the tick of *Stop* from each of
-  those states, and a finished one kept +484 px after *Stop* and read 0 after
-  *Set time* 0. The finished case was reported as Scirra/Construct-bugs#9287,
-  closed 2026-09-30: the next beta after r504 sets the time to 0 on *Stop* of
-  a timeline that is not playing; *Set time* 0 works in both]
+  the states before it finished]
 
 - *Set time* pauses a playing timeline at the time that it sets. After a
   *Play* in the same action list, it takes the timeline off the schedule and
@@ -118,8 +114,8 @@ Sources and the rule for adding an entry are in the index,
   pose drawn at the keyframe, and after *Wait 0* matched it within 1 px;
   reported as Scirra/Construct-bugs#9291: in the trigger `Time` reads the
   keyframe's time while a discrete track still holds the value before the
-  keyframe; closed 2026-10-01, to be fixed in the first beta after the next
-  stable release, where the *Wait 0* is no longer needed]
+  keyframe; r507 beta trackState.js interpolates the property tracks before
+  it fires the triggers]
 
 - A negative playback rate plays a timeline back to 0, and the timeline
   finishes there. If a windup is cancelled midway, *Set playback rate* −3

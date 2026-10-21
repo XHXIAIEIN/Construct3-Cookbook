@@ -195,7 +195,7 @@ If the events use a condition, action or expression that every object has (hiera
 
 If the events use 3D model, read [plugins/model3d.md](plugins/model3d.md).
 
-- A 3D model's *Set progress* does nothing while the clip plays or is paused. In r505, *Play* of the playing clip leaves it where it is, so *Stop* the clip first to restart it. After *Play* switches clips, *Stop* and `stop()` leave the first clip playing. *Play* cuts in one tick unless *Transition duration* (r505) is set. A clip cannot cross into itself, so blended repeats alternate two copies.
+- A 3D model's *Set progress* does nothing while the clip plays or is paused. To restart a clip, *Stop* it, then *Play* it. After *Play* switches clips, *Stop* and `stop()` leave the first clip playing. *Play* cuts in one tick unless *Transition duration* is set. A clip cannot cross into itself, so blended repeats alternate two copies.
 
 ### Advanced Random
 
@@ -328,8 +328,8 @@ If the events use Timeline controller, read [plugins/timeline.md](plugins/timeli
 - A relative track adds each tick's step, counted from 0. So keyframe values are offsets from the pose at the start of play. Moves that start and end at 0 can be layered and repeated, and they leave no offset.
 - An angle keyframe turns in the direction that its setting gives, even the long way round if the values disagree. Set the direction to the sign of the change to the next keyframe.
 - *Set instance* applies only to the next *Play*. One *Play* starts a copy per picked instance, all with the same tags. Set one instance at a time, and tag each copy with its UID.
-- A copy is found by the timeline's name inside the copy's name. So make sure that no timeline name contains another.
-- *Stop* rewinds to 0 and reverts a relative track's offsets, while *Pause* holds. A finished timeline ignores both *Stop* and *Resume*, and it keeps its offsets. Run *Set time* 0 before you replay it or put the instance back.
+- A copy is found by the timeline's name and a colon inside the copy's name. So make sure that no timeline name ends with another.
+- *Stop* rewinds to 0 and reverts a relative track's offsets in every state, finished included, while *Pause* holds. A finished timeline ignores *Resume*, so run *Set time* 0 before you replay it.
 - *Set time* pauses and never fires *On keyframe reached*.
 - *On keyframe reached* picks nothing. Pick the instance again from the UID in `Timeline.TimelineTags`.
 - *On keyframe reached* sees the previous tick's pose. So put *Wait 0* before you read where the keyframe put the instance.

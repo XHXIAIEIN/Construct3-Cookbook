@@ -92,6 +92,22 @@ the preview or the look, put it where "Adding an entry" in
 If sources disagree, manual wording outranks an observation, and an
 observation outranks intuition.
 
+## Releases
+
+The entries describe the current stable release. To find the current
+Stable and Beta releases, read `https://editor.construct.net/versions.json`.
+The `version` in Construct3-RAG's `data/c3-schemas/_index.json` names the
+stable release whose data the clone holds. To read the runtime code of a
+release, fetch `https://editor.construct.net/<dir>/<path>`. `<dir>` writes a
+patch release with a dash, such as `r506-3` for r506.3, and `offline.json`
+in that folder lists every `<path>`, such as
+`preview/timelines/timelineManager.js`.
+
+- If a stable release fixes a pitfall, delete the entry, or rewrite it to
+  the behaviour that remains. Leave out the report and the release that
+  fixed it, because the reader acts on the current behaviour only.
+- If only a beta fixes it, keep the entry, and name the beta in its source.
+
 ## Before you finish
 
 Run these checks from the root of the repository:
