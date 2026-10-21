@@ -3,7 +3,7 @@
 This page covers a scene of flat art set at different depths and seen from
 an angle: a diorama, a pop-up book, a drawing whose strokes stand at
 different distances, which the player tilts or circles. Design first with
-[design/thinking.md](../design/thinking.md); this page expands that
+[design/thinking.md](../design/thinking.md). This page expands that
 file's row "flat art at different depths".
 
 ## What gives depth
@@ -19,59 +19,60 @@ file's row "flat art at different depths".
   [manual: project-primitives/layers.md "Z elevation"; schema
   `plugins/_common.json` `set-mesh-point`]
 - **One object can stand at its own height** with *Set Z* (`set-z-elevation`)
-  or `IWorldInstance.zElevation`, on top of its layer's Z. top-down-jump
-  lifts its player this way.
-- **Projection.** The layout's *Projection* is *Perspective* by default, so a
-  plane further from the camera shows smaller. *Orthographic* keeps every
-  plane the same size, and the stack then shows depth only through the
-  camera's angle. System *Set layout projection* switches it at runtime
-  (orthographic-projection). *Vanishing point* (System *Set layout
-  vanishing point*, 0 to 100, 50 the middle) moves where distant planes
-  converge; it does nothing under *Orthographic*.
+  or `IWorldInstance.zElevation`, on top of its layer's Z. The
+  top-down-jump example lifts its player this way.
+- **Projection.** The layout's *Projection* is *Perspective* by default, so
+  a plane further from the camera shows smaller. *Orthographic* keeps every
+  plane the same size, and then the stack shows depth only through the
+  camera's angle. System *Set layout projection* switches the projection
+  at runtime (orthographic-projection). *Vanishing point* (System *Set
+  layout vanishing point*, 0 to 100, 50 the middle) moves the point where
+  distant planes converge. Under *Orthographic*, it does nothing.
   [manual: project-primitives/layouts.md "Projection", "Vanishing point"]
 - **Rendering mode per layer.** The 3D Camera moves only the layers whose
-  *Rendering mode* is *3D*; a *2D* layer ignores it and scrolls as usual.
-  Put the HUD and a fixed backdrop on *2D* layers, because on a *3D* layer
-  content that rises higher can overlap them. The skill's template makes
-  every layer *3D*, so set the HUD's to *2D*. [manual:
+  *Rendering mode* is *3D*. A *2D* layer ignores the camera and scrolls as
+  usual. Put the HUD and a fixed backdrop on *2D* layers, because on a
+  *3D* layer, content that rises higher can overlap them. The skill's
+  template makes every layer *3D*, so set the HUD layer to *2D*. [manual:
   plugin-reference/3d-camera.md "Using a 3D Camera",
   project-primitives/layers.md "Rendering mode"]
-- **Z axis scale.** A new project uses *Regular*, where Z has the scale of X
-  and Y. The default camera Z then follows the viewport height and the
-  field of view, so read it as `3DCamera.DefaultCameraZ` instead of writing
-  100, the value of the deprecated *Normalized* scale. [manual:
-  plugin-reference/3d-camera.md "3D Camera properties",
+- **Z axis scale.** A new project uses *Regular*, where Z has the scale of
+  X and Y. The default camera Z then follows the viewport height and the
+  field of view. So read it as `3DCamera.DefaultCameraZ` instead of
+  writing 100, which is the value under the deprecated *Normalized* scale.
+  [manual: plugin-reference/3d-camera.md "3D Camera properties",
   project-primitives/projects.md "Z axis scale"]
 
-No official example raises a whole layer: none has a layer with a Z
-elevation other than 0 or calls *Set layer Z elevation*. The examples put
-depth on instances and 3D Shapes. So a stack of raised layers has no example
-to copy; check it in a preview before you build on it. [checked over the
-layouts and sheets of Construct-Example-Projects, 2026-10-18]
+The official examples put depth on instances and 3D Shapes. Every layer in
+them has a Z elevation of 0, and none calls *Set layer Z elevation*. So no
+example shows a stack of raised layers. Check such a stack in a preview
+before you build on it. [checked over the layouts and sheets of
+Construct-Example-Projects, 2026-10-18]
 
 ## Spacing the layers
 
 Seen from straight above at camera height `C`, a plane at height `z` shows
-at `C / (C - z)` of its size: a layer at half the camera's height shows
-twice as large, one at `-C` half as large. Keep the stack well below the
-camera's Z, because a plane at or above the camera is behind it and not
-drawn. Planes nearer than the project's *Near distance* or further than its
-*Far distance* are not drawn either. Space the layers from
-`DefaultCameraZ`, such as `-0.6`, `-0.3`, `0` and `0.3` of it, rather than
-from fixed numbers that hold for one viewport. [derived from the
+at `C / (C - z)` of its size. So a layer at half the camera's height shows
+twice as large, and one at `-C` shows half as large. Keep the stack well
+below the camera's Z, because a plane at or above the camera is behind it
+and is not drawn. A plane nearer than the project's *Near distance* or
+further than its *Far distance* is not drawn either. Space the layers as
+shares of `DefaultCameraZ`, such as `-0.6`, `-0.3`, `0` and `0.3` of it,
+because fixed numbers hold for one viewport only. [derived from the
 perspective projection; manual: project-primitives/projects.md "Near
 distance", "Far distance"]
 
 ## Circling the scene
 
-*Rotate camera* is mouse look. It turns the direction the camera points in
-and leaves the camera where it is, so it cannot circle a scene. To circle,
-move the camera around a centre and look at the centre every tick.
-back-face-culling does this with an invisible object that has the Orbit
-behavior: *Every tick*, `3DCamera: Look at position` with the camera at
+*Rotate camera* is mouse look. It turns the direction that the camera
+points in and leaves the camera where it is, so it cannot circle a scene.
+To circle a scene, move the camera around a centre, and look at the
+centre every tick. The back-face-culling example does this with an
+invisible object that has the Orbit behavior. *Every tick*, it runs
+`3DCamera: Look at position` with the camera at
 `(CameraPos.X, CameraPos.Y, 300)`, the look position at the scene's centre
-at Z 0, and up vector `(0, 0, 1)`. That turns the camera around the scene by
-itself, for a tour that plays without input. [manual:
+at Z 0, and the up vector `(0, 0, 1)`. So the camera turns around the
+scene by itself, as a tour that plays without input. [manual:
 plugin-reference/3d-camera.md "Rotate camera"; back-face-culling]
 
 To let the player drag the view, keep three numbers: `Yaw`, the compass
@@ -90,15 +91,15 @@ above; and `Distance`. `sin` and `cos` take degrees.
    `cz + Distance * cos(Tilt)`, the look position at `(cx, cy, cz)`, and up
    vector `(0, 0, 1)`. `cz` is the middle of the stack.
 
-Keep `Tilt` above 0, because straight above the camera would look along its
-up vector, which breaks its orientation: the manual gives the same reason
-for keeping *Rotate camera*'s polar angles off 0 and 180. Keep it below
-90, where the camera is level with the stack and sees the layers edge on.
-Start `Distance` at `DefaultCameraZ` so that the first frame shows the
-layout at about its 2D size. [derived from *Look at position* and
-back-face-culling; not yet observed in a preview]
+Keep `Tilt` above 0. At 0 the camera is straight above and looks along its
+up vector, and that breaks its orientation. The manual gives the same
+reason to keep the polar angles of *Rotate camera* off 0 and 180. Keep
+`Tilt` below 90, because at 90 the camera is level with the stack and sees
+the layers edge on. Start `Distance` at `DefaultCameraZ`, so that the
+first frame shows the layout at about its 2D size. [derived from *Look at
+position* and back-face-culling; not yet observed in a preview]
 
-In a script, the camera's methods belong to the object type, not to an
+In a script, call the camera's methods on the object type, not on an
 instance:
 `runtime.objects["3DCamera"].lookAtPosition(camX, camY, camZ, lookX, lookY, lookZ, 0, 0, 1)`.
 The name starts with a digit, so index it with quotes. [schema:
@@ -110,5 +111,5 @@ The name starts with a digit, so index it with quotes. [schema:
 |---------------|-----------------|--------------|
 | *Rotate camera* fed by a drag to circle the scene | It turns the view around the camera | *Look at position* from `Yaw`, `Tilt` and `Distance` |
 | A layer tilted to face the camera | Layers do not tilt | A mesh with a Z on each point, or a 3D Shape |
-| Layer Z values typed for one screen size, at or above the camera | The default camera Z follows the viewport and the field of view; a plane at or above the camera is not drawn | Values as shares of `DefaultCameraZ` |
+| Layer Z values typed for one screen size, at or above the camera | The default camera Z follows the viewport and the field of view, and a plane at or above the camera is not drawn | Values as shares of `DefaultCameraZ` |
 | The HUD on a *3D* layer | The camera moves it, and raised content can cover it | *Rendering mode* *2D* on the HUD layer |

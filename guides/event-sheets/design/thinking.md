@@ -1,9 +1,9 @@
 # Construct 3 Event Sheet — Design Guide
 
-This guide decides what the events are before you write them.
-[pitfalls/README.md](../pitfalls/README.md) lists the
-runtime facts that intuition gets wrong, one line each. It names the topic
-file under `pitfalls/` to open for each group that the events touch.
+Use this guide to decide which events a sheet needs before you write
+them. [pitfalls/README.md](../pitfalls/README.md) lists, one line each,
+the runtime facts that intuition gets wrong. For each group that the
+events touch, it names the topic file under `pitfalls/` to open.
 Before the events go into a project or a generator, read
 [design/style.md](style.md). It says how the official
 examples organise, name and comment a sheet, and which habits the checker
@@ -22,11 +22,12 @@ Such a sheet works, but an experienced Construct user rejects it.
 ## The model
 
 Events filter instances. Each condition narrows the picked instances, and
-the actions run on those that are left. If no condition names an object,
-all its instances stay picked. A trigger fires with the instances involved
-already picked. A sub-event and its siblings all start from the set that
-their parent picked. Top-level events start from all instances. Spatial
-relations (`Is overlapping another object`, `Pick overlapping point`,
+the actions run on the instances that are left. If no condition names an
+object, all its instances stay picked. When a trigger fires, the
+instances involved in it are already picked. A sub-event and its sibling
+sub-events all start from the instances that their parent event picked.
+Top-level events start from all instances. Spatial relations
+(`Is overlapping another object`, `Pick overlapping point`,
 `Pick nearest/furthest`) are conditions, so they pick too.
 [manual: project-primitives/events/how-events-work.md,
 project-primitives/events/sub-events.md,
@@ -34,8 +35,8 @@ plugin-reference/common-features/common-conditions.md]
 
 Manual paths are relative to the `Construct3-Manual/` directory inside the
 `Construct3-Manual` clone, next to this repository. Read the clone, because
-construct.net rejects fetches from an agent. The live page is the same path
-without `.md`, after
+construct.net rejects fetches from an agent. The live page has the same
+path without `.md`, appended to
 `https://www.construct.net/en/make-games/manuals/construct-3/`.
 
 ## Rules
@@ -52,57 +53,60 @@ without `.md`, after
    destroyed instance still counts until the top-level event ends
    ([pitfalls: Picking](../pitfalls/picking.md)). A variable that copies one of
    these (`occupied`, `isDragging`, `bricksLeft`) stops matching the engine
-   as soon as instances move or are destroyed. Every event that must update
-   it can forget to. Store only what nothing can answer (level, score,
-   where a drag started), on the instance it describes. If family events
-   read it, declare it on the family.
+   as soon as instances move or are destroyed, because every event that
+   must update it can forget to. Store only the values that nothing else
+   can answer (level, score, where a drag started), on the
+   instance that they describe. If events on a family read such a value,
+   declare it on the family.
 
-   A decision that plays out as an animation is such a value. While the
-   units of a pour drain and fill, the engine's state still describes each
-   tube as it was. So a check that reads this state can seal the tube that
-   the pour is about to empty. Record the decision when you make it, and let
-   the animation follow.
+   A decision that an animation plays out is such a value. While the units
+   of a pour drain and fill, the engine's state still describes each tube
+   as it was before the pour. So a check that reads this state can seal the
+   tube that the pour is about to empty. Record the decision when the
+   events make it, then let the animation follow.
 3. **Use the trigger's pick.** Inside `On drop`, `Piece` is the dropped
    piece. Narrow the pick with sub-events instead of copying its UID into
    a variable and picking it again.
 4. **Use a family for a second instance of the same type.** The dropped
    `Piece` and the `Pieces` already on the slot are two independent picks
-   in one event, so it can compare `Pieces.level = Piece.level`, then
-   `Piece: Destroy`.
-5. **Disable collisions instead of setting a flag.** Run
-   `Set collisions disabled` at `On drag start`, and enable them again when
-   the instance settles (Tween `On any finished`). Every overlap test then
-   ignores it: its old slot tests as empty, and a drop back on that slot
-   takes the empty-slot branch. In the same way, a Solid that should stop
-   blocking, such as a door that opens, gets Solid *Set enabled* off. Its
-   animation alone leaves it blocking.
+   in one event. So the event can compare `Pieces.level = Piece.level`,
+   then run `Piece: Destroy`.
+5. **Disable collisions instead of setting a flag.** In `On drag start`,
+   run `Set collisions disabled`. When the instance settles (Tween
+   `On any finished`), enable its collisions again. Every overlap test then
+   ignores the dragged instance: its old slot tests as empty, and a drop
+   back on that slot takes the empty-slot branch. In the same way, if a
+   Solid must stop blocking, such as a door that opens, set its Solid
+   *Set enabled* to off. If only its animation changes, it keeps blocking.
 6. **Shape an interaction as a trigger, narrowing sub-events and Else.**
    Each branch reads as a sentence: on drop; over a slot; slot holds a
    piece; same level: merge. Else: swap. Else: move in. Else: go back.
-   Collecting values into variables first and branching on the numbers is
-   the wrong shape. A branch holds one trigger, and a function counts as
-   one. So the *On finished* of a tween that a function starts is a
-   top-level event of its own
+   Do not collect values into variables first and then branch on the
+   numbers. A branch holds one trigger, and a function counts as one
+   trigger. So if a function starts a tween, put the tween's *On finished*
+   in a top-level event of its own
    ([pitfalls: Triggers and Else](../pitfalls/triggers-and-else.md)).
 7. **Derive appearance every tick.** One event without conditions sets the
-   default look. The next picks the exceptions and overrides it, so nothing
-   needs a reset.
-8. **Choose a UID, `Pick all` or a global last.** A UID or a global fits a
-   singleton and a reference that crosses events (an inventory array of
-   UIDs, a persisted selection). `Pick all` fits when the events after it
-   need the rest of a type and not the trigger's instance: relic-hunter
-   stops every ghost when one touches the player. If they read both, as a
-   merge compares two levels, use a family for the second (rule 4). Inside
-   one interaction, `Pick all` followed by a pick from a stored link means
-   the events discarded a pick and rebuilt it by hand. That pick is
-   *Pick by unique ID*, or *Pick by comparison* on a variable that holds a
-   UID or a slot number.
+   default look. The next event picks the exceptions and overrides the
+   default, so no event needs to reset the look.
+8. **Choose a UID, `Pick all` or a global last.** Use a UID or a global
+   for a singleton and for a reference that crosses events (an inventory
+   array of UIDs, a persisted selection). Use `Pick all` when the events
+   after it need the rest of a type and not the trigger's instance. For
+   example, relic-hunter stops every ghost when one ghost touches the
+   player. If the events read both, as a merge does when it compares two
+   levels, use a family for the second instance (rule 4). Inside one
+   interaction, `Pick all` followed by a pick from a stored link means that
+   the events discarded a pick and rebuilt it by hand. The pick from the
+   stored link is *Pick by unique ID*, or *Pick by comparison* on a
+   variable that holds a UID or a slot number.
 
 ## Native first
 
-Before you add a variable, an `Every tick` or a formula, ask which built-in
-already does it. A draft that rebuilds one of the built-ins below by hand
-is a program transcribed into events, even without a picking smell.
+Before you add a variable, an `Every tick` or a formula, find the built-in
+that already does the job. A draft that rebuilds one of the built-ins below
+by hand is a program transcribed into events, even if it has none of the
+picking problems in the smell table.
 
 | Need | Use | Not |
 |------|-----|-----|
@@ -114,7 +118,7 @@ is a program transcribed into events, even without a picking smell.
 | Continuous motion toward a target or along a heading | MoveTo, Bullet, Pathfinding, Platform, 8 Direction | `Set X`/`Set Y` from your own velocity variables |
 | A part that moves with a body: the graphics on a collision box, a shadow, a held item | Hierarchy: *Add child* once, when the body is created; the child then follows it | An every-tick *Set position* to the body's X and Y |
 | Repeating or periodic movement, flashing, fading out | Sine, Flash, Rotate; a fade is a Tween on Opacity | Hand-written oscillation; the Fade behavior, superseded |
-| Level data, loot tables, stat curves, any lookup table | Array or Dictionary project file (Project Bar: *New - Array / Dictionary*), loaded in *On start of layout*: AJAX *Request project file*, *Wait for previous actions*, then *Load* from `AJAX.LastData`, all in that one block, because a *Wait* delays only its own block (cell-linking loads its level this way). An AJAX *On completed* is a trigger and cannot sit under *On start of layout*. Nested or hand-written data through the JSON plugin | Per-level instance variables, `level1Hp`, chained conditions or nested ternaries that encode the table in expressions |
+| Level data, loot tables, stat curves, any lookup table | Array or Dictionary project file (Project Bar: *New - Array / Dictionary*), loaded in *On start of layout*: AJAX *Request project file*, *Wait for previous actions*, then *Load* from `AJAX.LastData`, all in that one block, because a *Wait* delays only its own block (cell-linking loads its level this way). An AJAX *On completed* is a trigger, so it cannot be a sub-event of *On start of layout*. Nested or hand-written data through the JSON plugin | Per-level instance variables, `level1Hp`, chained conditions or nested ternaries that encode the table in expressions |
 | A list that changes at runtime: a deck and its discard pile, a queue, an inventory, a playlist | One Array per list, width 0 at start: *Push* to add, *Shuffle*, `Front`, `Back` or `At(i)` to read, then *Pop* or *Delete* to remove (they return nothing, so read first), *Contains value* to test membership, `Width` to count (place-stickers `InventoryArray`, airborne-explorer `ArrBGM`). Load definitions with several fields from a project file (row above) | A separated string read with `tokenat` (smell table) |
 | Things each instance holds, each with its own numbers and its own time: stacked shields, buffs, status effects | One instance per item, a child of its holder (*Add child*, destroy with parent on), with its own variables and a Timer that destroys it when it runs out. The holder reads them with *Pick children* and takes them in order with *For each (ordered)* by the time left ([pitfalls: Timer](../pitfalls/timer.md)) | An Array in the holder's container, which an event that picks through a family does not pick ([pitfalls: Picking](../pitfalls/picking.md)); expiry times kept in cells and swept by a loop |
 | What a move, an effect or an attack does: its kind and its numbers | One field per fact, a `kind` text and `amount` and `times` numbers, as instance variables or fields of a project file (row above); the branch is an exact comparison, `kind = "block"`, one sibling event or `Else` per kind (alien-battle: under the boss's *On Timer*, `AnimationState = 0`, `= 1`, `= 2`, one attack each) | A code such as `"A6x2"` parsed with `mid`, `tokenat` or `right` and dispatched with `find` (smell table) |
@@ -157,20 +161,21 @@ complete", project-primitives/layers.md "Parallax", "Global layers",
 project-primitives/objects/containers.md; the pause, hit-stop and wait rows
 are sourced in [pitfalls: Wait and time scale](../pitfalls/wait-and-time-scale.md)]
 
-Check two things before you choose. A Timer is state with transitions, so
-list its transitions ([pitfalls: Timer](../pitfalls/timer.md)). An Array
+Before you choose, check two things. A Timer is state with transitions, so
+list its transitions ([pitfalls: Timer](../pitfalls/timer.md)). Array
 *Load* reads Construct's own JSON format, so make the file in the Array
-editor; the JSON plugin reads hand-written JSON.
+editor. For hand-written JSON, use the JSON plugin.
 
-A behavior that exists can still be the wrong choice. An existing project
-may keep a superseded feature, but a new project uses its replacement. Fade
-runs a fixed series of opacity tweens, so use a *Tween (one property)* on
-Opacity. In place of Pin, use a hierarchy: *Add child* on the parent. It
-stays reliable where chains of pinned objects do not. In place of the Solid
-behavior's own *Tags* property, use instance tags, which *Use instance
-tags* selects by default. Z axis scale *Normalized* is deprecated rather
-than superseded. A new project uses *Regular*, where Z is a co-ordinate on
-the same scale as X and Y, so 3D sizes match how they look.
+A behavior can exist and still be the wrong choice. An existing project
+may keep a superseded feature, but a new project uses its replacement.
+Fade runs a fixed series of opacity tweens, so use a *Tween (one property)*
+on Opacity in its place. In place of Pin, use a hierarchy: *Add child* on
+the parent. A hierarchy stays reliable where chains of pinned objects do
+not. In place of the Solid behavior's own *Tags* property, use instance
+tags, which *Use instance tags* selects by default. Z axis scale
+*Normalized* is deprecated rather than superseded. A new project uses
+*Regular*, where Z is a co-ordinate on the same scale as X and Y, so 3D
+sizes match how they look.
 [manual: tips-and-guides/superseded-features.md,
 tips-and-guides/deprecated-features.md]
 
@@ -185,14 +190,14 @@ how loud, and how to make and check a placeholder file. If you generate a
 game or write events for any of these, read both files first.
 [recipes/scripted-sequences.md](../recipes/scripted-sequences.md) says
 how an attack pattern, a cutscene or dialogue runs from a data file, and
-how dialogue markup is parsed and localised.
+how events parse and localise dialogue markup.
 
 ## Layout of the sheet
 
 If you generate a project, or add a layout, layer, event sheet, group or
 object type to one, read [project-files/new-project.md](../project-files/new-project.md)
-first. It says how the examples split the sheets and groups and build the
-rest.
+first. It says how the examples split the sheets and groups, and how they
+build the rest of the project.
 
 ## Smell table
 
@@ -224,7 +229,8 @@ If a draft matches one row, redesign it instead of patching it.
 2. Find an official example with the same behaviors. Filter
    `data/c3-examples/{locale}/*.json` on `used-addons` (`"DragnDrop"` under
    `behaviors` for a drag case). If `Construct-Example-Projects` is cloned
-   alongside, copy the event shape from `example-projects/{id}/eventSheets/`.
+   next to this repository, copy the event shape from
+   `example-projects/{id}/eventSheets/`.
    Read a sheet as events, not as JSON: `python
    <Construct3-Agent-Skills>/plugin/skills/construct3-agent-plugin/scripts/print_sheet.py --project
    <Construct-Example-Projects>/example-projects/{id}` prints it in the
@@ -243,18 +249,18 @@ If a draft matches one row, redesign it instead of patching it.
 5. Write the draft. Before you show it, check it against the smell table
    and the [pitfalls](../pitfalls/README.md), with the topic file of each
    group that it touches.
-6. Only then verify every name: `python
+6. Only then verify every name with `python
    <Construct3-Agent-Skills>/plugin/skills/construct3-agent-plugin/scripts/lookup_ace.py
-   OBJECT WORDS` prints the matching conditions, actions and expressions of
-   a plugin or behavior, with their parameters and the JSON to write, and
-   the ACEs that all world objects share with them. If it finds nothing, say
-   so and mark the closest match unverified; never write a name it did not
-   print.
+   OBJECT WORDS`. It prints the matching conditions, actions and
+   expressions of a plugin or behavior, with their parameters and the JSON
+   to write. It also prints the ACEs that all world objects share with
+   them. If it finds nothing, say so and mark the closest match as
+   unverified. Never write a name that it did not print.
 
 ## Worked case: pieces on a slot grid
 
 If the events drag pieces onto slots or a grid to merge, swap, move or
-return them, or if a draft hit the smell table, read
+return them, or if a draft matched a row of the smell table, read
 [recipes/worked-case-slot-grid.md](../recipes/worked-case-slot-grid.md).
-It writes the interaction natively, then as a program transcribed into
-events.
+It writes the interaction with native features first, then as a program
+transcribed into events.

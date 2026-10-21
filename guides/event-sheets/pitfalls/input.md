@@ -6,18 +6,20 @@ Sources and the rule for adding an entry are in the index,
 - The Mouse object reacts only to a pointer whose type is mouse. *Mouse button
   is down*, *On any click*, *On button released*, a single *On click* and
   `Mouse.X`, `Mouse.Y` ignore a finger and a pen. *On movement* is the
-  exception and fires for touch too. Touch with *Use mouse input* on fires for
-  the mouse and the finger alike and has no expression for the pointer type.
-  Drag & Drop takes a left click and a finger without the Touch object. So if
-  a drag behaves differently under a finger, such as a piece lifted higher so
-  the finger does not hide it, test `Mouse: Mouse button is down (left)`: true
-  while a mouse drags, false while a finger does. Test it in an event that
-  runs every tick under Drag & Drop *Is dragging*, not under *On drag start*.
-  That trigger runs from the same pointer-down dispatch as the Mouse object's
-  own handler, and the two run in the order they subscribed in, which nothing
-  documents. This test decides per drag, so a touchscreen laptop gets each
-  drag right. The input-method triggers of the next entry choose a control
-  scheme instead. [runtime: exported c3runtime.js r503,
+  exception and fires for touch too. The Touch object with *Use mouse input*
+  on fires for the mouse and the finger alike. It has no expression for the
+  pointer type. Drag & Drop takes a left click and a finger by itself,
+  without the Touch object. So if a drag must behave differently under a
+  finger, test `Mouse: Mouse button is down (left)`. An example is a piece
+  lifted higher so that the finger does not hide it. The condition is true
+  while a mouse drags and false while a finger drags. Test it in an event
+  that runs every tick under Drag & Drop *Is dragging*, not under *On drag
+  start*. *On drag start* runs from the same pointer-down dispatch as the
+  Mouse object's own handler. The two run in the order in which they
+  subscribed, and nothing documents this order. The test decides for each
+  drag, so on a touchscreen laptop each drag gets the behavior of the
+  pointer that makes it. The input-method triggers of the next entry
+  choose a control scheme instead. [runtime: exported c3runtime.js r503,
   `Plugins.Mouse.Instance` `_OnPointerDown`, `_OnPointerMove` and
   `_OnPointerUp` each test `"mouse"===e["pointerType"]` before touching the
   position or the button map, and the movement trigger in `_OnPointerMove`
@@ -30,20 +32,21 @@ Sources and the rule for adding an entry are in the index,
   2026-09-30]
 - With *Use mouse input* on, a left click is a touch. *On any touch start*,
   *On touched object* and *On tap* fire for it, so a Touch trigger cannot
-  detect a finger. Detect the input method with *Use mouse input* off. Then
-  *On any touch start* means a finger or a pen, and Mouse *On any click* or
-  Keyboard *On any key pressed* means a desktop. Each sets a global variable
-  that decides the controls (see "Native first" in
-  [design/thinking.md](../design/thinking.md)). The example
-  detecting-input-method decides once, on its title screen. The same triggers
-  in a sheet that runs during play follow a change of device. Gamepad *On any
-  button pressed* adds a gamepad. With *Use mouse input* off, a mouse fires
-  no Touch trigger, so every button the mouse must press needs its own Mouse
-  event. A project that clicks its Touch buttons with the mouse keeps the
-  setting on and tells a finger drag from a mouse drag with the Mouse test
-  above. The global variable follows the last input. Whether it has changed
-  when a drag starts on the same press depends on the same undocumented order
-  as above. [manual: plugin-reference/touch.md "Use mouse input"; example:
+  detect a finger. To detect the input method, turn *Use mouse input* off.
+  Then *On any touch start* means a finger or a pen, and Mouse *On any
+  click* or Keyboard *On any key pressed* means a desktop. Each of these
+  triggers sets a global variable that decides the controls (see "Native
+  first" in [design/thinking.md](../design/thinking.md)). The example
+  detecting-input-method decides once, on its title screen. The same
+  triggers in a sheet that runs during play follow a change of device.
+  Gamepad *On any button pressed* detects a gamepad too. With *Use mouse
+  input* off, a mouse fires no Touch trigger, so every button that the
+  mouse must press needs its own Mouse event. If a project clicks its
+  Touch buttons with the mouse, keep the setting on. Then tell a finger
+  drag from a mouse drag with the Mouse test above. The global variable
+  follows the last input. If a drag starts on the same press, whether the
+  variable has changed by then depends on the same undocumented order as
+  above. [manual: plugin-reference/touch.md "Use mouse input"; example:
   detecting-input-method, `Title events` events 2 and 3 and the comment of 3,
   Touch object with *Use mouse input* off; schema: plugins/gamepad.json
   `on-any-button-pressed`, a trigger; runtime: exported c3runtime.js r503,
@@ -60,8 +63,8 @@ Sources and the rule for adding an entry are in the index,
   that reads `Mouse.X` and `Mouse.Y`. For a finger, use an event with *Is in
   touch* that reads `Touch.X` and `Touch.Y`. `Mouse.MovementX` and
   `Mouse.MovementY` in the trigger hold the amount of the current move.
-  [runtime: r495.2
-  preview, `Plugins.Mouse.Instance._OnPointerMove` calls the private method
+  [runtime: r495.2 preview, `Plugins.Mouse.Instance._OnPointerMove` calls
+  the private method
   that triggers `OnMovement` before it sets `_mouseXcanvas` and
   `_mouseYcanvas`; manual: plugin-reference/mouse.md "On movement",
   "MovementX"; observed in a minimal project, r495.2 and r504 previews,
@@ -75,13 +78,14 @@ Sources and the rule for adding an entry are in the index,
   moved by hand in a headed r495.2 preview, the *On movement* sprite
   stopped 3 px short of the every-tick one]
 - Touch *On touched object*, *Is touching object*, *On tap object* and Mouse
-  *On object clicked*, *Cursor is over object* find an instance only by its shape
-  under the pointer. So the player can press an invisible instance, one with
-  collisions disabled and one on an invisible layer. These conditions skip
-  only an instance outside the viewport or on a layer that is not interactive.
-  A button hidden to switch it off still works. Add *Is visible* to its event,
-  or turn its layer off with *Set layer interactive*. Disabled collisions fail
-  overlap and collision tests, not these. [runtime: exported c3runtime.js
+  *On object clicked*, *Cursor is over object* find an instance only by its
+  shape under the pointer. So the player can press an invisible instance,
+  one with collisions disabled and one on an invisible layer. These
+  conditions skip only an instance outside the viewport or on a layer that
+  is not interactive. So a button that is hidden to switch it off still
+  works. Add *Is visible* to its event, or turn its layer off with *Set
+  layer interactive*. Disabled collisions make an instance fail overlap and
+  collision tests, but not these conditions. [runtime: exported c3runtime.js
   r504, those conditions call `TestAndSelectCanvasPointOverlap`, which tests
   the layer's `IsSelfAndParentsInteractive`, `IsInViewport2` and
   `ContainsPoint`; manual: project-primitives/layers.md "Initially
@@ -92,12 +96,13 @@ Sources and the rule for adding an entry are in the index,
 - Touch *On touched object*, *On tap object* and Mouse *On object clicked*
   pick every instance under the pointer, not the one in front. So when
   popups, menus or buttons overlap, a click or tap on the front one also
-  runs the event for each instance behind it: the press goes through. Add
-  the button's own *Pick top/bottom* (top) as a second condition of the
-  trigger's event: it keeps the front instance, counting layers first and
-  then Z order, so it works across popup layers too. It compares instances of
-  one object type, so buttons made of several types go into a family and the
-  event uses the family. [manual: plugin-reference/common-features/common-conditions.md
+  runs the event for each instance behind it. Add the button's own *Pick
+  top/bottom* (top) as a second condition of the trigger's event. It keeps
+  the front instance, by layer first and then by Z order, so it works
+  across popup layers too. It compares instances of one object type only.
+  So if the buttons are of several types, put them in a family and use the
+  family in the event. [manual:
+  plugin-reference/common-features/common-conditions.md
   "Pick top/bottom"; runtime: the `TestAndSelectCanvasPointOverlap` of the
   entry above selects each instance that contains the point]
 - A popup turns the layer under it off with *Set layer interactive* while
@@ -105,14 +110,14 @@ Sources and the rule for adding an entry are in the index,
   same input, and each *On tap object* tests its object's layer as it
   runs. So if the close event turns the layer under the popup on again in
   its own action list, a later *On tap object* event of a button under
-  the popup fires on the same tap: the press goes through. Put *Wait 0*
-  before *Set layer interactive*, so the layer turns on in the next tick,
-  after every event of that tap has run. The wait protects only the events
-  of the same trigger. A close on *On touched object* runs at the press,
-  and a button's *On tap object* under it fires at the release, ticks
-  later, when the layer is on again. So give the close and the buttons
-  one trigger, *On tap object* for both. The button's event above the
-  close event in the same sheet does not fire on that tap either. [manual:
+  the popup fires on the same tap. Put *Wait 0* before *Set layer
+  interactive*, so the layer turns on in the next tick, after every event
+  of that tap has run. The wait protects only the events of the same
+  trigger. A close on *On touched object* runs at the press. But the *On
+  tap object* of a button under it fires at the release, ticks later, when
+  the layer is on again. So give the close and the buttons one trigger,
+  *On tap object* for both. A button's event above the close event in the
+  same sheet does not fire on that tap either. [manual:
   project-primitives/events/how-events-work.md "Events run top to bottom";
   runtime: exported c3runtime.js r504, the `TestAndSelectCanvasPointOverlap`
   of the entry on invisible instances above tests the layer as the
@@ -123,15 +128,16 @@ Sources and the rule for adding an entry are in the index,
   alone, and so with the lower button's event above the close event. With
   the close on *On touched object* and *Wait 0*, the lower button's *On
   tap object* counted and its *On touched object* did not]
-- Drag & Drop starts one drag per press, on the front instance under the
-  pointer: the one on the highest layer, then the one highest in Z order on
-  that layer. It considers only instances whose behavior is enabled and
-  whose layer is interactive, of every object type that has the behavior. It
-  ignores visibility, of the instance and of its layer. A popup without
-  Drag & Drop takes no part, so the pieces under it can still be dragged, and
-  a hidden piece or a piece on a hidden layer is dragged too. To stop drags
-  while a popup shows, turn the pieces' layer off with
-  *Set layer interactive*, or the behavior with *Set enabled*. [runtime:
+- Drag & Drop starts one drag for each press, on the front instance under
+  the pointer. That is the instance on the highest layer, and on that
+  layer the one highest in Z order. It considers the instances of every
+  object type that has the behavior, but only those whose behavior is
+  enabled and whose layer is interactive. It ignores the visibility of the
+  instance and of its layer. A popup without Drag & Drop takes no part in
+  this choice, so the player can still drag the pieces under it. The
+  player can also drag a hidden piece or a piece on a hidden layer. To
+  stop drags while a popup shows, turn the pieces' layer off with *Set
+  layer interactive*, or the behavior with *Set enabled*. [runtime:
   exported c3runtime.js r504, `Behaviors.DragnDrop` `_OnInputDown` skips an
   instance whose behavior is disabled or whose layer fails
   `IsSelfAndParentsInteractive`, then keeps the instance with the highest
@@ -140,13 +146,14 @@ Sources and the rule for adding an entry are in the index,
   layer's dragged, also with that layer hidden and with that instance
   hidden, and the lower one dragged once the upper layer was not interactive;
   of two on one layer, the higher in Z dragged]
-- A touch's speed, from `Touch.SpeedAt`, `Touch.SpeedForID` or *Compare
-  touch speed*, is the distance between the last two pointer moves divided by
-  the time between them. Once the finger has been still for about 50 ms, the
-  speed reads 0. The release adds no move. So in *On any touch end* the speed
-  is that of the last move if the finger lifts while it moves, and 0 if it
-  stopped first: a flick test there passes only for a release made in
-  motion. [runtime: exported c3runtime.js r504, `Plugins.Touch.TouchInfo`
+- `Touch.SpeedAt`, `Touch.SpeedForID` and *Compare touch speed* read the
+  speed of a touch. It is the distance between the last two pointer moves
+  divided by the time between them. Once the finger has been still for
+  about 50 ms, the speed reads 0. The release adds no move. So in *On any
+  touch end*, the speed is that of the last move if the finger lifts while
+  it moves. If the finger stopped first, the speed is 0. A flick test in
+  that trigger therefore passes only for a release made in motion.
+  [runtime: exported c3runtime.js r504, `Plugins.Touch.TouchInfo`
   `GetSpeed`; `Plugins.Touch.Instance` `_OnTick2` sets a touch's last time
   to the present once it has not moved for 50 ms, which makes the speed 0,
   and `_OnPointerUp` records no position; observed in a minimal project, r504
@@ -161,10 +168,11 @@ Sources and the rule for adding an entry are in the index,
   must be continually true]
 - Platform's *Simulate control* Jump jumps from the floor only, or in the
   air as the one extra jump that *Double jump* allows. Pressed in the air
-  with *Double jump* off, it does nothing. A jump from the air, such as a
-  coyote-time jump just after walking off a ledge, is *Set vector Y* to
-  `-Self.Platform.JumpStrength`. *On jump* does not fire for it, so that
-  event also runs what *On jump* would run. [manual:
+  with *Double jump* off, it does nothing. For a jump from the air, such
+  as a coyote-time jump just after the player walks off a ledge, use *Set
+  vector Y* to `-Self.Platform.JumpStrength`. *On jump* does not fire for
+  this jump, so give that event the actions that *On jump* would run as
+  well. [manual:
   behavior-reference/platform.md "Double jump"; observed in a probe
   project, r495.2 preview at 60 and 144 Hz, 2026-10-08: *Simulate control*
   Jump pressed 7 to 208 ms after walking off a ledge never jumped, and
@@ -172,80 +180,86 @@ Sources and the rule for adding an entry are in the index,
 - *Default controls* is a property of each instance, and every instance
   with it on moves with the arrow keys. A crate given Platform to be pushed,
   or an enemy given 8 Direction, has it on by default and walks with the
-  player. Turn it off on every instance the player does not steer, in each
-  layout: `"default-controls": false` in the instance's behavior
+  player. In each layout, turn it off on every instance that the player
+  does not steer: `"default-controls": false` in the instance's behavior
   properties. Move those objects with *Simulate control*. The
   `construct3-agent-plugin` skill's `check_project.py` warns when instances
   of two object types in one layout have it on. [manual:
   behavior-reference/platform.md, 8-direction.md, car.md and
   tile-movement.md "Default controls"]
 - A game that moves with W, A, S and D alone is hard to control on an AZERTY
-  keyboard. There those letters sit elsewhere and ZQSD takes their place.
-  Give every direction its arrow key too, in an OR block with the letter or
-  in its own event. The arrow keys work on most keyboard layouts. The same
-  holds for any control chosen for where its key sits. The 8 Direction,
-  Platform and Car behaviors move with the arrow keys while *Default
-  controls* is on. A project that turns it off to simulate controls from
-  letters adds the arrows itself.
+  keyboard. On that keyboard, those letters sit elsewhere, and ZQSD takes
+  their place. Give every direction its arrow key too, because the arrow
+  keys work on most keyboard layouts. Put the arrow key in an OR block
+  with the letter or in an event of its own. The same holds for any
+  control chosen for where its key sits. The 8 Direction, Platform and Car
+  behaviors move with the arrow keys while *Default controls* is on. If a
+  project turns it off to simulate controls from letters, add the arrow
+  keys in the project's own events.
   [manual: plugin-reference/keyboard.md, the note on keyboard
   layouts; behavior-reference/8-direction.md, platform.md and car.md "Default
   controls"; example: detecting-input-method, `Game events` 5 to 8: each
   direction an OR block of its arrow key and its letter, simulating 8
   Direction]
-- These actions ask the browser for something it grants only just after the
-  player touches, clicks or presses a key: *Request fullscreen*, *Request
-  install*, *Request permission* (Touch), *Request wake lock*, *Request
-  pointer lock*, *Share*, the clipboard's paste requests, the File chooser's
-  *Click*, the File System pickers, a Bluetooth device request, screen
-  recording, speech recognition and Google Play *Sign in*. In *On start of
-  layout* or on a timer the browser refuses *Request fullscreen*, and *On
-  fullscreen error* fires. Put each in an event with an *On tap*, *On click*,
-  *On key pressed* or form control trigger, such as a fullscreen button, or in
-  a function such an event calls. The `construct3-agent-plugin` skill's
-  `check_project.py` warns if one has no touch, mouse, keyboard or form
-  control condition in its event or above it. *Request MIDI access* is the
-  exception. Some browsers allow it on startup, so the MIDI examples ask there
-  and offer a button for a second try. [manual: plugin-reference/browser.md
+- Some actions ask the browser for something that it grants only just
+  after the player touches, clicks or presses a key. These actions are
+  *Request fullscreen*, *Request install*, *Request permission* (Touch),
+  *Request wake lock*, *Request pointer lock*, *Share*, the clipboard's
+  paste requests, the File chooser's *Click*, the File System pickers, a
+  Bluetooth device request, screen recording, speech recognition and
+  Google Play *Sign in*. In *On start of layout* or on a timer, the
+  browser refuses *Request fullscreen*, and *On fullscreen error* fires.
+  Put each action in an event with an *On tap*, *On click*, *On key
+  pressed* or form control trigger, such as a fullscreen button. A
+  function that such an event calls works too. The
+  `construct3-agent-plugin` skill's `check_project.py` warns if one has no
+  touch, mouse, keyboard or form control condition in its event or above
+  it. *Request MIDI access* is the exception. Some browsers allow it on
+  startup, so the MIDI examples ask there and offer a button for a second
+  try. [manual: plugin-reference/browser.md
   "Request fullscreen", "On fullscreen error", "Request install"; touch.md
   "Request permission"; platform-info.md "Request wake lock"; mouse.md
   "Request pointer lock"; share.md; clipboard.md; file-chooser.md "Click";
   filesystem.md; bluetooth.md; bbc-micro-bit.md; video-recorder.md;
   speech-recognition.md; google-play.md "Sign in"; midi.md; example:
   midi-input, event 2]
-- Keyboard and Gamepad have separate conditions, so a game that takes both
+- Keyboard and Gamepad have separate conditions. So a game that takes both
   writes every input event twice, and a menu that tests *On key pressed*
-  misses the gamepad. Route both through one input object: an invisible
-  sprite, or globals, with a number per control (up, down, left, right,
-  confirm, cancel) and a copy of each from the last tick. At the top of the
-  sheet, every tick, copy each control into its last value and set it to 0.
-  Then a Keyboard group and a Gamepad group set a control to 1 while its
-  key, button or stick past the dead zone is down. Every consumer tests a
-  press as `confirm > lastConfirm`, a hold as `confirm = 1` and a release as
-  `confirm < lastConfirm`, and a touch layer added later writes the same
-  numbers. The copy and the clear come before the groups that write, so a
-  consumer anywhere below them reads this tick's state. [observation in a
+  misses the gamepad. Route both through one input object, either an
+  invisible sprite or globals. It holds a number for each control (up,
+  down, left, right, confirm, cancel) and a copy of each from the last
+  tick. At the top of the sheet, every tick, copy each control into its
+  last value and set it to 0. Then a Keyboard group and a Gamepad group
+  set a control to 1 while its key or button is down or its stick is past
+  the dead zone. Every consumer tests a press as `confirm > lastConfirm`,
+  a hold as `confirm = 1` and a release as `confirm < lastConfirm`. A
+  touch layer added later writes the same numbers. The copy and the clear
+  come before the groups that write, so a consumer anywhere below them
+  reads this tick's state. [observation in a
   studied project, 2026-10-06]
-- A tap on the screen, a tap anywhere, is Touch *On any touch start*, which
-  fires for a touch wherever it lands. *On touched object* fires only for a
-  touch that starts inside the object, so an invisible Sprite laid out as the
-  tap area misses every tap outside its box: one built 397 px square in a
-  corner of a 720×1280 layout counted the taps in that corner and none in
-  the middle. Use *On any touch start* with no object, and `Touch.X` and
-  `Touch.Y` where the rule reads where the tap landed. [manual:
+- Touch *On any touch start* detects a tap anywhere on the screen, because
+  it fires for a touch wherever it lands. *On touched object* fires only
+  for a touch that starts inside the object. So an invisible Sprite laid
+  out as the tap area misses every tap outside its box. For example, one
+  built 397 px square in a corner of a 720×1280 layout counted the taps in
+  that corner and none in the middle. Use *On any touch start* with no
+  object. If the rule needs the place where the tap landed, read `Touch.X`
+  and `Touch.Y`. [manual:
   plugin-reference/touch.md "On any touch start", "On touched object";
   observed in a generated project, editor preview, 2026-10-09]
-- A popup closed by a tap on its dim, Touch *On touched object* with the
-  dim, closes only where the dim reaches. Under *Scale outer* the viewport
-  grows with the window's aspect ratio, so a dim sized to the design area
-  leaves strips at the sides of a wide window or above and below a tall one.
-  There the game shows through and a tap closes nothing. Size a full-screen
-  cover far past any aspect ratio, such as 8000×8000 around the centre of
-  the design area. A Sprite does this without a layer of its own texture,
-  which a layer background faded by layer opacity needs. Test the tap
-  against the panel instead of the cover: *On any touch start* and *NOT Is
-  touching object* for the panel and for each of its buttons, in a group
-  that is active only while the popup is open. Then the cover only draws,
-  and its size decides nothing about input. [manual:
+- A popup that closes on Touch *On touched object* with its dim closes
+  only where the dim reaches. Under *Scale outer*, the viewport grows with
+  the aspect ratio of the window. So a dim sized to the design area leaves
+  strips at the sides of a wide window, or above and below a tall one. In
+  these strips the game is visible, and a tap closes nothing. Size a
+  full-screen cover far past any aspect ratio, such as 8000×8000 around
+  the centre of the design area. A Sprite cover does this without a layer
+  that has its own texture. A layer background faded by layer opacity
+  needs such a layer. Test the tap against the panel instead of the
+  cover. Use *On any touch start* and *NOT Is touching object* for the
+  panel and for each of its buttons, in a group that is active only while
+  the popup is open. Then the cover only draws, and its size has no effect
+  on input. [manual:
   system-reference/system-expressions.md "OriginalViewportWidth", the
   viewport size that *Scale outer* changes with the screen;
   interface/debugger/gpu-profile-tab.md, the cost of a layer's own

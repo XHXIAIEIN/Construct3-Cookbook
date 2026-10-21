@@ -2,11 +2,12 @@
 
     python scripts/check.py
 
-A link resolves when its file or folder exists beside the linking file and,
-when it carries a #fragment, the target Markdown file has a heading with that
-GitHub slug. The pitfalls index gives every group one conclusion line per
-entry of the topic file it links, and every entry ends with its source.
-Exits 1 and prints each problem when there is one.
+A link resolves when its file or folder exists beside the linking file. If
+the link carries a #fragment, the target Markdown file must also have a
+heading with that GitHub slug. In the pitfalls index, every group has one
+conclusion line per entry of the topic file that it links, and every entry
+ends with its source. If the check finds a problem, it prints each problem
+and exits with 1.
 """
 import re
 import sys

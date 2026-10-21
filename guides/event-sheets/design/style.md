@@ -1,26 +1,27 @@
 # Construct 3 Event Sheet — Authoring Style
 
-Read this after the design, before events go into a project or a
-generator. It shows how the official examples
+Read this guide after you design the events and before they go into a
+project or a generator. It shows how the official examples
 (`Construct-Example-Projects`, the games by Viridino and Forsteri Studios)
 organise, name and comment a sheet. If the user's sheet has conventions of
-its own, follow those. If a rule here differs from what an example does, or
-a style check's threshold is in question, read
+its own, follow them. If a rule here differs from what an example does, or
+if the threshold of a style check is in question, read
 `docs/decisions/event-sheet-design-guidance.md`.
 
 ## Seven habits to avoid
 
-In a project the agent wrote, `check_project.py --style` reports the last
-five. `edit_sheet.py` refuses a plan that adds the long block, the
-uncommented cases or the extra Every tick, since one comment or one
-deleted condition fixes each. It warns on the decision tree and the
-repeated event. No check detects the state globals or the migration
-leftovers; only this file covers them. To fix a warning, change the events
-to the right column's shape, not just enough to silence it.
+In a project that the agent wrote, `check_project.py --style` reports the
+last five habits in the table. `edit_sheet.py` refuses a plan that adds
+the long block, the uncommented cases or the extra Every tick, because one
+comment or one deleted condition fixes each of them. It warns on the
+decision tree and the repeated event. No check detects the state globals
+or the migration leftovers, so only this file covers them. To fix a
+warning, rebuild the events in the shape of the right column instead of
+changing only enough to silence the warning.
 
 | Habit | The examples instead |
 |-------|----------------------|
-| State globals piled at the top of the sheet: `touchSX`, `foodX`, `tailUID`, `nextX` | Only what several groups read is global. State one group alone uses is declared first in it: a static local if it lasts between ticks (`touchStartX` in `Player Controls`), a plain local if it is recomputed each tick. A value one event computes and reads is that event's local, set in an unconditioned sub-event. An instance's property is its instance variable (`dir` on the head), not a global. A link to an instance is *Pick children* or a condition, not a stored UID |
+| State globals piled at the top of the sheet: `touchSX`, `foodX`, `tailUID`, `nextX` | Only what several groups read is global. State that only one group uses is declared first in that group: a static local if it lasts between ticks (`touchStartX` in `Player Controls`), a plain local if it is recomputed each tick. A value one event computes and reads is that event's local, set in an unconditioned sub-event. An instance's property is its instance variable (`dir` on the head), not a global. A link to an instance is *Pick children* or a condition, not a stored UID |
 | Construct 2 leftovers after a migration: the Function plugin with `Function.Param(n)`, a globals plugin whose instances hold variables beside the sheet's globals, Dictionaries used as namespaces for them, hex colours decoded by hand with `find`, a script block for what an action does, such as the framerate mode | Built-in functions with named, typed parameters, and a function map for a call by a string ([pitfalls: Functions](../pitfalls/functions.md)); one `Globals` sheet for what several sheets read; a Dictionary or JSON per record; colours as `HexColor("#RRGGBB")`, or `rgbEx255` when the channels are computed, written in data as a hex string or three numbers from 0 to 255 ([pitfalls: Rendering](../pitfalls/rendering.md)); System *Set framerate mode* |
 | A long block of 20 actions without a comment action | A comment action every three to five actions: `Clear the board`, `Create the head`, `Show the start panel`. The block stays one block |
 | A decision as a tree three sub-events deep, one function call per leaf | One gate event with the shared conditions, then the cases as flat sibling sub-events with a comment each. `Else` with conditions is the else-if. If the outcomes differ only by a number, one expression: `(round(angle(x0, y0, Touch.X, Touch.Y) / 90) % 4 + 4) % 4` |
@@ -64,15 +65,17 @@ Here is a sheet as `print_sheet.py` prints it.
    8   custom action Coin.Collect()
 ```
 
-Constants go under `Settings`, shared state under `Gameplay variables`,
-then one group per subsystem in play order (`Setup`, `Tutorial`, `Player`,
-`Enemies`, `Camera`, `HUD`, `Game Over`, `Restart`). Every event is in a
-group, with a comment above it. A group holds its variables, then its
-functions and custom actions, then its events. A trigger has its filter
-conditions in the same block and its branches in sub-events, one comment
-each. Two levels of sub-events cover almost every event in the examples.
+Constants go under `Settings` and shared state under `Gameplay variables`.
+Then comes one group per subsystem, in play order (`Setup`, `Tutorial`,
+`Player`, `Enemies`, `Camera`, `HUD`, `Game Over`, `Restart`). Every event
+is in a group, with a comment above it. A group holds its variables, then
+its functions and custom actions, then its events. A trigger has its
+filter conditions in the same block and its branches in sub-events, with
+one comment for each branch. Two levels of sub-events cover almost every
+event in the examples.
 
-To see these conventions in a whole sheet before writing, print an example:
+To see these conventions in a whole sheet before you write, print an
+example:
 
 ```bash
 python <Construct3-Agent-Skills>/plugin/skills/construct3-agent-plugin/scripts/print_sheet.py --project <Construct-Example-Projects>/example-projects/samuroof Game
@@ -82,15 +85,15 @@ python <Construct3-Agent-Skills>/plugin/skills/construct3-agent-plugin/scripts/p
 
 ## Comments
 
-The examples' comments are one sentence of eight words at the median and
-eighteen at the ninetieth percentile. One in forty has a second sentence.
-A comment names the things of the game (the player, the wall, the trail),
-never the ACE: `Turn the player left`, not `Set angle to Self.Angle - 90`
-or `Set score to 0`. It never holds a `TODO`, a change history, how the
-author got there, `#`, colours or BBCode. Write comments in the user's
-language. End
-every comment and description without a period, even where the examples
-put one. Keep the period between two sentences.
+In the examples, a comment is one sentence: eight words at the median and
+eighteen words at the ninetieth percentile. One comment in forty has a
+second sentence. A comment names the things of the game (the player, the
+wall, the trail), never the ACE: `Turn the player left`, not
+`Set angle to Self.Angle - 90` or `Set score to 0`. A comment never holds
+a `TODO`, a change history, how the author got there, `#`, colours or
+BBCode. Write comments in the user's language. End every comment and
+description without a period, even where the examples put one. Keep the
+period between two sentences.
 
 | Above | Frame | From the examples |
 |-------|-------|-------------------|
@@ -104,9 +107,9 @@ put one. Keep the period between two sentences.
 | A section of globals or of inputs | A noun | `Settings` `Gameplay variables` `Keyboard inputs` |
 | The sheet | One line on what it covers | `This is the main gameplay event sheet. Each game component has a dedicated event sheet` |
 
-A function's or custom action's description is the sentence of the
-comment above it: in the shape above, `Coin.Collect()` has the description
-`Shrink the coin away and score it`.
+The description of a function or a custom action is the same sentence
+as the comment above it. In the shape above, `Coin.Collect()` has the
+description `Shrink the coin away and score it`.
 
 ## Names
 
@@ -119,7 +122,7 @@ comment above it: in the shape above, `Coin.Collect()` has the description
 | Function | camelCase, verb first | `spawnEnemy`, `computeLighting`, `gameOver` |
 | Custom action | A verb phrase with spaces, on the object it acts on, in that object's group | `Create trail`, `Teleport to Node`, `Die` |
 | Function parameter | A word that is clear alone in an expression (`Self.X + OffsetX`), so `posX`, not `x`. The examples use camelCase and PascalCase equally | `PositionX`, `Duration`, `volumeTweak`, `enemyUid` |
-| Timer or Tween tag | PascalCase, verb and noun. A timer that stands for a state is named after it and tested with *Is timer running* | `ShowFader`, `TeleportCooldown`; `dashing`, `dashCooldown` |
+| Timer or Tween tag | PascalCase, verb and noun. A timer that stands for a state is named after the state and tested with *Is timer running* | `ShowFader`, `TeleportCooldown`; `dashing`, `dashCooldown` |
 | Animation | PascalCase, one animation per kind if one type stands for several | `Idle`, `Walk`, `Walking0`; `Treasures`, `Pathfinder` |
 | Group | Title Case with spaces, description empty | `Player Controls`, `Sort Z-Order` |
 | Layout, layer, sheet | PascalCase | `MainMenu`, `ObjectRepository`, `HUD`, `GameEvents` |
@@ -140,12 +143,12 @@ and how the examples build their objects.
 UI text is sentence case and imperative, and names the key:
 `Press Space to start`, `[Arrows]: select | [Space]: confirm`. Outcomes are
 short and end with `!`: `Game over!`, `You were caught!`. Result banners
-are in capitals: `YOU WIN`. HUD labels are `"Score: " & score`. The text
-is in the Text object with a `###` placeholder, filled by
-`replace(Self.Text, "###", value)` and coloured with BBCode.
+are in capitals: `YOU WIN`. HUD labels are `"Score: " & score`. The Text
+object holds the text with a `###` placeholder. Events fill it with
+`replace(Self.Text, "###", value)` and colour it with BBCode.
 
 If events build a text from two or more values, write one `StringSub`
-template, not a chain of `&`:
+template instead of a chain of `&`:
 `StringSub("X = {0}    Y = {1}", round(Box.X), round(Box.Y))`. If the text
 breaks a line, pass `newline` as a value:
 `StringSub("Level {0}{1}Score: {2}", level, newline, score)`. The examples
