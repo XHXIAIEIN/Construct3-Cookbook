@@ -6,11 +6,6 @@ Construct3-Cookbook 是 [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/C
 
 ## 安装
 
-### 前提条件
-
-- Git
-- Construct3-Agent-Skills 或 Construct3-RAG 的克隆
-
 ### 克隆仓库
 
 将本仓库克隆到名为 `Construct3-Cookbook` 的文件夹，并与 Construct3-Agent-Skills 或 Construct3-RAG 的克隆放在同一目录下。放在此位置时，skill 无需额外配置即可找到它。

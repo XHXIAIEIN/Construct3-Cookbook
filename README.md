@@ -6,11 +6,6 @@ Construct3-Cookbook is the companion guide collection for [Construct3-Agent-Skil
 
 ## Installation
 
-### Prerequisites
-
-- Git
-- A clone of Construct3-Agent-Skills or Construct3-RAG
-
 ### Clone the repository
 
 Clone this repository into a folder named `Construct3-Cookbook` next to your Construct3-Agent-Skills or Construct3-RAG clone. The skill finds a clone in this location without further configuration.
