@@ -144,6 +144,13 @@ and the reels hold no effect between them:
   frame difference, and the area that differs from a background plate.
   The four counts and the ratio above then follow from the frames.
   [inferred]
+- Record at least as fast as the shortest part. The counts are frames of
+  the recording, so a recording at half the game's rate halves every part
+  and rounds each half on its own: one impact, rendered at 60 fps and then
+  at 30, reads 7 / 2 / 5 and then 4 / 1 / 2, and its ratio drifts from
+  1.40 to 2.00. A charge's longer parts survive the halving, 28 / 6
+  reading 14 / 3. A recorder that writes 30 fps can check a charge but not
+  an impact's ratio. [derived]
 - Leave out a title card. A reel that opens on a white card shows a
   brightness jump at the cut, and a measure that reads the whole clip
   takes that cut for the effect's peak. Start the measure after the cut.
