@@ -29,6 +29,7 @@ of one date by file name. `scripts/check.py` fails when a record has no
 line, a line has no record, or the order differs, and prints the expected
 lines.
 
+- [Effect Timing Counts Read from Recorded Frames](vfx-timing.md) — 2026-10-22
 - [The Guides Are Named by Construct's Own Ids, Categories and Manual Pages](guides-layout.md) — 2026-10-21
 - [Design and Style Prompts Keep What Every Task Reads](prompt-references-by-task.md) — 2026-09-30
 - [The Pitfalls Are an Index of Conclusion Lines over Their Pages](pitfalls-index-and-topics.md) — 2026-09-29

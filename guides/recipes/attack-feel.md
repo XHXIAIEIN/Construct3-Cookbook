@@ -5,7 +5,8 @@ hit effect land on the same moments. This file gives the numbers for each
 of them and the Construct way to build each. It applies to an action game
 in which a click-to-attack hero makes a melee swing or a ranged shot. For
 the general effects (shake, hit stop, squash), read [feel.md](feel.md).
-For the loudness and the mix, read [sound.md](sound.md).
+For the loudness and the mix, read [sound.md](sound.md). For the frame
+counts inside the hit effect itself, read [vfx-timing.md](vfx-timing.md).
 
 The numbers come from the study of one published action game. Each rule
 ends with the kind of its evidence:
@@ -198,6 +199,10 @@ the schemas. Unless the rule says so, no preview has played it.
   - A slash or impact shape of 0.2 s that grows to 4 and then 8 times its
     size as it fades.
   - Optional sparks of 0.3 to 0.45 s that fly outwards.
+- Divide that length into a rise, a peak, a fall and an ember, and keep
+  the fall the longest part. [vfx-timing.md](vfx-timing.md) gives the
+  frame counts of the four parts and the ratio that separates an impact
+  from a charge.
 - Make each layer a Sprite with Tween (one property) on *Size* and on
   *Opacity*. Set *Destroy on complete* on the longer of the two tweens.
   [inferred]
