@@ -60,8 +60,16 @@ Construct-Example-Projects, 2026-09-18]
   these as `PALETTE` and `rgb()`, the colour check of `write_png()`, `FONT`
   and `TEXT_SIZE`, the contrast check of `hud_text()`, `PIXEL_ART` and
   `FULLSCREEN`.
-- Until the art arrives, a generated game is paper and ink: flat shapes on
-  a white paper that fills the screen, without shadows, cards or panels.
+- The look that the user gives comes first: a style, an art direction, or
+  references or an existing project to take it from. The generator template
+  names where it comes from in `USER_LOOK`, and `PALETTE` and `ART_STYLE`
+  follow it. Contrast, the grid and clean edges hold in every look. Paper
+  and ink, the colours, type and pointer of the next three items, and the
+  checks of its taste hold only when the user gives no look
+  (`docs/decisions/paper-and-ink-is-the-fallback.md`).
+- When the user gives no look, a generated game is paper and ink until its
+  art arrives: flat shapes on a white paper that fills the screen, without
+  shadows, cards or panels.
   Lightness shows the hierarchy. The player is the one solid mass of ink,
   and structure is the faintest thing on the screen. Electric blue marks
   what is collected, and deep orange marks what hurts. Both are
