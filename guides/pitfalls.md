@@ -174,7 +174,8 @@ If the events use a System condition, action or expression, read [plugins/system
 - With an empty template name, *Create object* copies the first instance of the type in the first layout of the project that holds one. So it never reads a template instance in a later layout. Mark that instance as a template, and name it in *Create object*.
 - *Create hierarchy* creates the children on the layer of the created parent, whatever layers the template's children sit on. Move a child to its own layer after the creation.
 - If only events create an object, it loads its images at creation and draws nothing until they arrive. So a screen-sized picture shows late. Call *Load object images* for it in *On start of layout*.
-- *Restart layout* and *Go to layout* keep every global variable and static local at its current value.
+- *Restart layout* and *Go to layout* keep every global variable, every static local and the time scale at its current value. So a restart from a pause leaves the game frozen. Run *Set time scale* 1 under *On start of layout*.
+- *Go to layout (by name)* with a name that no layout has does nothing and raises no error. Open only the layouts that exist, and lock or hide the buttons for the others.
 
 ### Common to all objects
 
@@ -274,6 +275,14 @@ If the events use JSON, read [plugins/json.md](plugins/json.md).
 If the events use Keyboard, read [plugins/keyboard.md](plugins/keyboard.md).
 
 - W, A, S and D alone do not fit an AZERTY keyboard. Give each direction its arrow key too.
+
+### Local Storage
+
+If the events use Local Storage, read [plugins/localstorage.md](plugins/localstorage.md).
+
+- A read's trigger runs in the sheet of the layout that is running when the read completes. So leaving the layout first loses the read, and a later write from memory overwrites the save. Read the save in a first layout, or test `NOT Is processing gets` and `NOT Is processing sets` on the inputs.
+- A failed write fires *On error*, not *On item set*. Handle *On error*, and leave the layout there too.
+- Keep the whole save in one Dictionary or JSON object with a `version` key, under one key. Read it once at the start, load defaults in *On item missing*, and leave the layout in *On item set*.
 
 ### Mouse
 
@@ -381,6 +390,13 @@ If the events use Drag & Drop, read [behaviors/dragndrop.md](behaviors/dragndrop
 If the events use Follow, read [behaviors/follow.md](behaviors/follow.md).
 
 - Follow replays the target's path after a delay. Use it for a trailing companion, not a chasing enemy.
+
+### Pathfinding
+
+If the events use Pathfinding, read [behaviors/pathfinding.md](behaviors/pathfinding.md).
+
+- *Find path* fails when a gap is narrower than the cell size, though Line of Sight sees through it, and the object stops. Handle *On failed to find path*, or an enemy that chases on sight stands still for good.
+- A *Find path* during a calculation still fires the old path's triggers, and the object moves on along its old path. Add `NOT Is calculating path` to *On arrived*, and run *Find path* at once when a chase starts.
 
 ### Platform
 

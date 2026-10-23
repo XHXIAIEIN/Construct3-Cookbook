@@ -21,7 +21,8 @@ Sources and the rule for adding an entry are in the index,
     position about every second, and run *Move along path* in *On path
     found*. The behavior calculates the path in the background, so the path
     is not ready in the tick of *Find path*. A *Find path* in every tick
-    costs a lot of CPU.
+    costs a lot of CPU. *Find path* can fail, and a new one does not cancel
+    the one being calculated (see [Pathfinding](../behaviors/pathfinding.md)).
   - Keep 8 Direction only if the enemy must move like the player. Then, in
     each tick, compare the positions and *Simulate control* left or right
     and up or down.

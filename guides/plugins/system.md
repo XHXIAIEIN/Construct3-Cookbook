@@ -313,8 +313,28 @@ Sources and the rule for adding an entry are in the index,
   the game starts over, run *Reset global variables*, and *Reset static*
   for static locals. A countdown works better as a Timer on an object of
   the layout, started under *On start of layout*. The restart recreates the
-  object with no timer running, so nothing is left to set back. [manual:
+  object with no timer running, so nothing is left to set back. The time
+  scale is kept too, because only *Set time scale* changes it. So a restart
+  from a pause menu at time scale 0 starts a layout in which nothing moves
+  and no timer runs, with no error. Run *Set time scale* 1 under *On start
+  of layout* in every layout that a paused game can go to. [manual:
   system-reference/system-actions.md "Restart layout", "Go to layout",
   "Reset global variables"; project-primitives/events/variables.md "Static
   and constant variables"; behavior-reference/timer.md; observed in preview,
-  2026-09-28]
+  2026-09-28; runtime: r506.3 `preview/runtime.js`, `_timeScale` is set
+  only at start, by `SetTimeScale` and when a savegame loads; observed in a
+  test project, r506.3 preview, 2026-10-24: without *Set time scale* 1 under
+  *On start of layout*, *Restart layout* at time scale 0 left the time
+  scale at 0, the countdown at 60 and the player unable to move]
+
+- *Go to layout (by name)* with a name that no layout has does nothing. It
+  raises no error and leaves the current layout running, so a mistyped name
+  or a level button whose layout is not made yet looks like a dead button.
+  The name is compared without case. Open only the layouts that exist: give
+  a level button its layout name, and lock or hide the buttons past the last
+  layout that the project has. [manual: system-reference/system-actions.md
+  "Go to layout (by name)"; runtime: r506.3
+  `plugins/system/c3runtime/runtime.js`, `GoToLayoutByName` changes the
+  layout only if `GetLayoutByName` finds one, and
+  `preview/layouts/layoutManager.js` looks the name up in lower case; read
+  from source, not observed]
