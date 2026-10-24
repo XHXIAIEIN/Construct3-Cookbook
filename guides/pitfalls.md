@@ -155,6 +155,7 @@ If the events use a System condition, action or expression, read [plugins/system
 - A *Wait* delays only the rest of its own block and its sub-events. Sibling events run at once.
 - A *Wait* with *Use time scale* on never ends while the time scale is 0.
 - *Wait 0* resumes at the start of the next tick, not at the end of the event or sheet. Use it only if a trigger fires before the tick applies what the trigger reports, or if no later event or trigger can pick what a trigger created.
+- *Signal* resumes only the *Wait for signal* actions already waiting. A wait that starts after its *Signal* misses it: a *Signal* earlier in the same action list, in the parent event, or in a function called first that signals at once. Start the wait first, and run the *Signal* in a later event or trigger, or after a *Wait* in the function.
 - *Set time scale* 0 stops animations too. To keep one animation playing through a pause (an ultimate, a cutscene), run *Set object time scale* 1 on its object. Restore both time scales in the Sprite's *On finished*.
 - For a hit stop, run *Set time scale* 0.1, then *Wait*, then *Set time scale* 1. For a smooth ramp, use a value tween.
 - If two *Wait* hit stops overlap, the shorter one ends both. Count the hit stops in progress, and restore the time scale when the count returns to 0. Do not restore it at a `wallclocktime` deadline, because that runs on another clock and leaves the game slowed.

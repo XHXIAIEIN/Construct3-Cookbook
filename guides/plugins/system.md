@@ -85,6 +85,35 @@ Sources and the rule for adding an entry are in the index,
   construct-2/general-discussion-17/wait-59374; *Wait for previous actions*
   "always runs at the end of the tick", Scirra/Construct-bugs#3948]
 
+- *Signal* resumes only the *Wait for signal* actions that are already
+  waiting, and it keeps nothing for a later one. So a *Wait for signal*
+  that starts after its *Signal* misses it. This happens when the *Signal*
+  runs earlier in the same action list or in the parent event. It also
+  happens in a function called first that runs the *Signal* before any
+  *Wait* of its own. After a trigger that runs once, such as *On start of
+  layout*, the actions after the wait never run. In an event that runs
+  again, such as *Every 0.5 seconds*, each run's *Signal* resumes the wait
+  of the previous run. So the actions after the wait run only when the
+  event runs the next time. Start the wait first. Then run the *Signal*
+  where the waited step ends: in a later event or trigger, such as an input
+  trigger or *On finished*, or after a *Wait* in the function. If the
+  *Signal* and the wait are in one action list, delete the wait, because
+  nothing is left to wait for.
+  [runtime: r506.3, the System action `WaitForSignal`
+  (`plugins/system/c3runtime/runtime.js`) calls `AddScheduledWait` and
+  `InitSignal` when it runs, and `Signal`
+  (`preview/events/eventSheetManager.js`) marks only the waits in
+  `scheduledWaits()` whose tag matches; manual:
+  system-reference/system-actions.md "Signal": "Resume any events paused
+  with a *Wait for signal* action with the given tag"; observed in a
+  minimal project, r506.3 preview, 2026-10-24: 3 seconds after *On start of
+  layout*, a wait after *Signal* in the same action list, one in a sub-event
+  under a *Signal*, and one after a call to a function that signalled at
+  once had not resumed; a wait signalled from another event 0.5 seconds
+  later, and one after a function that waited 0.2 seconds and then
+  signalled, had resumed; *Every 0.5 seconds* with *Signal* then *Wait for
+  signal* ran 6 times and resumed 5]
+
 - *Set time scale* 0 also stops every animation. So a cutscene, an
   ultimate's full-screen animation or a pause menu's own animation stops
   with the battle. Pause with *Set time scale* 0, then *Set object time
