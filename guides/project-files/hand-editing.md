@@ -27,6 +27,25 @@ edit with the checks at the end of this file.
   it in the same change. Each JSON resource is in its folder
   (`objectTypes/`, `families/`, `layouts/`, `eventSheets/`, `timelines/`,
   `flowcharts/`, `3dmodels/`), under the subfolders that the listing names.
+- An editor that has the folder project open keeps every file as it loaded
+  it. It shows no notice when a file changes on disk, and it never shows
+  the change. *Reload all from folder* (F9) re-reads script files, not
+  event sheets or layouts. A save writes the editor's copy of each resource
+  edited in the editor over any change made to its file on disk. A save
+  with no edit in the editor still writes `project.c3proj` from the
+  editor's copy when the file on disk differs. So a project property set
+  by hand returns to the editor's value. A sheet added by hand loses its
+  entry in the listing, and the editor then ignores its file. Before you
+  change the files, ask the user to save and close the project in the
+  editor. After the change, ask the user to open it again. If the project
+  stayed open during the change, ask the user to close it there without
+  saving. [manual: interface/keyboard-shortcuts.md "F9"; observed in a
+  scratch project on a local disk, r506.3, 2026-10-24: opened with *Open
+  local project folder*; a comment and a layout width written on disk were
+  gone after a save that followed an edit of the same sheet or layout,
+  also after F9; a comment on a sheet that the editor did not edit stayed;
+  a property and an added sheet's entry in `project.c3proj` were gone after
+  a save with no edit in the editor]
 - Images are in `images/`, without subfolders, with names in lower case. A
   frame's file is `<object type>-<animation>-<frame>.png`. The frame number
   counts from 0 and is padded to three digits (`player-default-000.png`).
@@ -97,9 +116,11 @@ saved or from the official examples
   still opens. [observed: the official examples carry none; an event
   sheet and a `project.c3proj` with one opened in the stable editor, October
   2026]
-- A Save of a folder project writes only the files of the resources that
-  were edited. So a hand-written file keeps its form, including keys that
-  the editor would rewrite, until something in it is edited in the editor.
+- A Save of a folder project writes the files of the resources that were
+  edited, and `project.c3proj` when it differs from the editor's copy (see
+  "The project folder"). So any other hand-written file keeps its form,
+  including keys that the editor would rewrite, until something in it is
+  edited in the editor.
   Save as project folder and Download a copy write every file. [observed in
   a game project, r504, October 2026: a Save after opening an unedited
   folder wrote no file; two folder saves rewrote only the edited layout and
