@@ -9,9 +9,10 @@ observation in a game project with its date. If you edit
 `eventSheets/*.json`, `layouts/*.json` or clipboard JSON by hand, read
 [project-files/hand-editing.md](project-files/hand-editing.md) first.
 
-Each group lists one conclusion per pitfall. If the events touch what a
-group names, open its page for the cases and the sources before you write
-the events.
+Each group under Topics lists one conclusion per pitfall. If the events
+touch what a group names, open its page for the cases and the sources
+before you write the events. The groups under Feature pages list only the
+page to open.
 
 ## Topics
 
@@ -193,12 +194,6 @@ If the events use a condition, action or expression that every object has (hiera
 - *Set color* multiplies. Draw a tinted part white, and keep highlights on an untinted child.
 - The instances of a created hierarchy run *On created* in no fixed order. Initialise the hierarchy in *On hierarchy ready* of its root, which fires after all of them have run *On created*.
 
-### 3D model
-
-If the events use 3D model, read [plugins/model3d.md](plugins/model3d.md).
-
-- A 3D model's *Set progress* does nothing while the clip plays or is paused. To restart a clip, *Stop* it, then *Play* it. After *Play* switches clips, *Stop* and `stop()` leave the first clip playing. *Play* cuts in one tick unless *Transition duration* is set. A clip cannot cross into itself, so blended repeats alternate two copies.
-
 ### Advanced Random
 
 If the events use Advanced Random, read [plugins/advancedrandom.md](plugins/advancedrandom.md).
@@ -212,56 +207,11 @@ If the events use Array, read [plugins/arr.md](plugins/arr.md).
 
 - `Array.IndexOf` searches along X only. To find a row, use *For* over `Height` with *Compare at XY* and *Stop loop*. *Stop loop* does not stop *For each element*.
 
-### Audio
-
-If the events use Audio, read [plugins/audio.md](plugins/audio.md).
-
-- With *Use worker* on, scheduled sounds jitter by a message delay. For sample-accurate scheduling, set it to *No*.
-- A sound that is not loaded yet plays late. A Music file ignores its scheduled time. Keep beat-locked files in Sounds, and preload them.
-- *Preload sounds* skips the Music folder. *Unload audio* stops every instance that still plays the file, so unload a fading track in *On fade ended*.
-- In a browser, nothing is heard before the first touch, click or key press. Open on a "tap anywhere to start" screen that goes to the game. Put *Request fullscreen* on that tap. Music on that screen itself starts only at the tap.
-- The audio clock starts only at the first release, click or key press. Start music when `CurrentTime` moves, not on a touch.
-- The `PlaybackTime` of a scheduled sound is ahead by its scheduling lead. Build a beat grid from `CurrentTime` and integer steps.
-- *Set playback rate* changes every instance with the tag. Give each play a one-off tag.
-- A sound uses the effect chain of its first tag. An action on `"a b"` acts on each tag.
-- *Set effect parameter* cancels a ramp that is still running. So merge overlapping ducks into one release.
-- Gain effect values are in dB, and the ramp runs on the linear gain. Compressor parameters stay fixed after the effect is added.
-- An exponential ramp to 0 throws an error, also on the dry path of a 100 % mix. Ramp linearly, or keep the value above 0.
-- Delay `mix` runs from 0 to 100 and scales only the echoes: first echo = mix × feedback.
-- *Fade volume* also acts on instances that are scheduled but not started. So a fade of a one-off tag to -100 dB cancels a play scheduled ahead.
-- On resume, every suspended sound restarts at once. Run *Stop all* in *On resumed*, then restart the schedule.
-- Stereo pan mixes the channels of a stereo sound, which gives +2.3 dB at ±20. Narrow the pan of loud sounds, and keep them off each other's grid points.
-- *Play by name* finds a sound by its folder path, such as `Board/spawn`. Keep sounds that are played by computed names out of folders.
-- A sound is heard `OutputLatency` after its scheduled time.
-
-### Browser
-
-If the events use Browser, read [plugins/browser.md](plugins/browser.md).
-
-- Put *Request fullscreen*, *Request permission*, *Request wake lock* and the other requests that need a user input trigger in an *On tap*, *On click* or *On key pressed* event. In any other event the browser refuses them.
-- A web export looks for an update only when the page loads.
-- An automatic reload in *On update ready* loops while another tab of the game is open. Set the hash to `updated` before *Reload*. If the page starts with that hash, prompt the player instead of a reload.
-- The Browser object suppresses the browser's install banner. To offer the installation, run *Request install* after *On install available*.
-
 ### Dictionary
 
 If the events use Dictionary, read [plugins/dictionary.md](plugins/dictionary.md).
 
 - Dictionary *Set key* ignores a missing key. Write a missing key with *Add key*.
-
-### Drawing canvas
-
-If the events use Drawing canvas, read [plugins/drawingcanvas.md](plugins/drawingcanvas.md).
-
-- Drawing Canvas *Fill polygon* with *Convex* off draws nothing when two consecutive points coincide. Give consecutive points different positions.
-
-### File system
-
-If the events use File system, read [plugins/filesystem.md](plugins/filesystem.md).
-
-- File System writes only through a picker tag. The known folders exist only in desktop exports.
-- No tag names the Construct project folder. Save to `<current-app-data>`.
-- In a browser, File System needs desktop Chromium and a user input trigger. A save picker erases the file.
 
 ### JSON
 
@@ -270,26 +220,6 @@ If the events use JSON, read [plugins/json.md](plugins/json.md).
 - JSON `Type(path)` is `"undefined"` for a missing path, so it can test presence inside an expression.
 - JSON reads a dot in a path as a step into a nested key. Escape a dot inside a key as `\.` in the path, or keep dots out of keys. A Dictionary reads keys whole.
 - JSON has no merge. To merge data files, run *For each* at `""`, and *Set JSON* `GetAsCompactString(CurrentKey)` per top-level key. Requests that share one AJAX tag each fire *On completed* with their own `LastData`, so count them down.
-
-### Keyboard
-
-If the events use Keyboard, read [plugins/keyboard.md](plugins/keyboard.md).
-
-- W, A, S and D alone do not fit an AZERTY keyboard. Give each direction its arrow key too.
-
-### Local Storage
-
-If the events use Local Storage, read [plugins/localstorage.md](plugins/localstorage.md).
-
-- A read's trigger runs in the sheet of the layout that is running when the read completes. So leaving the layout first loses the read, and a later write from memory overwrites the save. Read the save in a first layout, or test `NOT Is processing gets` and `NOT Is processing sets` on the inputs.
-- A failed write fires *On error*, not *On item set*. Handle *On error*, and leave the layout there too.
-- Keep the whole save in one Dictionary or JSON object with a `version` key, under one key. Read it once at the start, load defaults in *On item missing*, and leave the layout in *On item set*.
-
-### Mouse
-
-If the events use Mouse, read [plugins/mouse.md](plugins/mouse.md).
-
-- In Mouse *On movement*, `Mouse.X`, `Mouse.Y`, `Touch.X` and `Touch.Y` hold the previous pointer event's position. To follow or aim at the pointer, read it in *Every tick*, or in *Is in touch* for a finger.
 
 ### Particles
 
@@ -308,14 +238,6 @@ If the events use Sprite, read [plugins/sprite.md](plugins/sprite.md).
 - *Set frame* to a frame of another image size resizes the instance and swaps its collision polygon.
 - A bar grows from its origin. Put the origin on the edge it grows from.
 
-### Sprite font
-
-If the events use Sprite font, read [plugins/spritefont2.md](plugins/spritefont2.md).
-
-- A Sprite Font draws whole cells and tints its outline with its colour. Draw each glyph at the left of its cell, and make one image per colour. Size the box for the largest scale.
-- A Sprite Font's *Character spacing* is in layout pixels, and *Scale* does not scale it. It applies only between characters, and `TextWidth` includes it. Keep it at 0, and put a space character where you want a gap.
-- Put a Sprite Font's widths in *Spacing data*, which the Layout View shows. Use *Set character width* for a width that changes at runtime. Give a full-width space its own width.
-
 ### Text
 
 If the events use Text, read [plugins/text.md](plugins/text.md).
@@ -331,39 +253,6 @@ If the events use Tiled Background, read [plugins/tiledbg.md](plugins/tiledbg.md
 
 - The image scale of a Tiled Background or a 9-patch is a percentage in events and a fraction in the layout file. So multiply the fraction by 100. A growing Y offset moves the image down, so scroll upward with a falling offset. A 9-patch pops as one piece only if its image scale changes with its size.
 
-### Timeline controller
-
-If the events use Timeline controller, read [plugins/timeline.md](plugins/timeline.md).
-
-- A relative track adds each tick's step, counted from 0. So keyframe values are offsets from the pose at the start of play. Moves that start and end at 0 can be layered and repeated, and they leave no offset.
-- An angle keyframe turns in the direction that its setting gives, even the long way round if the values disagree. Set the direction to the sign of the change to the next keyframe.
-- *Set instance* applies only to the next *Play*. One *Play* starts a copy per picked instance, all with the same tags. Set one instance at a time, and tag each copy with its UID.
-- A copy is found by the timeline's name and a colon inside the copy's name. So make sure that no timeline name ends with another.
-- *Stop* rewinds to 0 and reverts a relative track's offsets in every state, finished included, while *Pause* holds. A finished timeline ignores *Resume*, so run *Set time* 0 before you replay it.
-- *Set time* pauses and never fires *On keyframe reached*.
-- *On keyframe reached* picks nothing. Pick the instance again from the UID in `Timeline.TimelineTags`.
-- *On keyframe reached* sees the previous tick's pose. So put *Wait 0* before you read where the keyframe put the instance.
-- A negative playback rate rewinds to 0 and finishes there. Set it positive again before the next *Resume*.
-- A timeline stopped at its end ignores *Resume* at any rate. Run *Set time* to just before the end, then rewind.
-- In the tick in which a copy starts, it reads `Time` 0 while *Is playing* is true. To know that a move is in progress, test *Is playing*.
-- If you rewind a copy that reads `Time` 0, it starts backwards from its end, and a relative track ends off by its end pose. Rewind only when `Time > 0`; otherwise run *Set time* 0.
-- A negative playback rate fires *On keyframe reached* again for each keyframe it passes on the way back. Set a flag for the rewind, and test the flag in the keyframe event.
-- With *Use system timescale* on, the default, a hit stop slows the timeline too.
-
-### Touch
-
-If the events use Touch, read [plugins/touch.md](plugins/touch.md).
-
-- Touch *On tap* skips a tap within 666 ms and 25 px of the tap before it. That second tap fires *On double-tap* instead. If a button counts every press, use *On touched object* (start).
-- One tap fires *On any touch start* and *On touched object*, then *On tap* at the release, whatever the order in the sheet. So a restart on *On tap*, or on *On touched object* in a later event, fires on the tap that ends the game. Make the restart test a value that the end of the game sets after a *Wait*.
-- Mouse ignores fingers. To tell a finger drag from a mouse drag, test *Mouse button is down* each tick, not in *On drag start*.
-- If *Use mouse input* is on, Touch fires for clicks too. To detect the input method, turn it off.
-- Touch and Mouse press an object that is invisible or has collisions disabled. Add *Is visible* to the event, or make the object's layer not interactive.
-- Touch and Mouse pick every instance under the pointer. Add the button's *Pick top/bottom* (top) to the trigger's event. For buttons of several types, pick through a family.
-- Touch speed reads 0 after about 50 ms without a move. So a flick tested in *On any touch end* passes only for a release made in motion.
-- A tap anywhere on the screen is *On any touch start* with no object. An invisible Sprite used as the tap area misses taps outside its box.
-- Under *Scale outer*, a dim sized to the design area leaves strips where a tap misses it. Size the dim 8000×8000. Close the popup on *On any touch start* with *NOT Is touching* the panel and its buttons.
-
 ### Anchor
 
 If the events use Anchor, read [behaviors/anchor.md](behaviors/anchor.md).
@@ -378,33 +267,11 @@ If the events use Bullet, read [behaviors/bullet.md](behaviors/bullet.md).
 - A Bullet's angle of motion and the object's angle are two separate values. At speed 0, *Set angle of motion* does nothing, and *Set speed* from 0 moves the object right. Set the speed first, then the angle of motion.
 - A fired bullet that misses flies on outside the layout forever, because its hit events destroy only the bullets that hit. Give it the Destroy outside behavior.
 
-### Drag & Drop
-
-If the events use Drag & Drop, read [behaviors/dragndrop.md](behaviors/dragndrop.md).
-
-- The slot where a dragged or tweening instance will land reads empty until the instance lands. So make an event that fills empty slots on its own wait for that instance.
-- Drag & Drop moves the instance only when the pointer moves. So put a trailing or lifted look on a child.
-- Drag & Drop drags the front instance under the pointer, by layer and then by Z, visible or not. To stop drags under a popup, use *Set layer interactive* on the pieces' layer, or the behavior's *Set enabled*.
-
 ### Follow
 
 If the events use Follow, read [behaviors/follow.md](behaviors/follow.md).
 
 - Follow replays the target's path after a delay. Use it for a trailing companion, not a chasing enemy.
-
-### Pathfinding
-
-If the events use Pathfinding, read [behaviors/pathfinding.md](behaviors/pathfinding.md).
-
-- *Find path* fails when a gap is narrower than the cell size, though Line of Sight sees through it, and the object stops. Handle *On failed to find path*, or an enemy that chases on sight stands still for good.
-- A *Find path* during a calculation still fires the old path's triggers, and the object moves on along its old path. Add `NOT Is calculating path` to *On arrived*, and run *Find path* at once when a chase starts.
-
-### Platform
-
-If the events use Platform, read [behaviors/platform.md](behaviors/platform.md).
-
-- A Solid stops a Platform object at its edge, so *Is overlapping* stays false. To test touching, use *Is overlapping at offset* with 1 pixel towards the Solid. *On collision* still fires.
-- With *Double jump* off, Platform's *Simulate control* Jump does nothing in the air. To jump from the air, as in coyote time, use *Set vector Y* to `-Self.Platform.JumpStrength`. *On jump* does not fire then, so run its actions in the same place.
 
 ### Scroll To
 
@@ -418,12 +285,6 @@ If the events use Solid, read [behaviors/solid.md](behaviors/solid.md).
 
 - A Solid blocks while its behavior is enabled, so a door that only plays an open animation keeps blocking. When the door opens, disable its Solid with *Set enabled*, or destroy the door.
 
-### Tile movement
-
-If the events use Tile movement, read [behaviors/tilemovement.md](behaviors/tilemovement.md).
-
-- Tile movement's *Set grid position* takes a column and a row, not pixels. Convert a position with `round((X - offset X) / grid width)`.
-
 ### Timer
 
 If the events use Timer, read [behaviors/timer.md](behaviors/timer.md).
@@ -434,12 +295,6 @@ If the events use Timer, read [behaviors/timer.md](behaviors/timer.md).
 - A timer and a tween scheduled to end together end a tick apart.
 - A *Once* timer still counts as running for the rest of the tick in which its *On timer* fires. If an event below branches on *Is timer running* for that tag, put *Stop timer* first in the *On timer*.
 - Timer tags cannot time stacked buffs of one kind on one instance. No expression names the tag that fired, and a re-cast restarts the tag. Make each shield or buff a child instance of its holder, with its own Timer and amount. Spend them with *Pick children* and *For each (ordered)* by the time left.
-
-### Turret
-
-If the events use Turret, read [behaviors/turret.md](behaviors/turret.md).
-
-- Turret *Add object to target* adds the whole type or family, whatever is picked. To target only some instances, run *Acquire target* on one picked instance instead.
 
 ### Tween
 
@@ -453,6 +308,77 @@ If the events use Tween, read [behaviors/tween.md](behaviors/tween.md).
 - A property tween adds its change each tick. If a *Set* changes that property while the tween plays, the value stays, and the rest of the tween adds to it. Guard the *Set* with *NOT Is playing*.
 - *Stop* releases a tween at the end of the tick. `Value(tag)` reads the stopped value until then.
 - A width tween can end slightly short of its target. Then `Width < target` restarts a tween of no distance, which blocks a real tween for 0.3 s. Start the tween on `Width < target - 0.5`. Set the width to `target` on `Width < target` and `NOT Is playing`. Write the same two events with `>` for a trail.
+
+## Feature pages
+
+A task names or shows each of these addons: a sound, a finger on the
+screen, a save, a platformer. So their groups list no conclusions. If the
+events use one of these addons, open its page before you write them,
+because its pitfalls are there and not here.
+
+### 3D model
+
+If the events use 3D model, read [plugins/model3d.md](plugins/model3d.md).
+
+### Audio
+
+If the events use Audio, read [plugins/audio.md](plugins/audio.md).
+
+### Browser
+
+If the events use Browser, read [plugins/browser.md](plugins/browser.md).
+
+### Drawing canvas
+
+If the events use Drawing canvas, read [plugins/drawingcanvas.md](plugins/drawingcanvas.md).
+
+### File system
+
+If the events use File system, read [plugins/filesystem.md](plugins/filesystem.md).
+
+### Keyboard
+
+If the events use Keyboard, read [plugins/keyboard.md](plugins/keyboard.md).
+
+### Local Storage
+
+If the events use Local Storage, read [plugins/localstorage.md](plugins/localstorage.md).
+
+### Mouse
+
+If the events use Mouse, read [plugins/mouse.md](plugins/mouse.md).
+
+### Sprite font
+
+If the events use Sprite font, read [plugins/spritefont2.md](plugins/spritefont2.md).
+
+### Timeline controller
+
+If the events use Timeline controller, read [plugins/timeline.md](plugins/timeline.md).
+
+### Touch
+
+If the events use Touch, read [plugins/touch.md](plugins/touch.md).
+
+### Drag & Drop
+
+If the events use Drag & Drop, read [behaviors/dragndrop.md](behaviors/dragndrop.md).
+
+### Pathfinding
+
+If the events use Pathfinding, read [behaviors/pathfinding.md](behaviors/pathfinding.md).
+
+### Platform
+
+If the events use Platform, read [behaviors/platform.md](behaviors/platform.md).
+
+### Tile movement
+
+If the events use Tile movement, read [behaviors/tilemovement.md](behaviors/tilemovement.md).
+
+### Turret
+
+If the events use Turret, read [behaviors/turret.md](behaviors/turret.md).
 
 ## Adding an entry
 
@@ -476,12 +402,17 @@ outranks an observation, and an observation outranks intuition. Intuition
 alone is not an entry.
 
 Put the entry on the one page that owns it, by the rules in "Where an
-entry goes" of the repository's `AGENTS.md`. Then add its conclusion as one
-line to the page's group here, at the same position as the entry on the
-page. A conclusion keeps the fix, not only the prohibition. If the page
-does not exist, create it with the name that `AGENTS.md` gives it, and add
-a group here that says when to read it. Link the entry from the other
-pages that it concerns.
+entry goes" of the repository's `AGENTS.md`. If the page's group is under
+Topics, add the entry's conclusion as one line to the group, at the same
+position as the entry on the page. A conclusion keeps the fix, not only the
+prohibition. A group under Feature pages takes no line. If the page does
+not exist, create it with the name that `AGENTS.md` gives it, and add a
+group here that says when to read it. Put the group under Topics, with its
+conclusion lines, if an agent picks the addon as a means to another end,
+as it picks Tween for a hop or Timer for a delay. Put it under Feature
+pages if an agent uses the addon only when the task names or shows what
+the addon does, as it uses Audio for a sound. Link the entry from the
+other pages that it concerns.
 
 The skill's `lookup_ace.py` ends the entry of an addon with the page that
 its id names. A category page or a `primitives/` page names the addons and

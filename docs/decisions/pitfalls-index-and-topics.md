@@ -2,7 +2,7 @@
 
 Moved from Construct3-Agent-Skills at commit 46bf73f, where its history stays.
 
-Date: 2026-09-29, revised 2026-10-21
+Date: 2026-09-29, revised 2026-10-21 and 2026-10-24
 
 ## Problem
 
@@ -57,6 +57,22 @@ whose entries carry long sources and observations. The two groups became
 topic files a second time, with a change that answers the failure above:
 each conclusion line keeps the fix and not only the prohibition.
 
+By 2026-10-24 the index was 42 KB, past the mark below, so the measurement
+that the mark asks for was run: Audio, Timeline controller, Touch and Tween
+reduced to their when-to-read lines (34.7 KB) against the full index, three
+Haiku runs per task and arm. On four tasks that name
+their addon, every run in the reduced arm opened the page its task needed,
+and all 24 runs avoided the pitfall. On four tasks that only show what
+happens on screen (a coin chime, a finger on a bomb, a fade, a hop), the
+chime, finger and fade tasks were right in every run of both arms. The hop
+task split them. Every run built the hop from a value tween, not from a
+timeline. No reduced run opened the Tween page, and all three restarted
+the hop's tag while it still played, so a hit enemy hopped twice. All
+three full runs stopped the tag first, two of them from the conclusion
+lines alone. An agent that picks an addon as a means to another end does
+not think of the addon's group as something to read. Runs and grading:
+`.local/docs/evidence/pitfalls-addon-lines-2026-10-24/`.
+
 ## Decision
 
 Option 3. `guides/pitfalls.md` keeps its opening rules. Each group is a
@@ -68,6 +84,16 @@ category key (`guides/behavior-category/movements.md`) or a page of the
 manual's `project-primitives/`
 (`guides/primitives/events/how-events-work.md`), so a group is smaller
 than a topic of this repository's own was: 45 groups where there were 18.
+
+The groups stand in two sections. Under Topics, a group keeps its
+conclusion lines: the primitives, the categories, and every addon that an
+agent picks as a means to another end, such as System, Sprite, Tween,
+Timer, Array, Dictionary, JSON or Bullet. Under Feature pages, a group is a
+heading and its when-to-read line only: an addon that an agent uses only
+when the task names or shows what it does, such as Audio for a sound,
+Touch for a finger, Local Storage for a save or Platform for a platformer.
+So the index is 32 KB, and a feature page costs a task only when the
+task uses its addon.
 Picking is now `primitives/events/how-events-work.md` and
 `primitives/objects/containers.md`, and Triggers and Else is
 `primitives/events/conditions.md`, besides the entries that went to an
@@ -101,20 +127,23 @@ angle* wrong without it. An entry the checker also enforces stays too, since
 the guides serve as a system prompt where no checker runs.
 
 A new entry goes onto its page with its source, and its conclusion into the
-index. `scripts/check.py` fails when a page is not linked from the index,
-when a group's conclusion lines and the page's entries differ in number, or
-when an entry has no source.
+index if its group is under Topics. `scripts/check.py` fails when a page is
+not linked from the index, when a Topics group's conclusion lines and the
+page's entries differ in number, when a Feature pages group has a
+conclusion line, or when an entry has no source.
 
 ## Re-evaluate when
 
-- The index passes about 35 KB: first move out what fails the scope test,
-  then shorten conclusion lines, or merge groups that are always read
-  together. With one conclusion line per pitfall that keeps its fix, the
-  size follows the number of pitfalls, and the index has about twice as
-  many as when 20 KB was the mark. So before the next cut, measure whether
-  a group whose when-to-read line names a feature the task shows, such as
-  Audio or Timeline, is opened from that line without its conclusion lines.
-  The sizes behind this are in `.local/docs/evidence/prompt-cut-2026-10-15/`.
+- The index passes about 35 KB: first move out what fails the scope
+  test, then move to Feature pages a group whose addon only a named or
+  shown feature brings into a task, then shorten conclusion lines. The
+  sizes behind the mark are in `.local/docs/evidence/prompt-cut-2026-10-15/`.
+- An agent breaks an entry of a Feature pages group without opening its
+  page, because it picked the addon as a means, as the hop runs picked
+  Tween: move the group back to Topics with its conclusion lines. Audio
+  and Touch were measured on tasks that only show their feature, and
+  Timeline controller only on tasks that name it. The other Feature pages
+  groups were placed by judgement.
 - An agent writes a sheet that breaks an entry of How events work,
   Containers or Conditions whose fix its conclusion line states: these
   pages are read by nearly every sheet and are not opened, so bring the

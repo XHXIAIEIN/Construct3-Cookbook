@@ -6,8 +6,9 @@ the decision records.
 A link resolves when its file or folder exists beside the linking file. If
 the link carries a #fragment, the target Markdown file must also have a
 heading with that GitHub slug. In the pitfalls index, guides/pitfalls.md,
-every page has one group with one conclusion line per entry of the page,
-and every entry ends with its source.
+every page has one group. A group under Topics has one conclusion line per
+entry of the page, and a group under Feature pages has none. Every entry
+ends with its source.
 
 A page's path names what the page is about, and it comes from one of three
 sources (AGENTS.md, "Naming"). plugins/, behaviors/ and effects/ take an id
@@ -145,19 +146,22 @@ def pages() -> dict[str, Path]:
 def index_problems() -> list[str]:
     text = INDEX.read_text(encoding="utf-8")
     problems, linked = [], set()
-    topics = text.split("\n## Topics\n", 1)[1].split("\n## ", 1)[0]
-    for block in topics.split("\n### ")[1:]:
-        title, body = block.split("\n", 1)
-        links = [link for link in MD_LINK.findall(body.split("\n- ", 1)[0]) if link.split("/")[0] in PAGE_FOLDERS]
-        if len(links) != 1:
-            problems.append(f"pitfalls.md: group {title!r} links {links}, not one page")
-            continue
-        linked.add(links[0])
-        page = GUIDES / links[0]
-        if page.exists():
-            lines, entries = len(bullets(body)), len(bullets(page.read_text(encoding="utf-8")))
-            if lines != entries:
-                problems.append(f"pitfalls.md: group {title!r}: {lines} conclusion lines, {entries} entries in {links[0]}")
+    for section in ("Topics", "Feature pages"):
+        groups = text.split(f"\n## {section}\n", 1)[1].split("\n## ", 1)[0]
+        for block in groups.split("\n### ")[1:]:
+            title, body = block.split("\n", 1)
+            links = [link for link in MD_LINK.findall(body.split("\n- ", 1)[0]) if link.split("/")[0] in PAGE_FOLDERS]
+            if len(links) != 1:
+                problems.append(f"pitfalls.md: group {title!r} links {links}, not one page")
+                continue
+            linked.add(links[0])
+            page = GUIDES / links[0]
+            if page.exists():
+                lines, entries = len(bullets(body)), len(bullets(page.read_text(encoding="utf-8")))
+                expected = entries if section == "Topics" else 0
+                if lines != expected:
+                    problems.append(f"pitfalls.md: {section} group {title!r}: {lines} conclusion lines, "
+                                    f"{expected} expected for {entries} entries in {links[0]}")
     on_disk = pages()
     problems += [f"pitfalls.md links {name}, which does not exist" for name in sorted(linked - set(on_disk))]
     problems += [f"pitfalls.md does not link {name}" for name in sorted(set(on_disk) - linked)]
