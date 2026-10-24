@@ -198,6 +198,7 @@ If the events use a condition, action or expression that every object has (hiera
 
 If the events use Advanced Random, read [plugins/advancedrandom.md](plugins/advancedrandom.md).
 
+- A project has one Advanced Random object, which holds every probability table by name. Draw with `WeightedByName(name)`, or *Set probability table* then `Weighted`. For a second shuffled deck, use an Array's *Shuffle*, because the object keeps one permutation table.
 - Advanced Random's `Random`, weighted draws and permutation tables share one sequence, and *Update seed* restarts it. Seed each draw from the run's seed, its use and a counter, so one kind of draw does not shift another. `advanced_random.py` replays such a run offline. After a Construct update, run its `--check` before you trust the numbers.
 - `random()`, `choose()` and *Pick random instance* ignore the seed while *Replace system random* is off. Write a seeded draw as `floor(AdvancedRandom.Random * n)`, or *Pick nth instance* of `floor(AdvancedRandom.Random * PickedCount)`.
 
