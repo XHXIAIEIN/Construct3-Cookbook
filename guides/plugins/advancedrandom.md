@@ -3,6 +3,25 @@
 Sources and the rule for adding an entry are in the index,
 [pitfalls.md](../pitfalls.md).
 
+- A project has one Advanced Random object, and it holds every
+  probability table. The editor adds the plugin to a project once, and
+  the skill's `check_project.py` reports a second Advanced Random object
+  type written into the project files. Give each table a name with *Create probability table* (or
+  *Create probability table from JSON*). `WeightedByName("loot")` draws
+  from a table by its name, ignoring case, and returns 0 for a name that
+  has no table. `Weighted` draws from the current table: creating a table
+  makes it current, and *Set probability table* makes another one current,
+  so set it in the same event as the draw. The object keeps one
+  permutation table, and *Create permutation table* replaces it. For a
+  second deck that must stay shuffled beside the first, keep its cards in
+  an Array and use the Array's *Shuffle*.
+  [manual: plugin-reference/advanced-random.md, "Set probability table"
+  and "Weighted"; editor text `singleglobal-plugin-already-added`, "can
+  only be added to a project once"; runtime code, `plugins/AdvancedRandom`
+  in an r505 export's `c3runtime.js`: one current table, a map of tables by
+  lowercase name and one permutation array per instance; observed in a game
+  project, 2026-10-24: an agent made one Advanced Random object per table]
+
 - Advanced Random has one number sequence, and `Random`, `Weighted`,
   `WeightedByName` and *Create permutation table* all take numbers from
   it. A weighted draw takes one number. A permutation table of length n,
