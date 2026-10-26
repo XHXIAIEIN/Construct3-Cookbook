@@ -16,7 +16,9 @@ ends with the kind of its evidence:
 - `documented`: stated in the game's player-written reference;
 - `derived`: computed from values in the data;
 - `inferred`: a reading that the data does not state, so a starting point
-  to tune.
+  to tune;
+- `observed`: played in a probe project in the editor's preview, with its
+  release and date.
 
 A distance is given as a multiple of the hero's move speed, because the
 game measures in its own units. The Construct way in each rule comes from
@@ -243,6 +245,19 @@ the schemas. Unless the rule says so, no preview has played it.
 - Merge damage over time and rapid hits into one number. A further hit
   within 0.35 to 1.3 s adds to the number and extends its life. Show at
   most 20 numbers, and queue the rest 0.2 s apart. [data]
+- Where numbers pile up, draw a plain hit at 0.8 of the base size and 55 %
+  opacity, and keep the critical numbers over the plain ones. In a burst of
+  40 plain numbers over 3 critical ones, the faint plain hits left every
+  critical number readable; drawn alike, the critical numbers were lost.
+  [observed in a probe project, r506.3 preview, 2026-10-26]
+- To keep the critical numbers on top, give the number a `rank` instance
+  variable, 1 for a critical hit, and run System *Sort Z order* by `rank`
+  from an *Every tick* event. Do not run the sort in the function that
+  creates the number: the sort misses the numbers created in that tick, the
+  new one included, with or without *Pick all* first. Sorted there, a burst
+  created in one tick kept a plain number over a critical one in 60 of 60
+  overlapping pairs, and sorted every tick, in none.
+  [observed in a probe project, r506.3 preview, 2026-10-26]
 - For the ghost of a health bar, the part that shows a loss and then
   closes, read [progress-bars.md](progress-bars.md).
 
