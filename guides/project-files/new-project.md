@@ -42,11 +42,16 @@ Construct-Example-Projects, 2026-09-18]
 - Pixel art uses a 320×180 viewport, *Nearest* sampling and *Integer scale
   outer*. Other art uses 1920×1080, *Trilinear* and *Scale outer*. Both
   fill the screen at any aspect ratio, and the screen then shows more than
-  the viewport on its longer side. So a HUD element held to an edge carries the
-  Anchor behavior for that edge, and a backdrop or a dim reaches far past
-  the viewport
-  ([coordinates-and-angles.md](../primitives/objects/instances.md),
-  [input.md](../plugins/touch.md)). A one-screen game's layout is the
+  the viewport on its longer side. So a HUD element held to an edge carries
+  the Anchor behavior for that edge
+  ([coordinates-and-angles.md](../primitives/objects/instances.md)). The
+  plain paper is the colour of the opaque `Background` layer and needs no
+  object. A patterned backdrop in a one-screen layout lies over the
+  viewport on a layer at parallax 0, and Anchor on all four edges stretches
+  it to the screen ([anchor.md](../behaviors/anchor.md)). Only a scrolling
+  level's backdrop, on a layer at parallax 1, and a popup's dim still reach
+  the generator template's `SCREEN_PAD` past the layout
+  ([input.md](../plugins/touch.md)). A one-screen game's layout is the
   viewport's size, with *Unbounded scrolling* on, so that the game stays
   centred with the HUD.
 - Use few colours, each for a role: the player, what hurts, what is
@@ -83,8 +88,10 @@ Construct-Example-Projects, 2026-09-18]
   ring. A slot is a disc of the faint fill, the size of what fills it. An
   area with a rule of its own, such as a door or lava, is a striped Tiled
   Background. Where something is transparent, a mask or a background still
-  to come, the backdrop is the transparency checker instead. A level is a
-  run of beats, each asking one thing, with a rest after every hard one.
+  to come, the backdrop is the transparency checker instead. Stretched to
+  the screen, its cells start at the screen's edge, not on the grid. A
+  level is a run of beats, each asking one thing, with a rest after every
+  hard one.
   The generator template holds these as `PALETTE`, `SUBJECT`, `shape()`,
   `zone()`, `ring()`, `PATTERNS`, `area()`, `backdrop()` and `BEATS`. The
   records are `docs/decisions/paper-and-ink-look.md` and
