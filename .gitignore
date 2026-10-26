@@ -1,0 +1,42 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+*.swp
+
+# Local material that must not be public
+.local/
+
+# Temporary / working files
+tmp/
+.tmp/
+.trash/
+.remember/
+
+# Git worktrees
+.worktrees/
+
+# IDE
+.idea/
+.vscode/
+.codex/
+.cursor/
+.trae/
+.workbuddy-ai/
+
+# Logs
+*.log
+.log/
+
+# Claude Code
+.claude/settings.local.json
