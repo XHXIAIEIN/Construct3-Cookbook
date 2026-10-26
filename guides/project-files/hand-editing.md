@@ -297,27 +297,56 @@ saved or from the official examples
   is a list of `{"iv": name, "state": boolean}` objects.
   `x` and `y` are `false` in every block, and the rest are mostly `true`.
   For example, a replica of `Tree1` has `z` `false`, and a template made
-  from `Floor0` has `w`, `h`, `sx` and `sy` `false`. The manual says that
-  a replica takes each property from its template until the replica's own
-  value is edited, and that position stays the replica's own. So the
-  boolean reads as whether the property follows the template. The editor
-  was not watched doing this.
+  from `Floor0` has `w`, `h`, `sx` and `sy` `false`. On a replica, `true`
+  means that the property follows the template: the preview starts it
+  with the template's value and ignores the value saved in the replica.
+  So a value written by hand into a replica needs its boolean set to
+  `false`. An edit to the template in the Properties Bar writes the new
+  value into every replica, in every layout, where that property is
+  `true`, and leaves the replicas where it is `false`. It writes only the
+  edited property, and opening and saving the project rewrite nothing, so
+  a following value saved stale stays stale in the file: the `basic1`
+  replicas of rat-purrsuit save the animation `Pickup0` while the template
+  has `Pickup3`, and the preview shows `Pickup3`. *Apply template to all
+  replicas › Properties only* sets each replica's own instance variables
+  to the template's values and their booleans to `true`, keeps `x` and
+  `y`, and also leaves the stale following values. A template made from
+  another template has every boolean `true` and still its own values: it
+  is a copy, and an edit to its source leaves it.
   Files that r288 to r290 saved have `"mode": "none"` blocks. These blocks
   hold the lists as JSON strings, without the booleans and `replicasUIDs`.
-  A few example replicas have `sourceTemplateName` `""`, and a few
-  templates have an empty `templateName`. What the editor shows for these,
-  and for a replica whose template is gone, is not observed.
+  A few example replicas have `sourceTemplateName` `""`. A few templates
+  have an empty `templateName`, and 29 have a `sourceTemplateName` that no
+  template has (`Poison` in arcane-express) or that is a template of
+  another object (the berry-harvester `Mushroom` templates, from the
+  Obstacle `StoneLarge`). The editor opens and saves all of these without
+  a message and without a change. A replica whose `sourceTemplateName` is
+  `""` or names no template starts with its own saved values in the
+  preview.
   The *Create object* and *Create object (by name)* actions name a
   template in `template-name`. This is an expression string with the name
   in inner quotes, `"\"Air1\""`, and `"\"\""` for none. If it is written as
-  `""`, the project does not open. The manual says that a name that no
-  template has is treated as none. The "template instance" that the
+  `""`, the project does not open. Neither does a bare name, which the
+  editor reads as an expression (`'PlayerTrail' needs an expression after
+  it` for the name of an object), nor a name in single quotes (`Unknown
+  character (use " for strings)`); `check_project.py` reports both. A
+  bare name is right only for a variable that holds the name, as
+  `"template-name": "enemyType"` in the examples. The manual says that a
+  name that no template has is treated as none, and the name must match
+  exactly ([plugins/system.md](../plugins/system.md)). The "template instance" that the
   checks and the pitfalls name is any instance of the object in a layout.
   A *Create object* without a template name copies it, and it needs no
   `template` block. [manual: project-primitives/objects/templates.md;
   examples airborne-explorer `ObjectRepository` and `GameEvents`, avalanche
   `ObjectRepository` and `MainMenu`, berry-harvester, arcane-express
-  `Game`; the `"none"` blocks in animated-svg, html-element and html-menu]
+  `Game`; the `"none"` blocks in animated-svg, html-element and html-menu;
+  observed in copies of avalanche, balloon-blower, berry-harvester and
+  rat-purrsuit, r506.3 editor and preview, 2026-10-26: each opened and saved as a folder with its template blocks
+  and replica values unchanged; in rat-purrsuit, `basic0` set to points
+  777 in the Properties Bar changed its following replicas and not one
+  with its own 999, *Apply template to all replicas › Properties only*
+  then set that one to 777, and the `template-name` of an action changed
+  to `PlayerTrail` and to `'trail'` was refused with the messages above]
 - Every layer carries `overriden`, `0` or `1`, right after `name`. It also
   carries `global`, a boolean, near the end. The layer whose *Global*
   property is on has `"global": true` and `"overriden": 0`. A layer of the

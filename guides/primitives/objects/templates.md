@@ -22,3 +22,32 @@ Sources and the rule for adding an entry are in the index,
   2026-10-02: the Laser of the official example families, its one layout
   instance removed, was created 52×27 and visible with Bullet speed 0; with
   the instance kept, speed 400]
+
+- A replica starts each property that follows its template with the
+  template's value, not with the value saved in the replica. Only a
+  property edited on the replica itself is its own. The editor turns own
+  values back into following ones: *Apply template › Properties only* sets
+  the replica's instance variables to the template's values. So an
+  instance variable that holds something about one replica, such as the y
+  it rests at, can take the template's value without any edit to that
+  replica. Set such a variable from events, `Set restY to Self.Y` under
+  *On start of layout*, or keep those instances out of templates. What the
+  editor writes into replicas is in
+  [hand-editing.md](../../project-files/hand-editing.md), "Layouts".
+  [manual: project-primitives/objects/templates.md "Terms"; observed in a
+  copy of the official example rat-purrsuit, r506.3 editor and preview,
+  2026-10-26: a `basic0` replica saved with points 555 and frame 2, both
+  following, read 100 and frame 0, the template's; a replica with its own
+  points 999 kept 999 through an edit of the template to 777, and *Apply
+  template to all replicas › Properties only* set it to 777]
+
+- *TemplateName* of an instance placed as a replica reads the name of its
+  template. So events can tell the kinds apart by the template, as
+  rat-purrsuit tests `Pickup.TemplateName = "speed"` when the player takes
+  a pickup, without an instance variable for the kind. A replica whose
+  template name names no template, or is empty, still reads the saved name
+  and starts with its own saved values. [official example rat-purrsuit
+  `GameEvents`, group "Pickups"; observed in a copy of it, r506.3 preview,
+  2026-10-26: the replicas read `basic0`, `basic1` and `speed`; a replica
+  whose template name was changed to `gone`, and one with `""`, read those
+  and started with their saved points 555 and animation `Pickup2`]

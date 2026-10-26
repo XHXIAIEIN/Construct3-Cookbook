@@ -125,6 +125,8 @@ If the events depend on what the manual's "Templates" page covers, read [primiti
 
 - If a part is in both the parent's container and its template hierarchy, it is created once. Put it in both, so that it is picked with the parent and follows it.
 - An instance created at runtime copies an existing instance or template. Without one, its behavior properties read 0. Keep one instance per object in a layout that never runs.
+- A replica starts each following property with the template's value, and *Apply template* turns own values back into the template's. Set a per-replica variable such as a rest y from events in *On start of layout*.
+- *TemplateName* of a replica reads its template's name, so events can branch on the kind without an instance variable.
 
 ### Data & storage plugins
 
@@ -173,7 +175,7 @@ If the events use a System condition, action or expression, read [plugins/system
 - *Set canvas size* also sets the project's window size, so a 4:3 game inside 16:9 shows more of the layout. Run *Scroll to position* back to the centre, and cover the extra width with bars.
 - *Create object* picks the created instance in its type, not in its families. So a family action after it moves every other instance. To reach the created instance through the family, use *Pick last created*.
 - *Create object* runs once per event, however many instances are picked.
-- With an empty template name, *Create object* copies the first instance of the type in the first layout of the project that holds one. So it never reads a template instance in a later layout. Mark that instance as a template, and name it in *Create object*.
+- With an empty template name, *Create object* copies the first instance of the type in the first layout of the project that holds one. So it never reads a template instance in a later layout. Mark that instance as a template, and name it in *Create object*. The name must match exactly: another case or a space falls back to that first instance.
 - *Create hierarchy* creates the children on the layer of the created parent, whatever layers the template's children sit on. Move a child to its own layer after the creation.
 - If only events create an object, it loads its images at creation and draws nothing until they arrive. So a screen-sized picture shows late. Call *Load object images* for it in *On start of layout*.
 - *Restart layout* and *Go to layout* keep every global variable, every static local and the time scale at its current value. So a restart from a pause leaves the game frozen. Run *Set time scale* 1 under *On start of layout*.

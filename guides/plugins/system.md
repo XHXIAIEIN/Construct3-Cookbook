@@ -296,7 +296,13 @@ Sources and the rule for adding an entry are in the index,
   layout is never read. Mark one instance as a template and name it in
   *Create object*. If *Create hierarchy* is on, the new instance also gets
   that template's children. A name that no template has falls back to the
-  first instance. [manual: system-reference/system-actions.md "Create
+  first instance, and so does a name in another case or with a space,
+  `"Basic1"` or `" basic1"` for `basic1`. The new instance's *TemplateName*
+  then reads the name of the instance it copied, which can be another
+  template. So a misspelt name creates the wrong kind without an error.
+  Keep each template name in one place, such as a constant global
+  variable, and name it from there. [manual:
+  system-reference/system-actions.md "Create
   object", "rather than an arbitrary instance";
   project-primitives/objects/templates.md "Runtime actions"; observed in a
   minimal project, r506.2 preview, 2026-10-16: the first layout held two
@@ -304,7 +310,12 @@ Sources and the rule for adding an entry are in the index,
   either layout copied the instance that came first in the first layout's
   file, 64×64 opaque at frame 0 or 128×128 half-opaque at frame 1 as the
   two were swapped, never the second layout's own 32×32 one, which had the
-  lowest uid. The named template copied the named instance]
+  lowest uid. The named template copied the named instance; observed in a
+  copy of the official example rat-purrsuit, r506.3 preview, 2026-10-26:
+  `createInstance` of the scripting API, which takes the same template
+  name, given `Basic1`, ` basic1`, `basic9` and `""`, created the copy of
+  the `basic0` template, the first instance in the first layout, and its
+  *TemplateName* read `basic0`]
 
 - *Create hierarchy* creates the children on the layer of the new parent,
   not on the layers where the template's children sit. So a template whose
