@@ -28,4 +28,8 @@ Sources and the rule for adding an entry are in the index,
   from `Touch.X` in *On movement* at (783, 392), the previous pointer
   event, and one moved under *Is in touch* at (800, 400); with a mouse
   moved by hand in a headed r495.2 preview, the *On movement* sprite
-  stopped 3 px short of the every-tick one]
+  stopped 3 px short of the every-tick one; r506.3
+  `plugins/input/mouse/c3runtime/runtime.js` keeps the order; observed in
+  a game project, r506.3 preview, 2026-10-28: a ribbon that followed
+  `Mouse.X` set in *On movement* shot towards (0, 0) at the first move of
+  a drag from (200, 150)]
