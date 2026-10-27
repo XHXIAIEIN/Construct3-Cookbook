@@ -21,7 +21,7 @@ changing only enough to silence the warning.
 
 | Habit | The examples instead |
 |-------|----------------------|
-| State globals piled at the top of the sheet: `touchSX`, `foodX`, `tailUID`, `nextX` | Only what several groups read is global. State that only one group uses is declared first in that group: a static local if it lasts between ticks (`touchStartX` in `Player Controls`), a plain local if it is recomputed each tick. A value one event computes and reads is that event's local, set in an unconditioned sub-event. An instance's property is its instance variable (`dir` on the head), not a global. A link to an instance is *Pick children* or a condition, not a stored UID |
+| State globals piled at the top of the sheet: `touchSX`, `foodX`, `tailUID`, `nextX` | Only what several groups read is shared, and in a sheet you write it is a static local of the outermost group, not a global ("The shape" below). State that only one group uses is declared first in that group: a static local if it lasts between ticks (`touchStartX` in `Player Controls`), a plain local if it is recomputed each tick. A value one event computes and reads is that event's local, set in an unconditioned sub-event. An instance's property is its instance variable (`dir` on the head), not a global. A link to an instance is *Pick children* or a condition, not a stored UID |
 | Construct 2 leftovers after a migration: the Function plugin with `Function.Param(n)`, a globals plugin whose instances hold variables beside the sheet's globals, Dictionaries used as namespaces for them, hex colours decoded by hand with `find`, a script block for what an action does, such as the framerate mode | Built-in functions with named, typed parameters, and a function map for a call by a string ([pitfalls: Functions](../primitives/events/functions.md)); one `Globals` sheet for what several sheets read; a Dictionary or JSON per record; colours as `HexColor("#RRGGBB")`, or `rgbEx255` when the channels are computed, written in data as a hex string or three numbers from 0 to 255 ([pitfalls: Text](../plugins/text.md)); System *Set framerate mode* |
 | A long block of 20 actions without a comment action | A comment action every three to five actions: `Clear the board`, `Create the head`, `Show the start panel`. The block stays one block |
 | A decision as a tree three sub-events deep, one function call per leaf | One gate event with the shared conditions, then the cases as flat sibling sub-events with a comment each. `Else` with conditions is the else-if. If the outcomes differ only by a number, one expression: `(round(angle(x0, y0, Touch.X, Touch.Y) / 90) % 4 + 4) % 4` |
@@ -35,53 +35,59 @@ Here is a sheet as `print_sheet.py` prints it.
 
 ```
      // Coins. Tap a coin to collect it; when the last one is gone the layout restarts
-     // Gameplay variables
-     global number score = 0
-         // Points collected this round
-   1 group Setup
-       local constant number COIN_COUNT = 6
-           // Coins dealt at the start
-       // Empty the score and deal the coins
-   2   System: On start of layout
-           -> System: Set score to 0
-           -> TextScore: Set text to "Score: 0"
-           -> // Deal the coins
-           -> ...
-   3 group Player
-       local static number touchStartX = 0
-           // Where the swipe began
-       // Only while the player can act
-   4   Player: NOT Is dead
-       System: NOT Is tutorial  [sub-events 5-6]
-         // Jump
-   5     Keyboard: On 32 pressed
-             -> Player: Jump()
-         // Dash
-   6     Keyboard: On 39 pressed
-             -> Player: Dash()
-   7 group Coins
-       // Shrink the coin away and score it
-   8   custom action Coin.Collect()
+   1 group Coins
+       local static number score = 0
+           // Points collected this round
+   2   group Setup
+         local constant number COIN_COUNT = 6
+             // Coins dealt at the start
+         // Empty the score and deal the coins
+   3     System: On start of layout
+             -> System: Set score to 0
+             -> TextScore: Set text to "Score: 0"
+             -> // Deal the coins
+             -> ...
+   4   group Player
+         local static number touchStartX = 0
+             // Where the swipe began
+         // Only while the player can act
+   5     Player: NOT Is dead
+         System: NOT Is tutorial  [sub-events 6-7]
+           // Jump
+   6       Keyboard: On 32 pressed
+               -> Player: Jump()
+           // Dash
+   7       Keyboard: On 39 pressed
+               -> Player: Dash()
+   8   group Collect
+         // Shrink the coin away and score it
+   9     custom action Coin.Collect()
 ```
 
-Only what several groups read is global: constants under `Settings` and
-shared state under `Gameplay variables`. Then comes one group per
-subsystem, in play order (`Setup`, `Tutorial`, `Player`, `Enemies`,
-`Camera`, `HUD`, `Game Over`, `Restart`). Every event is in a group, with
-a comment above it. A group holds its variables, then its functions and
-custom actions, then its events. A trigger has its
-filter conditions in the same block and its branches in sub-events, with
-one comment for each branch. Two levels of sub-events cover almost every
-event in the examples.
+The examples put constants under `Settings` and the state that several
+groups read under `Gameplay variables`, as globals at the top of the
+sheet. Then comes one group per subsystem, in play order (`Setup`,
+`Tutorial`, `Player`, `Enemies`, `Camera`, `HUD`, `Game Over`,
+`Restart`). Every event is in a group, with a comment above it. A group
+holds its variables, then its functions and custom actions, then its
+events. A trigger has its filter conditions in the same block and its
+branches in sub-events, with one comment for each branch. Two levels of
+sub-events cover almost every event in the examples.
 
-In a sheet that you write, three conventions of the user who keeps these
-guides apply on top of the examples:
+In a sheet that you write, four conventions of the user who keeps these
+guides apply on top of the examples, and the shape above follows them:
 
+- The sheet has no globals. Its groups sit in one outermost group named
+  for the game (`Coins` above), and the state that two or more groups
+  share is a static local of that outer group (`score`, which `Setup`
+  sets and `Collect` adds to), so every inner group sees it. A group that
+  writes shared state, such as an input group that stores the pointer for
+  a drawing group, stays a group of its own and is not merged into the
+  group that reads it. Only a value that another sheet reads is a global,
+  on the `Globals` sheet.
 - A feature's variables, its constants among them, are locals at the top
-  of its group, not globals, so the group holds the feature whole:
-  `COIN_COUNT` above, read only by `Setup`. The examples keep their tuning
-  constants global under `Settings`. A variable becomes global only when
-  several groups or sheets read it.
+  of its group: `COIN_COUNT`, read only by `Setup`. The examples keep
+  their tuning constants global under `Settings`.
 - A lifecycle trigger (*On start of layout*, *On end of layout*, *On
   loader layout complete*) comes right after the group's variables, before
   its functions and custom actions, so the group reads in the order it

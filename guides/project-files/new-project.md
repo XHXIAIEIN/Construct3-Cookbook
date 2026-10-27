@@ -19,7 +19,9 @@ group and how to name and comment it.
   the examples: *Setup* (`On start of layout`), *Player*, *Controls*,
   *Camera*, *Tutorial*, *Game over*, *Restart* (the restart key and
   *Restart layout*). What runs every tick goes in a group of its own,
-  *Update* by default, and a feature's variables are locals of its group
+  *Update* by default. A feature's variables are locals of its group, and
+  the groups sit in one outer group named for the game, whose static
+  locals hold the state they share, so the sheet has no globals
   ([design/style.md](../design/style.md), the user's conventions).
 - If the game has a second layout, each screen gets its own sheet (*Menu*,
   *Game*, *Credits*). Levels share one sheet (samuroof: Level1 to Level5
@@ -29,7 +31,9 @@ group and how to name and comment it.
   includes that sheet (kiwi-story: eMain includes nine).
 - Declare the global variables on one sheet, *Globals*, so that they can be
   found, as kiwi-story, samuroof and kitty-katcher do. A global is
-  project-wide, whichever sheet declares it.
+  project-wide, whichever sheet declares it. Only what another sheet
+  reads is global; state that the groups of one sheet share is a static
+  local of its outer group.
 - If a phase begins later, its group starts inactive: a tutorial, a boss
   enabled on entry, debug tools (19 examples). Deactivating a group stops
   its events and nothing else, so it is not a pause.
