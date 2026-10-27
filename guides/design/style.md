@@ -35,13 +35,12 @@ Here is a sheet as `print_sheet.py` prints it.
 
 ```
      // Coins. Tap a coin to collect it; when the last one is gone the layout restarts
-     // Settings
-     global constant number COIN_COUNT = 6
-         // Coins dealt at the start
      // Gameplay variables
      global number score = 0
          // Points collected this round
    1 group Setup
+       local constant number COIN_COUNT = 6
+           // Coins dealt at the start
        // Empty the score and deal the coins
    2   System: On start of layout
            -> System: Set score to 0
@@ -65,14 +64,32 @@ Here is a sheet as `print_sheet.py` prints it.
    8   custom action Coin.Collect()
 ```
 
-Constants go under `Settings` and shared state under `Gameplay variables`.
-Then comes one group per subsystem, in play order (`Setup`, `Tutorial`,
-`Player`, `Enemies`, `Camera`, `HUD`, `Game Over`, `Restart`). Every event
-is in a group, with a comment above it. A group holds its variables, then
-its functions and custom actions, then its events. A trigger has its
+Only what several groups read is global: constants under `Settings` and
+shared state under `Gameplay variables`. Then comes one group per
+subsystem, in play order (`Setup`, `Tutorial`, `Player`, `Enemies`,
+`Camera`, `HUD`, `Game Over`, `Restart`). Every event is in a group, with
+a comment above it. A group holds its variables, then its functions and
+custom actions, then its events. A trigger has its
 filter conditions in the same block and its branches in sub-events, with
 one comment for each branch. Two levels of sub-events cover almost every
 event in the examples.
+
+In a sheet that you write, three conventions of the user who keeps these
+guides apply on top of the examples:
+
+- A feature's variables, its constants among them, are locals at the top
+  of its group, not globals, so the group holds the feature whole:
+  `COIN_COUNT` above, read only by `Setup`. The examples keep their tuning
+  constants global under `Settings`. A variable becomes global only when
+  several groups or sheets read it.
+- A lifecycle trigger (*On start of layout*, *On end of layout*, *On
+  loader layout complete*) comes right after the group's variables, before
+  its functions and custom actions, so the group reads in the order it
+  runs. The examples put the functions first.
+- What runs every tick, an *Every tick* event and what it calls, is a group
+  of its own named for what it does, `Update` by default, after the groups
+  whose functions and custom actions it calls. It is not the last event of
+  a feature group.
 
 To see these conventions in a whole sheet before you write, print an
 example:

@@ -18,7 +18,9 @@ group and how to name and comment it.
 - A game of one layout has one sheet, with groups by subsystem named as in
   the examples: *Setup* (`On start of layout`), *Player*, *Controls*,
   *Camera*, *Tutorial*, *Game over*, *Restart* (the restart key and
-  *Restart layout*).
+  *Restart layout*). What runs every tick goes in a group of its own,
+  *Update* by default, and a feature's variables are locals of its group
+  ([design/style.md](../design/style.md), the user's conventions).
 - If the game has a second layout, each screen gets its own sheet (*Menu*,
   *Game*, *Credits*). Levels share one sheet (samuroof: Level1 to Level5
   use *Game*). If several screens need a subsystem, or the subsystem grows
