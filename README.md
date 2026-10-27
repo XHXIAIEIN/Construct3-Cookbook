@@ -59,7 +59,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | `guides/behavior-category/`, `guides/plugin-category/` | Pitfalls that arise when choosing between several objects for the same goal, for example `behavior-category/movements.md`. |
 | `guides/primitives/` | Pitfalls of the event engine and the runtime that belong to no single addon. Page paths follow the Construct 3 manual, for example `primitives/events/how-events-work.md`. |
 | [`guides/design/`](guides/design/thinking.md) | Event design guidance: `thinking.md` covers planning events before you write them, `style.md` covers how the official examples organise, name and comment event sheets, and `native-first.json` lists superseded addons with their built-in replacements. |
-| [`guides/recipes/`](guides/recipes/feel.md) | Implementation recipes for game feel, attack feel, effect timing, menus, progress bars, scripted sequences and dialogue, sound, and layered depth under a 3D camera, with a worked slot grid example. |
+| [`guides/recipes/`](guides/recipes/feel.md) | Implementation recipes for game feel, attack feel, effect timing, menus, progress bars, scripted sequences and dialogue, sound, layered depth under a 3D camera, and porting a web or WebGL effect, with a worked slot grid example. |
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | Conventions for editing the JSON in `eventSheets/`, `layouts/` and `objectTypes/` by hand, and the default event sheets, layers and visual style of a new project. |
 | [`docs/decisions/`](docs/decisions/README.md) | The decision records: why the guides are laid out, named and indexed as they are, with the evidence and the options weighed. |
 | [`scripts/check.py`](scripts/check.py) | The validation script that CI runs. |
