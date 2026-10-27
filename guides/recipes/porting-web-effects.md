@@ -18,12 +18,12 @@ lines and shapes, read [plugins/drawingcanvas.md](../plugins/drawingcanvas.md).
   tick, because the window can change size.
   [manual: plugin-reference/platform-info.md, "CanvasCssHeight";
   observed in a game project, r506.3 preview, 2026-10-28]
-- A size that the source gives as a share of the window, in clip space
-  from -1 to 1 or as a fraction of `innerWidth` and `innerHeight`, is a
-  share of what the player sees: `ViewportWidth("Layer")` and
-  `ViewportHeight("Layer")`. The layout's size and the project's viewport
-  size are not what the player sees, because *Scale inner* crops the
-  viewport to the window's shape and *Scale outer* shows more than it.
+- Some sizes the source gives as a share of the window, in clip space
+  from -1 to 1 or as a fraction of `innerWidth` and `innerHeight`. Take
+  such a size as a share of what the player sees, `ViewportWidth("Layer")`
+  and `ViewportHeight("Layer")`. The layout's size and the project's
+  viewport size are not what the player sees, because *Scale inner* crops
+  the viewport to the window's shape and *Scale outer* shows more than it.
   Clip space spans 2 across, so 0.02 of it is 0.01 of the visible height.
   [observed in a game project, r506.3 preview, 2026-10-28]
 
@@ -39,9 +39,9 @@ lines and shapes, read [plugins/drawingcanvas.md](../plugins/drawingcanvas.md).
   own motion: the port copies the source's dependence on the frame rate
   on purpose. [observed in a game project, r506.3 preview, 2026-10-28]
 - Do not scale such a step by `fps * dt` to keep the source's pace at any
-  frame rate. Under vsync it reads about 1, it lags behind for a while
-  after the refresh rate changes, and it jitters from tick to tick, so the
-  motion stutters. If the port must not depend on the frame rate, rewrite
-  the step with `dt`, as in `lerp(a, b, 1 - f ^ dt)`, and tune `f` until
+  frame rate. `fps * dt` reads about 1 under vsync, lags behind for a
+  while after the refresh rate changes, and jitters from tick to tick, so
+  the motion stutters. If the port must not depend on the frame rate,
+  rewrite the step with `dt`, as in `lerp(a, b, 1 - f ^ dt)`, and tune `f` until
   it matches the source at the source's usual refresh rate.
   [observed in a game project, r506.3 preview, 2026-10-28]

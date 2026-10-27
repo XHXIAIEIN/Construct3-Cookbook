@@ -14,41 +14,44 @@ Sources and the rule for adding an entry are in the index,
   the same square with its first point, a middle point or a closing point
   repeated filled 0, and all three filled 5776 with *Convex* on; r507 beta
   drawCommand.js removes repeated consecutive points when *Convex* is off]
-- *Fill poly*, *Outline poly* and *Dashed outline poly* draw every point
-  added since the last *Reset poly*, and they keep the points. So a loop
-  that adds the corners of one piece and fills it on each iteration fills
-  one polygon that grows along the whole path: each fill draws every
-  earlier piece again inside a shape that is no longer the piece. Run
-  *Reset poly* before the first *Add poly point* of each polygon.
+- *Fill polygon*, *Draw polygon outline* and *Draw dashed polygon
+  outline* draw every point added since the last *Reset polygon*, and they
+  keep the points after they draw. So a loop that adds the corners of one
+  piece and fills it on each iteration draws every earlier piece again with
+  the new one, as one polygon that grows along the path. Run *Reset
+  polygon* before the first *Add polygon point* of each polygon.
   [manual: plugin-reference/drawing-canvas.md; observed in a game project,
   r506.3 preview, 2026-10-28]
-- *Line*, *Dashed line*, *Outline poly* and *Dashed outline poly* take a
-  butt or a square line cap and no other, and one thickness per action. So
-  a thick polyline drawn as one *Line* per segment shows a notch on the
-  outside of every bend, and a ribbon whose width changes along its length
-  cannot be a line at all. Fill such a path as quads instead: at each
-  point, take the direction from the point before to the point after,
-  turn it a quarter turn, and scale it to half the width there, which
-  gives the point's two edge points. Then fill each piece between two
-  neighbouring points with four *Add poly point* actions and *Fill poly*,
-  after a *Reset poly*. Keep the points and their edge offsets in an Array
-  with one column per point. [schema `drawingcanvas.json`, `line-cap`:
-  butt | square; observed in a game project, r506.3 preview, 2026-10-28]
+- *Draw line*, *Draw dashed line* and the polygon outline actions take a
+  butt or a square line cap and no other, and one thickness per action. A
+  thick polyline drawn as one *Draw line* per segment therefore shows a
+  notch on the outside of every bend. A ribbon whose width changes along
+  its length cannot be a line at all. Fill such a path as pieces instead:
+  1. Keep the points in an Array with one column per point, and a row for
+     each coordinate of the offset to the edge.
+  2. At each point, take the direction from the point before to the point
+     after, turn it a quarter turn, and scale it to half the width there.
+     That offset, added and subtracted, gives the point's two edge points.
+  3. For each pair of neighbouring points, run *Reset polygon*, four *Add
+     polygon point* actions at their edge points, and *Fill polygon*.
+
+  [schema `drawingcanvas.json`, `line-cap`: butt | square; observed in a
+  game project, r506.3 preview, 2026-10-28]
 - Draw the shapes of one layer on one Drawing Canvas, back to front in the
-  order of the events, not on one full-screen canvas each. In a game
-  project, five full-screen canvases with 4x MSAA, one per ribbon and each
-  cleared every tick, became one canvas with 4x MSAA that draws all five
-  ribbons. With the pointer moving, the ticks per second at an unlimited
-  frame rate went from 2417 to 2774, and GPU use at pixel ratio 2 from
-  0.10 to 0.13 down to 0.03. [observed in a game project, headless Chrome
-  preview at 1280x720, medians of three rounds, 2026-10-28]
-- *Antialiasing* costs every pixel of the canvas on every frame, so on a
-  canvas the size of a large screen it slows the whole game. In a game
-  project at about 3840x2054 device px, 2x or 4x MSAA on one full-screen
-  canvas held the preview at about 92 fps, with frames of 7 and 14 ms
-  alternating, where the same canvas without it ran at 144 fps. At
-  1280x720, off, 2x and 4x measured alike. Leave *Antialiasing* off on a
-  large canvas unless its edges need it, and measure at the size of the
-  player's screen before turning it on. [manual:
-  plugin-reference/drawing-canvas.md, "Antialiasing"; observed in a game
-  project, r506.3 preview, 2026-10-28]
+  order of the events, not on one full-screen canvas each. One canvas that
+  draws every shape costs less than one canvas per shape, each cleared
+  every tick. [observed in a game project, headless Chrome preview at
+  1280x720, 2026-10-28: five full-screen canvases with 4x MSAA, one per
+  ribbon, against one canvas with 4x MSAA that drew all five; with the
+  pointer moving, medians of three rounds went from 2417 to 2774 ticks per
+  second at an unlimited frame rate, and GPU use at pixel ratio 2 from
+  0.10-0.13 to 0.03]
+- *Antialiasing* works on every pixel of the canvas on every frame, so on
+  a canvas the size of a large screen it holds the frame rate below the
+  display's. Leave it off on a large canvas unless its edges need it, and
+  measure at the size of the player's screen before you turn it on.
+  [manual: plugin-reference/drawing-canvas.md, "Antialiasing"; observed in
+  a game project, r506.3 preview, 2026-10-28: at about 3840x2054 device
+  px, 2x or 4x MSAA on one full-screen canvas held the preview at about 92
+  fps, frames of 7 and 14 ms alternating, against 144 fps without it; at
+  1280x720, off, 2x and 4x measured alike]
