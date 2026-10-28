@@ -154,6 +154,10 @@ saved or from the official examples
   false. A number text that does not parse reads as 0. A function
   parameter's `initialValue` can also be a JSON number. Any other value
   stops the load with `invalid type of initialValue`.
+- Do not leave an event block with no conditions. It runs every tick like
+  `Every tick`, but in the editor it reads as an unfinished event. Give it
+  `System: Every tick`, or the condition that actually gates it, such as a
+  static local variable it compares.
 - A function call is
   `{"callFunction": "name", "sid": N, "parameters": ["expr", ...]}`. A
   function block has `functionCopyPicked` (boolean) and `functionParameters`
