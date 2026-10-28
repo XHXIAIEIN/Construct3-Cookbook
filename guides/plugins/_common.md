@@ -48,13 +48,21 @@ Sources and the rule for adding an entry are in the index,
   "ChildCount", common-conditions.md "Compare child count"; observed in a
   game project, 2026-09-17]
 
-- *Set mesh point* in *Relative* mode adds to the current position of the
-  point, not to its default position. So a derivation that runs every tick
-  accumulates. Derive with *Absolute* and normalised coordinates, which
-  run 0..1 across the object box and may go past it. A texture value of -1
-  leaves the texture position unchanged. [manual:
-  plugin-reference/common-features/common-actions.md "Set
-  mesh point"]
+- *Set mesh point* in *Relative* mode adds X, Y and the texture position
+  to the point's default grid position, not to its current one, and
+  overwrites the point. So the same relative value set every tick holds the
+  point still, and 0 puts it back at its default. *Absolute* mode takes
+  normalised coordinates, which run 0..1 across the object box and may go
+  past it. The texture fields start at -1, which leaves the texture
+  position unchanged only in *Absolute* mode. In *Relative* mode -1 is an
+  offset that pulls every point's texture to the image's top-left corner,
+  so write 0 there. Z is absolute in both modes. The manual's "added to
+  their current values" means the default values. [schema:
+  plugins/_common.json `set-mesh-point`, mode "a relative displacement
+  from its default position"; runtime: r506.3
+  preview/objects/worldInfo.js `SetMeshPoint` adds col/(HSize-1) and
+  row/(VSize-1) to a relative x, y, u and v, then sets the point; manual:
+  plugin-reference/common-features/common-actions.md "Set mesh point"]
 
 - A mesh pulled into a trapezoid in X and Y bends every straight line of
   its image. Each cell draws as two triangles, and the image follows each

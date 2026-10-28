@@ -189,7 +189,7 @@ If the events use a condition, action or expression that every object has (hiera
 - *Pick parent* with *Own* looks only one level up. Use *All* to pick a grandparent, because with *Own* the event picks nothing and shows no error.
 - A hierarchy child can be on a different layer from its parent. So a lifted parent can be drawn above everything while its parts stay under an outline.
 - `ChildCount`, *Compare child count* and *Has children* count children of every type. To count one type, use *Pick children* and then `PickedCount`.
-- *Set mesh point* in *Relative* mode adds to the current position, so a point derived and set every tick accumulates.
+- *Set mesh point* in *Relative* mode offsets the point from its default position, so setting it every tick does not accumulate. In *Relative* mode, change the texture fields from -1 to 0, or every point's texture moves to the image's top-left corner.
 - If a mesh is pulled into a trapezoid in X and Y, it bends straight lines at each cell diagonal. It also shows no depth, however many points it has. For a plane at an angle, keep X and Y, and give the near row a Z on a *3D* layer under *Perspective*. A 2x2 mesh draws that plane straight.
 - *Set width* stretches a Sprite, repeats a Tiled Background and stretches a 9-patch's middle.
 - *Move to top* moves only the instance, and leaves its hierarchy children where they are. Move each part.
