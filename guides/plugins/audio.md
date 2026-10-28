@@ -79,6 +79,25 @@ Sources and the rule for adding an entry are in the index,
   restrictions"; runtime: main.js `_AttachUnblockEvents`,
   `_UnblockAudioContext`]
 
+- Play timed by `CurrentTime`, such as attacks, spawns and waves on a beat
+  grid, stops whenever the browser keeps the audio clock stopped. This
+  happens in a page that has had no input yet, and after the game comes
+  back from the background if the browser refuses the `resume()` that the
+  runtime calls. A reloaded game then restores its board, and nothing on
+  it moves until the player touches the screen. Time play by a global game
+  clock instead. Each tick, set it to `CurrentTime` plus an offset. When
+  `CurrentTime` has not advanced for about 0.2 s of `wallclocktime`, add
+  `wallclockdt` to the offset. Schedule sounds at the game time minus the
+  offset. Play no sound while the clock is stopped, because the sounds
+  queued then all start at once when it moves again. On the tick that it
+  moves again, use *Stop all* and restart the music grid.
+  [runtime: main.js `_SetSuspended` calls `resume()` once, and
+  `_AttachUnblockEvents` waits for the next input; observed in a game
+  project, editor preview with `"useWorker": "dom"`, 2026-10-28: with the
+  audio context suspended and `currentTime` held at 0, an attacker on a
+  grid scheduled by `CurrentTime` struck 0 times in 4 s, and 5 times with
+  the game clock]
+
 - For a sound scheduled in the future, `Audio.PlaybackTime(tag)` counts
   from the *Play* call, not from the start of the sound, so it is ahead by
   the scheduling lead. Compute a beat grid from `CurrentTime` minus a stored
