@@ -241,7 +241,10 @@ If the events use Sprite, read [plugins/sprite.md](plugins/sprite.md).
 - An instance with collisions disabled fails every overlap and collision test, in both directions. To take a dragged or tweening instance out of these tests, disable its collisions instead of using an `isMoving` flag.
 - Image point 0 is the origin. The first point added is 1, and `ImagePointCount` leaves out the origin.
 - *Set animation* to the animation already playing does nothing.
+- *Set animation* to another animation resets the speed and the repeat-to frame to the animation's own. Run *Set speed* after *Set animation*.
 - A looping animation never fires *On finished*. Turn *Loop* off for every animation whose end changes the state.
+- In *On finished*, *Set animation* takes effect on the next tick and undoes a *Set speed* after it. Start the actions with *Wait 0*, then *Set animation*, then *Set speed*.
+- *On frame changed* also fires on *Set animation*, *Set frame* and *Start animation*. To act on one frame of the playback, add *Compare frame*.
 - If frames serve as looks rather than as an animation, set the animation's *Speed* to 0.
 - *Set frame* to a frame of another image size resizes the instance and swaps its collision polygon.
 - A bar grows from its origin. Put the origin on the edge it grows from.
