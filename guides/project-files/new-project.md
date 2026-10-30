@@ -77,7 +77,8 @@ Construct-Example-Projects, 2026-09-18]
   - Paper and ink's shapes: `subject.size`, `subject.player-shape`,
     `lines.areas`, `backdrop.sheet`, `pattern.areas`, `pointer.colours`,
     `motion.hit`.
-  - Art: `art.image-tool`.
+  - Art: `art.routes`, `art.roles`, `art.ids`, `art.frames`,
+    `art.contrast`.
 - A line 1 px thick drops out on some rows when the screen draws the
   viewport smaller than its size. So draw a rule at least as thick as the
   viewport's height divided by the screen's height, rounded up. In a
