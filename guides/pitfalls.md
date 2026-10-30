@@ -254,6 +254,7 @@ If the events use Text, read [plugins/text.md](plugins/text.md).
 - A Text object draws only the lines that fit its height. Size the box for the longest text.
 - If a single line is taller than its Text box, it draws with the bottom of its glyphs cut off.
 - A change of a Text's font size redraws and re-uploads its texture. Animate position, angle or opacity instead, or use a Sprite Font and tween its scale.
+- A Text's font is one family: a CSS font list becomes one unknown name and draws in a serif. Give one font file's name or one generic family.
 
 ### Tiled Background
 

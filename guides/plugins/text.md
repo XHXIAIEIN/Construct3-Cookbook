@@ -66,3 +66,15 @@ Sources and the rule for adding an entry are in the index,
   [manual: plugin-reference/text.md "Set resolution
   mode"; observed in a game project, r504 export, runtime `_SetText` source
   and a counter on `_OnBeforeRender`, 2026-09-30]
+
+- A Text object takes one font family, not a CSS font list. The runtime
+  puts the whole font name in quotes as one family, unless the name is a
+  generic family such as `sans-serif`. So the *Font* property or *Set font
+  face* with `Inter, "PingFang SC", sans-serif` names a family that does
+  not exist, and the text draws in the browser's default face, a serif in
+  Chrome. Give one name: a font file of the project by its name, or one
+  generic family. A character that the font lacks, such as a Chinese
+  character in Inter, already falls back to a face of the platform, so it
+  needs no list. [runtime `lib/gfx/text.js` `_GetFontString`, r506.3;
+  observed in a Chrome 152 canvas, where `12pt "Arial, Microsoft YaHei,
+  sans-serif"` measured the same width as `12pt serif`, 2026-10-30]
