@@ -9,6 +9,7 @@ This file says where an entry goes, what its page is named, how to write it, and
 | Path | Contents |
 |------|----------|
 | `guides/pitfalls.md` | The index of all pitfalls: one group per page, with one conclusion line per entry for the groups under Topics and none for the groups under Feature pages, and the section "Adding an entry" |
+| `guides/symptoms.md` | The symptoms that events show, each with its causes in the order to check them, and a link to the page that holds each cause's entry |
 | `guides/plugins/{id}.md`, `guides/behaviors/{id}.md`, `guides/effects/{id}.md` | The pitfalls of one plugin, behavior or effect |
 | `guides/{behavior,plugin,effect}-category/{id}.md` | The pitfalls of a choice between several objects for the same goal |
 | `guides/primitives/` | The pitfalls of the event engine and the runtime that belong to no single addon, at paths that follow the manual |
@@ -62,6 +63,7 @@ To add a pitfall:
 1. Write the entry on its page. State the behaviour and its consequence, and end the entry with its source in brackets: `[manual: <page>]`, an official example ID, a schema file, or `[observed in a game project, <release> preview, <date>]`. An observation names the release it ran on, or the browser and its version when it ran outside Construct. `check.py` fails on an observation that names neither and is dated after 2026-10-30.
 2. If the page's group in `guides/pitfalls.md` is under Topics, add the entry's conclusion to the group as one line, at the same position as the entry on its page. Include the fix in the line, not only the prohibition, because an agent reads the index before it decides whether to open the page. A group under Feature pages takes no line.
 3. If you created the page, start it with the title and the link back to the index that the other pages use. Then add a group to the index that says when to read the page. Put the group under Topics or under Feature pages by the rule in "Adding an entry" in `guides/pitfalls.md`. The evidence for the rule is in `docs/decisions/pitfalls-index-and-topics.md`.
+4. If an agent would first notice the pitfall as something that goes wrong on screen, add the entry as a cause of that symptom in `guides/symptoms.md`, with a link to its page. Add the symptom if the table lacks it. When you delete or move an entry, remove or relink its cause there too.
 
 If sources disagree, the manual's wording takes precedence over an observation, and an observation takes precedence over intuition.
 

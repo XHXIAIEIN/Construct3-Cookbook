@@ -14,6 +14,13 @@ touch what a group names, open its page for the cases and the sources
 before you write the events. The groups under Feature pages list only the
 page to open.
 
+## Symptoms
+
+If events do not do what you expect, such as a click that does nothing
+or a toggle that flips back, open [symptoms.md](symptoms.md). It lists
+the causes of each symptom in the order to check them, and links the
+page that holds each fix and its source.
+
 ## Topics
 
 ### How events work

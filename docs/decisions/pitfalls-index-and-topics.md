@@ -2,7 +2,7 @@
 
 Moved from Construct3-Agent-Skills at commit 46bf73f, where its history stays.
 
-Date: 2026-09-29, revised 2026-10-21 and 2026-10-24
+Date: 2026-09-29, revised 2026-10-21, 2026-10-24 and 2026-10-31
 
 ## Problem
 
@@ -73,10 +73,24 @@ lines alone. An agent that picks an addon as a means to another end does
 not think of the addon's group as something to read. Runs and grading:
 `.local/docs/evidence/pitfalls-addon-lines-2026-10-24/`.
 
+On 2026-10-31 the index was 34.6 KB, and a table from what an agent sees
+to the entries that cause it was added: twelve symptoms, such as a click
+that does nothing or a toggle that flips back, each with its causes in the
+order to check them. The groups are ordered by topic, so an agent that sees
+only the symptom must already know which page owns the cause. The table is
+6 KB, which would take the index to 40.6 KB, past the mark below, and an
+agent needs it only once events misbehave. No eval has measured the table
+yet.
+
 ## Decision
 
-Option 3. `guides/pitfalls.md` keeps its opening rules. Each group is a
-`###` heading, a when-to-read line linking its page under `guides/`, and
+Option 3. `guides/pitfalls.md` keeps its opening rules, then a Symptoms
+section that sends an agent whose events misbehave to `guides/symptoms.md`.
+That page holds the symptom table. Each cause there links the page that
+holds its entry, so the table carries no fact or source of its own.
+
+Each group is a `###` heading, a when-to-read line linking its page
+under `guides/`, and
 one conclusion line per entry in the page's order. A page is what owns its
 entries ([guides-layout.md](guides-layout.md)): an addon's id
 (`guides/plugins/system.md`, `guides/behaviors/tween.md`), a c3-lang
@@ -162,3 +176,6 @@ conclusion line, or when an entry has no source.
 - An agent repeats a mistake that a moved lesson describes, because it did
   not read the lesson's home: bring the lesson back, or point to it from
   where that agent does read.
+- An agent that sees a symptom which `guides/symptoms.md` lists does not
+  open the page, or opens it and still misses the cause: move the table
+  into the index, shortened to fit, or reword the Symptoms section.

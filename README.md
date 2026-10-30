@@ -55,6 +55,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | Path | Contents |
 |------|----------|
 | [`guides/pitfalls.md`](guides/pitfalls.md) | The index of all pitfalls. It has one group per page, with a one-line conclusion for each pitfall and a note on when to read the page. |
+| [`guides/symptoms.md`](guides/symptoms.md) | Symptoms such as a click that does nothing, each with its causes in the order to check them and a link to the page that holds each fix. |
 | `guides/plugins/`, `guides/behaviors/` | Pitfalls of a single plugin or behavior. Each page is named after the addon's Construct ID, for example `plugins/system.md` or `behaviors/tween.md`. |
 | `guides/behavior-category/`, `guides/plugin-category/` | Pitfalls that arise when choosing between several objects for the same goal, for example `behavior-category/movements.md`. |
 | `guides/primitives/` | Pitfalls of the event engine and the runtime that belong to no single addon. Page paths follow the Construct 3 manual, for example `primitives/events/how-events-work.md`. |

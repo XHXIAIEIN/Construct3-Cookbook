@@ -55,6 +55,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | 路径 | 内容 |
 |------|------|
 | [`guides/pitfalls.md`](guides/pitfalls.md) | 全部陷阱的索引。每个页面对应一组，每条陷阱一行结论，并说明何时需要阅读该页面。 |
+| [`guides/symptoms.md`](guides/symptoms.md) | 按现象排查，例如点击没有反应：每个现象列出要按顺序检查的原因，并链接写有修正方法的页面。 |
 | `guides/plugins/`、`guides/behaviors/` | 单个插件或行为的陷阱。页面以该 addon 的 Construct ID 命名，例如 `plugins/system.md`、`behaviors/tween.md`。 |
 | `guides/behavior-category/`、`guides/plugin-category/` | 为同一目标在多个对象之间选择时出现的陷阱，例如 `behavior-category/movements.md`。 |
 | `guides/primitives/` | 不属于任何单个 addon 的事件引擎和运行时陷阱。页面路径沿用 Construct 3 手册，例如 `primitives/events/how-events-work.md`。 |
