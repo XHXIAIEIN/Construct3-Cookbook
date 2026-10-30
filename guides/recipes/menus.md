@@ -5,7 +5,8 @@ sub-menus and a way back, read this page. Design the events first with
 [design/thinking.md](../design/thinking.md). This page expands that
 file's row "A menu steered by keys, a gamepad or a pointer". A menu whose
 rows the pointer opens by hovering also needs "Sub-menus opened by a
-pointer".
+pointer". A button or a control with a text on it needs "A label on a
+button".
 
 ## The selection
 
@@ -36,6 +37,38 @@ overrides that look. No input event moves the highlight.
 [manual: plugin-reference/array.md "Push", "Pop", "Back";
 project-primitives/events/functions.md "Function maps"; a studied project,
 2026-10-06]
+
+## A label on a button
+
+Vertical alignment Center centres a Text's em box, not its letters. The
+runtime draws each line from its top, one em high. Capitals, digits and
+Chinese fill less than the em and sit near its top, so a label centred on a
+button by its box looks set high. Short lowercase letters such as "menu"
+sit centred.
+
+- Lower a label that holds capitals, digits or Chinese by about 0.11 em: 3
+  px at 27 px, 2 px at 16 px. Use one value for every label of one font and
+  size, so that "Play" and "Continue" on two buttons stand on one line.
+- Shrink the label's box from the top by twice that amount, so the label
+  stays inside its button or its control's row. If the box is one line
+  high, as the name beside a bar is, move it down by that amount instead,
+  because a line taller than its box draws from the box's top.
+- A Sprite Font centres its character cell. Lower the label by the
+  distance from the centre of a capital to the centre of the cell, in whole
+  font pixels times its scale: 1 font pixel for Fusion Pixel 8 px.
+- A glyph drawn alone on a shape, such as a play triangle on a disc, is
+  centred by its area, not its box. A triangle's centroid lies a third of
+  its height up from its base, so raise a triangle that points up by a
+  sixth of its height from the centre of its box.
+
+The skill's generator template does this in `button()`, `toggle()` and
+the other controls, `labelled_bar()` and the stage band of `band_text()`,
+and its `review_look.py` reports a label off its shape's centre as
+`optical`.
+
+[runtime: r506.3 `lib/gfx/text.js`; observed in a test project, r506.3
+preview at 1280×720 in system-ui and at 640×360 in Fusion Pixel 8 px,
+2026-10-30]
 
 ## Sub-menus opened by a pointer
 
