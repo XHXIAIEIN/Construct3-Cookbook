@@ -5,7 +5,7 @@ Read them with [design/thinking.md](design/thinking.md) before you write
 events. Every entry ends with its source: a manual page under
 `Construct3-Manual/`, a schema file, an official example id, a page of the
 community cheat sheet at fed-4.gitbook.io/c3-cheat-sheets, or an
-observation in a game project with its date. If you edit
+observation in a game project with its release and date. If you edit
 `eventSheets/*.json`, `layouts/*.json` or clipboard JSON by hand, read
 [project-files/hand-editing.md](project-files/hand-editing.md) first.
 
