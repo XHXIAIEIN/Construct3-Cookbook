@@ -1,9 +1,11 @@
-# Menus steered by keys or a gamepad
+# Menus with sub-menus
 
-If the events steer a menu with keys or a gamepad, with sub-menus and a
-way back, read this page. Design the events first with
+If the events steer a menu with keys, a gamepad or a pointer, with
+sub-menus and a way back, read this page. Design the events first with
 [design/thinking.md](../design/thinking.md). This page expands that
-file's row "A menu steered by keys or a gamepad".
+file's row "A menu steered by keys, a gamepad or a pointer". A menu whose
+rows the pointer opens by hovering also needs "Sub-menus opened by a
+pointer".
 
 ## The selection
 
@@ -34,3 +36,56 @@ overrides that look. No input event moves the highlight.
 [manual: plugin-reference/array.md "Push", "Pop", "Back";
 project-primitives/events/functions.md "Function maps"; a studied project,
 2026-10-06]
+
+## Sub-menus opened by a pointer
+
+A pointer that moves from a row to its sub-menu crosses other rows on a
+diagonal. If each row opens its own sub-menu at once, the sub-menu that
+the player aims at closes before the pointer reaches it. Delays and a
+safe triangle keep it open. The pointer decides only when an id goes
+onto or off the selection Array. The highlight still comes from the Array,
+so a row that the pointer crosses does not light up.
+
+- **The row under the pointer.** Every tick, pick it with Mouse *Cursor
+  is over object* and *Pick top/bottom* (top), because a sub-menu
+  overlaps its parent's rows. *Pick top/bottom* compares the instances of
+  one object type, so if the rows are of several types, put them in a
+  family and use the family. A closed level must fail this test, so add
+  *Is visible* or turn its layer off with *Set layer interactive*
+  ([pitfalls: Touch](../plugins/touch.md)). Read positions on the menu's
+  layer, as `Mouse.X("Menu")`.
+- **The pointer's path.** In an *Every tick* event, when the pointer's
+  position differs from the stored one, copy the stored position to an
+  older pair, then store the current one. The older position is the apex
+  of the triangle, so the apex never lies on the pointer. Do not record
+  it in *On movement*, because `Mouse.X` and `Mouse.Y` are one pointer
+  event behind in that trigger ([pitfalls: Mouse](../plugins/mouse.md)).
+- **The safe triangle.** While a sub-menu is open, the triangle joins the
+  apex to the two corners of the sub-menu's near edge, the left edge for a
+  sub-menu on the right. The pointer (px, py) is inside when
+  `(bx - ax) * (py - ay) - (by - ay) * (px - ax)` has one sign for the
+  three edges a→b, b→c and c→a. Put the test in a function that returns 1
+  or 0. The pointer must also be within the last
+  min(90, max(56, 0.43 × the parent's width)) CSS px of the parent, on the
+  side of the sub-menu. Convert CSS px as
+  [porting-web-effects.md](porting-web-effects.md) "Sizes" says. While
+  the pointer is in the triangle, a row that it crosses does not become
+  the hovered row. Once the pointer is inside the sub-menu, the triangle
+  ends.
+- **A finger.** The Mouse object ignores a finger
+  ([pitfalls: Touch](../plugins/touch.md)). So a touch takes effect at
+  once through Touch *On touched object*, with no delay and no triangle.
+
+Time each delay from a `wallclocktime` stored when the hovered row
+changes, and compare it every tick. A menu over a paused game runs at time
+scale 0, where `time` stops and a *Wait* with *Use time scale* never ends
+([pitfalls: System](../plugins/system.md)).
+
+| Delay | Seconds | Rule |
+|-------|---------|------|
+| Open | 0.22 | A row hovered this long takes effect. A folder row pushes its id and opens its sub-menu. A plain row pops the deeper levels. Leaving the row first cancels it |
+| Safe window | 1.2 | A row hovered inside the triangle takes effect when the pointer leaves the triangle, or this long after the hover began. So a pointer that stops there still opens its row |
+| Close | 0.36 | When the pointer is over no level and not over the menu's button, the whole menu closes after this long. Coming back first cancels it. A click outside closes it at once |
+
+[manual: system-reference/system-expressions.md "time", "wallclocktime";
+a studied web menu, 2026-10-26, for the triangle and the delays]
