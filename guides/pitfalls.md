@@ -179,6 +179,7 @@ If the events use a System condition, action or expression, read [plugins/system
 - *Create object* runs once per event, however many instances are picked.
 - With an empty template name, *Create object* copies the first instance of the type in the first layout of the project that holds one. So it never reads a template instance in a later layout. Mark that instance as a template, and name it in *Create object*. The name must match exactly: another case or a space falls back to that first instance.
 - *Create hierarchy* creates the children on the layer of the created parent, whatever layers the template's children sit on. Move a child to its own layer after the creation.
+- *Sort Z order* sorts by an instance variable and puts the instances back into the Z places they held, so no instance changes layer. For a depth sort, put the sorting objects in one family. Every tick, set its variable to the feet's Y, then sort.
 - If only events create an object, it loads its images at creation and draws nothing until they arrive. So a screen-sized picture shows late. Call *Load object images* for it in *On start of layout*.
 - *Restart layout* and *Go to layout* keep every global variable, every static local and the time scale at its current value. So a restart from a pause leaves the game frozen. Run *Set time scale* 1 under *On start of layout*.
 - *Go to layout (by name)* with a name that no layout has does nothing and raises no error. Open only the layouts that exist, and lock or hide the buttons for the others.
@@ -231,6 +232,7 @@ If the events use JSON, read [plugins/json.md](plugins/json.md).
 If the events use Particles, read [plugins/particles.md](plugins/particles.md).
 
 - A Particles object given a Sprite spawns real instances that are not the emitter's children.
+- A *One-shot* Particles object takes *Set rate* only immediately after its creation. Set the rate in the action list that creates it. Create another object for a second burst.
 
 ### Sprite
 
@@ -239,6 +241,7 @@ If the events use Sprite, read [plugins/sprite.md](plugins/sprite.md).
 - An instance with collisions disabled fails every overlap and collision test, in both directions. To take a dragged or tweening instance out of these tests, disable its collisions instead of using an `isMoving` flag.
 - Image point 0 is the origin. The first point added is 1, and `ImagePointCount` leaves out the origin.
 - *Set animation* to the animation already playing does nothing.
+- A looping animation never fires *On finished*. Turn *Loop* off for every animation whose end changes the state.
 - If frames serve as looks rather than as an animation, set the animation's *Speed* to 0.
 - *Set frame* to a frame of another image size resizes the instance and swaps its collision polygon.
 - A bar grows from its origin. Put the origin on the edge it grows from.

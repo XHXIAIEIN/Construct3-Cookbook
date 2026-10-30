@@ -31,6 +31,12 @@ Sources and the rule for adding an entry are in the index,
   plugin-reference/sprite.md "Set animation"; observed in a game
   project, 2026-09-22]
 
+- A looping animation never finishes, so *On finished* and *On any
+  finished* never fire for it. An attack, a hurt or a death state that
+  ends in *On finished* never ends if its animation has *Loop* on. So turn
+  *Loop* off for every animation whose end changes the state. [manual:
+  plugin-reference/sprite.md "On any finished", "On finished"]
+
 - If an animation's frames serve as looks rather than as an animation, set
   the animation's *Speed* to 0. A one-frame animation at the default speed
   5 shows no motion. But with more frames, every created instance plays

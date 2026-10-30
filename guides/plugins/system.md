@@ -354,6 +354,21 @@ Sources and the rule for adding an entry are in the index,
   a layout without "Parts", got its child on "Game" both times, with no
   error]
 
+- *Sort Z order* sorts the instances of an object by an instance variable,
+  not by an expression. It takes the instances out of the Z order and puts
+  the sorted sequence back into the places that they held. So no instance
+  changes layer, and an instance outside the sort keeps its place among
+  them. For a depth sort by the feet in a top-down view, put every object
+  that sorts against the others in one family. In an *Every tick* event,
+  set the family's variable to the Y of the feet. Then sort the family by
+  that variable. Run in the function that creates an instance, the sort
+  misses that instance ([attack-feel.md](../recipes/attack-feel.md)).
+  [manual: system-reference/system-actions.md "Sort Z order"; schema:
+  plugins/system.json `sort-z-order`, a parameter of type
+  `objinstancevar`; example: bewitched-torches, family `ZOrderables`
+  sorted every tick by `zOrderIndex` set to `Self.Y`; observed in a probe
+  project, r506.3 preview, 2026-10-26, recorded in recipes/attack-feel.md]
+
 - A layout loads the images of the objects placed in it when it starts. An
   object that only events create, with its template in a layout that never
   runs, loads its images when it is created. The game keeps running, and

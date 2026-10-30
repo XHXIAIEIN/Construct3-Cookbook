@@ -12,3 +12,11 @@ Sources and the rule for adding an entry are in the index,
   project, 2026-09-17; observed in that example, r504 preview, 2026-10-02:
   with its parenting event turned off, 49 of 50 particle sprites had no
   parent]
+
+- In *One-shot* mode, *Rate* is the number of particles in the one blast,
+  and *Set rate* changes it only immediately after the Particles object is
+  created. After the first tick, *Set rate* does nothing. So to size a
+  burst to a hit, run *Set rate* in the action list that creates the
+  object. A one-shot object destroys itself once its particles are gone,
+  so create another one for a second burst. [manual:
+  plugin-reference/particles.md "Rate", "Type"]

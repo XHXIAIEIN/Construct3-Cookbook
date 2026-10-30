@@ -32,3 +32,10 @@ Sources and the rule for adding an entry are in the index,
   project, r495.2 preview at 60 and 144 Hz, 2026-10-08: *Simulate control*
   Jump pressed 7 to 208 ms after walking off a ledge never jumped, and
   *Set vector Y* jumped at every press within the 0.1 s window]
+
+- Give Platform to an invisible rectangle Sprite with no animations.
+  Position the animated Sprite on top of it. On the animated Sprite
+  itself, each change of size and collision polygon as the animation plays
+  interferes with the detection of floors, walls and slopes, so the
+  movement shakes. [manual: behavior-reference/platform.md "Implementing
+  reliable platform movements"]
