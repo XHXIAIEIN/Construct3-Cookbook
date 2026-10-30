@@ -79,6 +79,10 @@ safe triangle keep it open. The pointer decides only when an id goes
 onto or off the selection Array. The highlight still comes from the Array,
 so a row that the pointer crosses does not light up.
 
+The open delay alone keeps a fast diagonal from switching, because a row
+that the pointer crosses in less than 0.22 s never takes effect. The
+triangle keeps the sub-menu open on a slower move.
+
 - **The row under the pointer.** Every tick, pick it with Mouse *Cursor
   is over object* and *Pick top/bottom* (top), because a sub-menu
   overlaps its parent's rows. *Pick top/bottom* compares the instances of
@@ -87,6 +91,11 @@ so a row that the pointer crosses does not light up.
   *Is visible* or turn its layer off with *Set layer interactive*
   ([pitfalls: Touch](../plugins/touch.md)). Read positions on the menu's
   layer, as `Mouse.X("Menu")`.
+- **The highlight.** With sub-menus, light every row whose id is on the
+  Array, not only `Back`, so the path to the open sub-menu stays lit.
+  Pick these rows with System *Pick by evaluate*,
+  `Selection.IndexOf(Row.itemId) >= 0`, where `Selection` is the
+  selection Array.
 - **The pointer's path.** In an *Every tick* event, when the pointer's
   position differs from the stored one, copy the stored position to an
   older pair, then store the current one. The older position is the apex
@@ -101,13 +110,19 @@ so a row that the pointer crosses does not light up.
   or 0. The pointer must also be within the last
   min(90, max(56, 0.43 × the parent's width)) CSS px of the parent, on the
   side of the sub-menu. Convert CSS px as
-  [porting-web-effects.md](porting-web-effects.md) "Sizes" says. While
-  the pointer is in the triangle, a row that it crosses does not become
-  the hovered row. Once the pointer is inside the sub-menu, the triangle
-  ends.
+  [porting-web-effects.md](porting-web-effects.md) "Sizes" says. A row
+  that the pointer crosses inside the triangle starts its hover time, but
+  it takes effect only by the safe window of the table. Once the pointer
+  is inside the sub-menu, the triangle ends.
+- **A click.** Mouse *On object clicked* with *Pick top/bottom* (top)
+  takes effect at once, with no delay.
 - **A finger.** The Mouse object ignores a finger
   ([pitfalls: Touch](../plugins/touch.md)). So a touch takes effect at
   once through Touch *On touched object*, with no delay and no triangle.
+  A finger is never over the menu for the Mouse object either, so the
+  close delay closes a menu that a tap opened. Set a global on Touch *On
+  any touch start* and clear it when `Mouse.X` or `Mouse.Y` changes.
+  While it is set, skip the open and close delays.
 
 Time each delay from a `wallclocktime` stored when the hovered row
 changes, and compare it every tick. A menu over a paused game runs at time
@@ -116,9 +131,16 @@ scale 0, where `time` stops and a *Wait* with *Use time scale* never ends
 
 | Delay | Seconds | Rule |
 |-------|---------|------|
-| Open | 0.22 | A row hovered this long takes effect. A folder row pushes its id and opens its sub-menu. A plain row pops the deeper levels. Leaving the row first cancels it |
+| Open | 0.22 | A row hovered this long takes effect. A folder row pushes its id and opens its sub-menu. A plain row pops the deeper levels, then pushes its own id. Leaving the row first cancels it |
 | Safe window | 1.2 | A row hovered inside the triangle takes effect when the pointer leaves the triangle, or this long after the hover began. So a pointer that stops there still opens its row |
 | Close | 0.36 | When the pointer is over no level and not over the menu's button, the whole menu closes after this long. Coming back first cancels it. A click outside closes it at once |
 
 [manual: system-reference/system-expressions.md "time", "wallclocktime";
-a studied web menu, 2026-10-26, for the triangle and the delays]
+a studied web menu, 2026-10-26, for the triangle and the delays; observed
+in a test project, r506.3 preview, 2026-10-30: a pointer that crossed
+"Export" in 0.25 s did not switch the sub-menu with or without the
+triangle, because it stayed on the row 70 ms; crossing in 0.9 s, the
+triangle kept "Open recent" open, and without it "Export" took effect
+0.223 s after its hover; a row left still inside the triangle took effect
+after 1.202 s; the menu closed 0.361 s after the pointer left; a menu
+opened by a tap closed itself until touch skipped the close delay]
