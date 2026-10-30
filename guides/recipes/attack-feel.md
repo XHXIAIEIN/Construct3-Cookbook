@@ -65,7 +65,7 @@ the schemas. Unless the rule says so, no preview has played it.
   the speed to the animation's own
   ([pitfalls: Sprite](../plugins/sprite.md)). The next attack then cuts
   the recovery short: at about 90 % of it at the base attack speed, and at
-  about 45 % at 2 attacks a second. [derived, inferred]
+  about 45 % at 2 attacks a second. [derived, inferred, observed]
 - Draw the last frames of the recovery close to the first pose of the
   wind-up, because the next attack can cut the recovery at any frame.
   [inferred]

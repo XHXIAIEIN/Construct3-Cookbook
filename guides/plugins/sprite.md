@@ -31,11 +31,12 @@ Sources and the rule for adding an entry are in the index,
   plugin-reference/sprite.md "Set animation"; observed in a game
   project, 2026-09-22]
 
-- *Set animation* to another animation sets the speed and the repeat-to
-  frame to the new animation's *Speed* and *Repeat to* from the Animations
-  Editor, whether it plays from the beginning or from the current frame.
-  So a *Set speed* or a *Set repeat-to frame* that runs before it is lost.
-  Run them after *Set animation*. [observed in a probe project, r506.3
+- *Set animation* to another animation takes the new animation's *Speed*
+  and *Repeat to* from the Animations Editor. This holds whether it plays
+  from the beginning or from the current frame. So a *Set speed* or a *Set
+  repeat-to frame* that runs before it is lost. Run *Set speed* after *Set
+  animation*. In *On finished* and *On any finished*, this order is not
+  enough, and the entry after the next one applies. [observed in a probe project, r506.3
   preview, 2026-10-30: *Set speed* 20, then *Set animation* to an
   animation of *Speed* 10, read `AnimationSpeed` 10, and the reverse
   order read 20; *Set repeat-to frame* 3, then *Set animation* to an
@@ -50,23 +51,28 @@ Sources and the rule for adding an entry are in the index,
 
 - In *On finished* and *On any finished*, *Set animation* takes effect on
   the next tick, and it then sets the speed to the new animation's
-  *Speed*. So a *Set speed* after it in the same trigger is lost. It is
-  also lost after a *Wait 0* between the two actions, and in a later event
-  of the same tick. To give the next animation another speed, start the
-  trigger's actions with *Wait 0*, then run *Set animation* and *Set
-  speed*. In *On frame changed*, *Set animation* takes effect at once.
+  *Speed*. So a *Set speed* after it in the same trigger is lost. The *Set
+  speed* is also lost after a *Wait 0* between the two actions. It is lost
+  in a later event of the same tick too. To give the next animation another
+  speed, start the trigger's actions with *Wait 0*, then run *Set
+  animation* and *Set speed*. In *On frame changed*, *Set animation* takes
+  effect at once, and a *Set speed* after it holds.
   [observed in a probe project, r506.3 preview, 2026-10-30: in *On
   finished*, *Set animation* to an animation of *Speed* 10, then *Set
   speed* 20, read `AnimationSpeed` 20 in that tick and 10 from the next;
   with *Wait 0* between the two actions, or with *Set speed* in a later
   event, 10; with *Wait 0* first, 20; *On any finished* read as *On
-  finished*, and *On frame changed* read 20; runtime: r506.3 Sprite
+  finished*; in *On frame changed*, the new animation's name and
+  repeat-to frame and `AnimationSpeed` 20 read at once, and 20 0.3 s
+  later; runtime: r506.3 Sprite
   `_SetAnim`, `_FinishAnimation`, `Tick`]
 
 - *On frame changed* fires whenever the shown frame changes, also while
-  the animation is stopped. *Set animation*, *Set frame* and *Start
-  animation* from the beginning fire it. It does not fire if the frame
-  stays the same, such as *Set frame* to the current frame. So a footstep
+  the animation is stopped. *Set animation* to another animation, *Set
+  frame* and *Start animation* from the beginning fire it. It does not
+  fire if the frame stays the same: *Set frame* to the current frame,
+  *Start animation* on frame 0, or *Set animation* to the animation
+  already playing. So a footstep
   sound or a counter in *On frame changed* also runs when an event sets
   the animation or the frame. To act on one frame of the playback, add
   *Compare frame* to that event. [manual: plugin-reference/sprite.md "On
