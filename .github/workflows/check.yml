@@ -17,3 +17,4 @@ jobs:
       - run: git clone --quiet --depth 1 https://github.com/XHXIAIEIN/Construct3-RAG "$GITHUB_WORKSPACE/../Construct3-RAG"
       - run: git clone --quiet --depth 1 https://github.com/XHXIAIEIN/Construct3-Manual "$GITHUB_WORKSPACE/../Construct3-Manual"
       - run: python scripts/check.py
+      - run: python -m unittest discover -s scripts

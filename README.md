@@ -63,6 +63,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | Conventions for editing the JSON in `eventSheets/`, `layouts/` and `objectTypes/` by hand, and the default event sheets, layers and visual style of a new project. |
 | [`docs/decisions/`](docs/decisions/README.md) | The decision records: why the guides are laid out, named and indexed as they are, with the evidence and the options weighed. |
 | [`scripts/check.py`](scripts/check.py) | The validation script that CI runs. |
+| [`scripts/test_check.py`](scripts/test_check.py) | The cases that the validation script must refuse or accept. |
 
 ## Contributing
 
@@ -74,6 +75,7 @@ Before you open a pull request, run the validation script from the repository ro
 
 ```bash
 python scripts/check.py
+python -m unittest discover -s scripts
 ```
 
 The script verifies that:
@@ -81,12 +83,15 @@ The script verifies that:
 - Every relative link and heading anchor resolves.
 - Every decision record has its line in `docs/decisions/README.md`, newest first, and every line has a record.
 - Every pitfall page has one group in `guides/pitfalls.md`, with one conclusion line per entry, and every entry ends with a source.
+- Every observation that is dated after 2026-10-30 names the Construct release it ran on, or the browser and its version when it ran outside Construct.
 - Every page name is an addon ID from Construct3-RAG, a category key from its c3-lang data, or a page of the Construct 3 manual.
 - Every ID in a page's `addons:` line is a plugin, a behavior or an ACE in the Construct3-RAG schemas.
 
 The last two checks read the Construct3-RAG and Construct3-Manual clones next to this repository. When the script runs in a git worktree, it looks next to the main working tree instead. If a clone is missing, the script skips the checks that need it and prints the command that clones it.
 
-CI runs the same script, with both clones present, on every pull request and on every push to `main`.
+The script also prints how many of the other observations, dated on or before 2026-10-30 or undated, name no release, and how many sources were last observed on a release older than that of the Construct3-RAG data. `python scripts/check.py --releases` lists them with their files and lines. Neither list fails the check, because each entry on it needs a new probe by hand.
+
+CI runs the same script and its tests, with both clones present, on every pull request and on every push to `main`.
 
 ## License
 

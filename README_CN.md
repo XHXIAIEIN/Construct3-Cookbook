@@ -63,6 +63,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | 手动编辑 `eventSheets/`、`layouts/`、`objectTypes/` 中 JSON 的规范，以及新工程默认的事件表、图层和视觉风格。 |
 | [`docs/decisions/`](docs/decisions/README.md) | 决策记录：指引为什么这样分布、命名和建索引，以及依据和权衡过的方案。 |
 | [`scripts/check.py`](scripts/check.py) | CI 运行的校验脚本。 |
+| [`scripts/test_check.py`](scripts/test_check.py) | 校验脚本必须拒绝或接受的用例。 |
 
 ## 贡献
 
@@ -74,6 +75,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 
 ```bash
 python scripts/check.py
+python -m unittest discover -s scripts
 ```
 
 该脚本会检查以下内容：
@@ -81,12 +83,15 @@ python scripts/check.py
 - 每个相对链接和标题锚点都能解析。
 - 每份决策记录在 `docs/decisions/README.md` 中都有一行，按日期从新到旧排列，并且每一行都对应一份记录。
 - 每个陷阱页面在 `guides/pitfalls.md` 中都有一组，每条条目对应一行结论，并且每条条目都以来源结尾。
+- 来源中每条日期晚于 2026-10-30 的观察都写明它运行的 Construct 版本；在 Construct 之外运行的观察则写明浏览器及其版本。
 - 每个页面名都是 Construct3-RAG 中的 addon ID、其 c3-lang 数据中的分类键，或 Construct 3 手册中的页面。
 - 页面 `addons:` 行中的每个 ID 都是 Construct3-RAG schema 中的插件、行为或 ACE。
 
 后两项检查会读取与本仓库同级的 Construct3-RAG 和 Construct3-Manual 克隆。在 git worktree 中运行时，脚本会改为在主工作树的同级目录中查找。如果缺少某个克隆，脚本会跳过依赖它的检查，并打印克隆它的命令。
 
-CI 在每个 pull request 和每次推送到 `main` 时，都会在两个克隆齐备的环境中运行同一脚本。
+脚本还会打印两个数字：其余观察（日期不晚于 2026-10-30 或没有日期）中有多少条没有写明版本，以及有多少个来源最近一次观察所用的版本早于 Construct3-RAG 数据的版本。`python scripts/check.py --releases` 会列出它们所在的文件和行。这两份清单都不会让检查失败，因为其中每条条目都需要手动重新验证。
+
+CI 在每个 pull request 和每次推送到 `main` 时，都会在两个克隆齐备的环境中运行同一脚本及其测试。
 
 ## 许可证
 

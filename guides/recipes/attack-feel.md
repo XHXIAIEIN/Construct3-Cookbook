@@ -61,9 +61,11 @@ the schemas. Unless the rule says so, no preview has played it.
   Most of the game's attacks match this within ±20 %. [derived]
 - Scale the playback so that the release frame lands on the current
   wind-up: Sprite *Set speed* to `Self.OriginalAnimationSpeed * baseWindup /
-  windup`. The next attack then cuts the recovery short: at about 90 % of
-  it at the base attack speed, and at about 45 % at 2 attacks a second.
-  [derived, inferred]
+  windup`. Run it after *Set animation*, because *Set animation* resets
+  the speed to the animation's own
+  ([pitfalls: Sprite](../plugins/sprite.md)). The next attack then cuts
+  the recovery short: at about 90 % of it at the base attack speed, and at
+  about 45 % at 2 attacks a second. [derived, inferred, observed]
 - Draw the last frames of the recovery close to the first pose of the
   wind-up, because the next attack can cut the recovery at any frame.
   [inferred]
@@ -202,14 +204,37 @@ the schemas. Unless the rule says so, no preview has played it.
     size as it fades.
   - Optional sparks of 0.3 to 0.45 s that fly outwards.
 - Divide that length into a rise, a peak, a fall and an ember, and keep
-  the fall the longest part. [vfx-timing.md](vfx-timing.md) gives the
-  frame counts of the four parts and the ratio that separates an impact
-  from a charge.
+  the fall the longest part. The peak lands on the damage, so the rise
+  runs before it. [vfx-timing.md](vfx-timing.md) gives the frame counts of
+  the four parts and the ratio that separates an impact from a charge.
 - Make each layer a Sprite with Tween (one property) on *Size* and on
   *Opacity*. Set *Destroy on complete* on the longer of the two tweens.
   [inferred]
-- Bring a layer to full opacity in the first 10 % of its life, and fade it
-  over the other 90 %. [derived]
+- A melee hit deals its damage in *On timer* "windup". Its effect peaks
+  on that tick, so a sweep layer, such as a trail that draws the swing,
+  rises before it ([vfx-timing.md](vfx-timing.md)). Build it in four
+  steps:
+  1. When the attack starts, run *Start timer* "sweep" for
+     `windup - RiseFrames / 60`, with `RiseFrames` from 6 to 8. If the
+     wind-up is shorter than the rise, create the sweep layer at once
+     instead.
+  2. In *On timer* "sweep", create the sweep layer at opacity 0. Tween its
+     *Opacity* to 100 over `min(RiseFrames / 60, windup)`.
+  3. In *On timer* "windup", start the sweep layer's fall with a second
+     *Opacity* tween. It stops the rising tween, so the peak lands on the
+     tick of the damage. Set *Destroy on complete* on the fall.
+  4. In the same trigger, create the burst layers, such as the flash, the
+     impact shape and the sparks. Bring each one to full opacity in the
+     first 10 % of its life, 1 to 3 frames at 60 fps. Fade it over the
+     other 90 %. In a pixel-art game, step it through animation frames and
+     fade only its glow ([pixel-art-vfx.md](pixel-art-vfx.md)).
+
+  The lengths of 0.2 to 0.5 s above count from the damage. When the attack
+  speed changes, keep the rise and move only its start. [derived,
+  inferred]
+- Every event that cancels the wind-up also runs *Stop timer* "sweep". It
+  destroys the sweep layer if one exists. A move order, a skill with a
+  cast time and a reset each cancel it. [inferred]
 - Create the effect at the target's chest, an image point above its
   centre, and keep it there with Pin *Pin to image point*. Set about half
   of the layers to the *Additive* blend mode. [data, inferred]

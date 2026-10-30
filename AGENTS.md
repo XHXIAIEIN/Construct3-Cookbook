@@ -16,7 +16,8 @@ This file says where an entry goes, what its page is named, how to write it, and
 | `guides/recipes/` | Recipes for game feel, menus, sequences and dialogue, sound, progress bars and layered depth |
 | `guides/project-files/` | The conventions for hand-editing project JSON, and the defaults of a new project |
 | `docs/decisions/` | The records of how the guides are laid out, named and indexed, with their evidence, options and trade-offs, listed in `docs/decisions/README.md` |
-| `scripts/check.py` | The validation that CI runs on links, on the index against its pages, on page names and on the index of the records |
+| `scripts/check.py` | The validation that CI runs on links, on the index against its pages, on sources and their releases, on page names and on the index of the records |
+| `scripts/test_check.py` | The cases that `check.py` must refuse or accept, which CI also runs |
 
 Keep these paths stable, because the skill depends on them. Its scripts recognise a clone by `guides/pitfalls.md`, search and cite the pitfall pages by path, and read `guides/design/native-first.json`. If you move or rename one of these files, update Construct3-Agent-Skills at the same time, because its `test_cookbook_paths.py` fails on a path that this repository no longer has.
 
@@ -58,7 +59,7 @@ A pitfall is a runtime behaviour of the event system that changes which events a
 
 To add a pitfall:
 
-1. Write the entry on its page. State the behaviour and its consequence, and end the entry with its source in brackets: `[manual: <page>]`, an official example ID, a schema file, or `[observed in a game project, <date>]`.
+1. Write the entry on its page. State the behaviour and its consequence, and end the entry with its source in brackets: `[manual: <page>]`, an official example ID, a schema file, or `[observed in a game project, <release> preview, <date>]`. An observation names the release it ran on, or the browser and its version when it ran outside Construct. `check.py` fails on an observation that names neither and is dated after 2026-10-30.
 2. If the page's group in `guides/pitfalls.md` is under Topics, add the entry's conclusion to the group as one line, at the same position as the entry on its page. Include the fix in the line, not only the prohibition, because an agent reads the index before it decides whether to open the page. A group under Feature pages takes no line.
 3. If you created the page, start it with the title and the link back to the index that the other pages use. Then add a group to the index that says when to read the page. Put the group under Topics or under Feature pages by the rule in "Adding an entry" in `guides/pitfalls.md`. The evidence for the rule is in `docs/decisions/pitfalls-index-and-topics.md`.
 
@@ -74,6 +75,8 @@ An entry describes the behaviour of the current stable release of Construct 3. T
 | The stable release that the Construct3-RAG data comes from | The `version` field in `data/c3-schemas/_index.json` of the Construct3-RAG clone |
 | The runtime code of a release | `https://editor.construct.net/<dir>/<path>`. `<dir>` writes a patch release with a dash (`r506-3` for r506.3), and `offline.json` in that folder lists every `<path>`, such as `preview/timelines/timelineManager.js` |
 
+To find the entries to check again, run `python scripts/check.py --releases`. It lists the observations that name no release, and the sources whose newest observed release is older than the release of the Construct3-RAG data. Neither list fails the check, because each entry needs a probe by hand. The reasons are in `docs/decisions/observed-releases.md`.
+
 If a stable release fixes a pitfall, delete the entry, or rewrite it to describe the behaviour that remains. Do not mention the bug report or the release that fixed it, because the reader acts only on the current behaviour. If only a beta release fixes it, keep the entry and name the beta in its source.
 
 ## Recording a decision
@@ -88,8 +91,11 @@ Before you finish, run these commands from the repository root:
 
 ```bash
 python scripts/check.py
+python -m unittest discover -s scripts
 git diff --check
 ```
+
+`scripts/test_check.py` holds the cases that `check.py` must refuse or accept. If you change what `check.py` refuses or accepts, add a case for that input to `scripts/test_check.py`.
 
 `check.py` reads the addon IDs from a Construct3-RAG clone and the manual pages from a Construct3-Manual clone beside this repository. In a git worktree, it looks beside the main working tree instead. If a clone is missing, the script skips the checks that need it and prints the command that clones it.
 

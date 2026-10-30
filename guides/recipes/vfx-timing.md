@@ -5,7 +5,9 @@ agree on one beat. This page gives the frame counts of that beat and the
 Construct way to build each. For the wind-up, the animation and the sounds
 of the attack that the effect belongs to, read
 [attack-feel.md](attack-feel.md). For the shake, the hit stop and the
-squash around it, read [feel.md](feel.md).
+squash around it, read [feel.md](feel.md). In a pixel-art game, also read
+[pixel-art-vfx.md](pixel-art-vfx.md): it fades the shapes by steps and
+keeps the additive blend for the glow.
 
 The numbers come from the decoded frames of seven published effect reels:
 4,468 frames at 60 fps, so 16.7 ms a frame, from 2.4 s to 27.9 s each.
@@ -17,6 +19,7 @@ Each rule ends with the kind of its evidence:
 - `derived`: computed from the counts.
 - `inferred`: a reading that the frames do not state, so a starting point
   to tune.
+- `observed`: what a probe project showed in a Construct preview.
 
 Count in frames, not seconds. Every key moment of the reels falls on a
 whole frame, with a remainder under 0.1 ms, so their times were set on a
@@ -37,6 +40,18 @@ frame grid rather than drawn as a continuous curve. A frame is 16.7 ms at
   the hit fading rather than as part of it. [frames, derived]
 - Place the peak where the damage lands, not at the end of the effect.
   Everything after the peak is the consequence of the hit. [inferred]
+- So the rise runs before the damage, and the effect's first frame comes
+  6 to 8 frames before it. A sweep layer, such as a trail that draws the
+  swing, carries that rise. The burst layers, such as the flash, the
+  impact shape and the sparks, start on the damage and reach full opacity
+  in 1 to 3 frames ([attack-feel.md](attack-feel.md)). Without a sweep
+  layer, the effect rises in those 1 to 3 frames. Its rise-to-fall ratio
+  then falls under 1.0, and the effect blinks. [derived, inferred]
+- A pixel-art impact built without a sweep layer has a rise-to-fall ratio
+  of 0 to 0.17 ([pixel-art-vfx.md](pixel-art-vfx.md)). [observed in a
+  probe project, r506.3 preview, 2026-10-30: six impacts]
+- After the peak on the damage, the effect runs another 22 to 26 frames,
+  0.37 to 0.43 s. [derived]
 - One effect repeats on a cycle of 106 frames, 1.77 s, with a spread of
   one frame over five repeats. When the same effect plays again, reuse its
   numbers instead of retuning each repeat. [frames]
@@ -54,7 +69,8 @@ and the reels hold no effect between them:
 | A charge or an ambient field: a beam, a tornado, an aura | 4.4 to 5.4 | 4.43, 5.40 |
 
 - For an impact, bring the brightness to its peak in 6 to 8 frames and
-  take 5 to 6 frames to fall to half. [frames]
+  take 5 to 6 frames to fall to half. In a hit, the sweep layer carries
+  that rise before the damage. [frames]
 - For a charge, take 27 to 31 frames to rise and 5 to 7 to fall. A charge
   that falls as slowly as it rises reads as a lamp, not as a release.
   [frames]
@@ -125,12 +141,20 @@ and the reels hold no effect between them:
   *Destroy on complete* on the longer of the two. Set the rise on the
   *Size* tween to 2 frames or less, as the area rule above says.
   ([pitfalls: Tween](../behaviors/tween.md)) [inferred]
+- Create the sweep layer `RiseFrames / 60` before the damage, at opacity
+  0. Tween its *Opacity* to 100 over the rise. On the damage, start its
+  fall with a second *Opacity* tween, which stops the rising one, so the
+  peak lands on the tick of the damage. Create the burst layers in the
+  same tick. For a melee hit, [attack-feel.md](attack-feel.md), "Hit
+  effects and damage numbers", gives the events. [inferred]
 - Give the debris its own object and its own Tween, with a life 10 to 11
   frames longer than the solid shape. Do not run both from one Tween: the
   handover needs the two lives to end apart. [inferred]
 - Set the effect's *Blend mode* to *Additive* on the solid shape and leave
   the debris normal, so the shape adds to the background and the specks
-  keep their own colour. [inferred]
+  keep their own colour. In a pixel-art game, keep the shape normal and
+  put the glow on its own additive sprite
+  ([pixel-art-vfx.md](pixel-art-vfx.md)). [inferred]
 - For a charge, drive the brightness with a Tween (value) channel that
   reaches 1 at 27 to 31 frames and falls in 5 to 7, and read the channel
   into the layer's opacity every tick. So a second charge starts while the
