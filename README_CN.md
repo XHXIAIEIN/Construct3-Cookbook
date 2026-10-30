@@ -59,7 +59,7 @@ git -C <parent-folder>/Construct3-Cookbook pull
 | `guides/behavior-category/`、`guides/plugin-category/` | 为同一目标在多个对象之间选择时出现的陷阱，例如 `behavior-category/movements.md`。 |
 | `guides/primitives/` | 不属于任何单个 addon 的事件引擎和运行时陷阱。页面路径沿用 Construct 3 手册，例如 `primitives/events/how-events-work.md`。 |
 | [`guides/design/`](guides/design/thinking.md) | 事件设计指引：`thinking.md` 介绍编写事件之前如何规划，`style.md` 介绍官方示例如何组织、命名和注释事件表，`native-first.json` 列出已被取代的 addon 及其内置替代方案。 |
-| [`guides/recipes/`](guides/recipes/feel.md) | 实现示例，涵盖手感、打击感、特效时序、菜单、进度条、脚本化序列与对话、声音、3D 相机下的分层纵深、移植网页或 WebGL 效果，并附一个完整的格子案例。 |
+| [`guides/recipes/`](guides/recipes/feel.md) | 实现示例，涵盖手感、打击感、特效时序、菜单、进度条、拖拽换位排序、脚本化序列与对话、声音、3D 相机下的分层纵深、移植网页或 WebGL 效果，并附一个完整的格子案例。 |
 | [`guides/project-files/`](guides/project-files/hand-editing.md) | 手动编辑 `eventSheets/`、`layouts/`、`objectTypes/` 中 JSON 的规范，以及新工程默认的事件表、图层和视觉风格。 |
 | [`docs/decisions/`](docs/decisions/README.md) | 决策记录：指引为什么这样分布、命名和建索引，以及依据和权衡过的方案。 |
 | [`scripts/check.py`](scripts/check.py) | CI 运行的校验脚本。 |

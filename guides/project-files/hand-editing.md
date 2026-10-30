@@ -144,7 +144,10 @@ saved or from the official examples
   variable, an ease id (`"ease": "easeoutback"`, the ids under
   `ui/bars/timeline/eases` in `<Construct3-RAG>/data/c3-lang/en-US.json`).
   The editor loads a quoted combo value without an error and keeps the
-  combo's default item. A key is its key code as a JSON number
+  combo's default item. A grouped combo, such as the cursor style of
+  Mouse *Set cursor style*, also takes the item id: `"cursor-style":
+  "grabbing"`. An index such as `"16"` loads, but the cursor stays the
+  default one. A key is its key code as a JSON number
   (`"key": 32`), and a string stops the load with `expected finite number`.
   A JSON string `"false"` in a boolean parameter reads as true.
 - An event variable's `initialValue` is text, whatever its `type`: `"0"`,

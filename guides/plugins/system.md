@@ -11,6 +11,19 @@ Sources and the rule for adding an entry are in the index,
   [manual: system-reference/system-actions.md "Wait";
   examples: arcade-shooter, layout-transition]
 
+- A *Wait* cannot be cancelled. If the events start a staggered set of
+  waits again before the last set has finished, the old waits still run,
+  and some of them run after the new, shorter ones. So an instance can end
+  on a value from an old set. A stagger that restarts while it plays, such
+  as items that make room for a dragged item, must not use *Wait*. Store
+  the `time` of the latest start, and let each instance take its new value
+  every tick once `time - StartTime` reaches its delay
+  ([recipes/drag-reorder.md](../recipes/drag-reorder.md)). [observed in a
+  probe project, r506.3 preview, 2026-10-30: a function called per item
+  with its target as a parameter, *Wait* `0.024 × n`, then a Tween to the
+  target; with 4 rounds of calls 7 to 14 ms apart, the farthest item
+  ended on its target of the first round, on the wrong side]
+
 - A *Wait* keeps the instances its event picked. The actions after it act
   on those instances, even if other events pick or create instances during
   the wait. An instance destroyed during the wait drops out. So *Wait 2
@@ -22,6 +35,18 @@ Sources and the rule for adding an entry are in the index,
   SOL of every object type and the wait restores it when it resumes; read
   from source, not observed; construct.net tutorial system-wait-action-63,
   "Wait remembers picked objects"]
+
+- A *Wait* restores the parameters and the local variables of the function
+  that holds it, but not the local variables of an event outside a
+  function. So in a *For each* outside a function, every iteration's
+  actions after the *Wait* read the value that the last iteration set. To
+  keep a value per iteration, call a function with the value as a
+  parameter, or store it in an instance variable of the picked instance.
+  [runtime: r506.3 `preview/events/scheduledWait.js`, `_Init` saves the
+  parameters and the inner local variables of `FindFirstFunctionBlockParent`
+  only; observed in a probe project, r506.3 preview, 2026-10-30: a *For
+  each* with *Wait* `0.024 × n` and a tween to a local variable moved every
+  instance to the last instance's value]
 
 - *Wait for previous actions* waits only for asynchronous actions. The
   manual names it "Wait for previous actions to complete". The editor
@@ -79,7 +104,8 @@ Sources and the rule for adding an entry are in the index,
   [Timeline controller](timeline.md)). [runtime: exported c3runtime.js
   r503, `Wait` calls `AddScheduledWait`, `RunScheduledWaits` is called only
   from `Step_BeforePreTick`, ahead of `Step_RunEventsEtc` and `Render`;
-  `ScheduledWait._Init` saves SOL, parameters and locals;
+  `ScheduledWait._Init` saves the SOL, and the parameters and locals of
+  the function that holds the wait;
   `ClearAllScheduledWaits` on layout end; read from source, not observed.
   Ashley: "rarely any need to use Wait 0 seconds", forum
   construct-2/general-discussion-17/wait-59374; *Wait for previous actions*

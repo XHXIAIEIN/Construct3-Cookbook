@@ -153,7 +153,9 @@ If you choose between the movements behaviors for one goal, read [behavior-categ
 If the events use a System condition, action or expression, read [plugins/system.md](plugins/system.md).
 
 - *Wait* does not stop a loop, so the remaining iterations run in the same tick.
+- A *Wait* cannot be cancelled, so a staggered set of waits started again runs both sets, and an old wait can set the last value. For a stagger that restarts, store the start `time` and let each instance act once `time - StartTime` reaches its delay.
 - A *Wait* keeps the instances that its event picked. So *Wait 2 seconds* then *Destroy* destroys the instance that started the wait, without a stored UID.
+- A *Wait* restores a function's parameters and locals, but not the locals of an event outside a function. Pass a per-iteration value to a function, or store it on the instance.
 - *Wait for previous actions* waits only for asynchronous actions. It waits for the *Wait* actions in a function only if the function is marked *Asynchronous*. The mark changes nothing inside the function.
 - A *Wait* delays only the rest of its own block and its sub-events. Sibling events run at once.
 - A *Wait* with *Use time scale* on never ends while the time scale is 0.
