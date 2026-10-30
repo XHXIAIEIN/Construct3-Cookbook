@@ -37,6 +37,15 @@ frame grid rather than drawn as a continuous curve. A frame is 16.7 ms at
   the hit fading rather than as part of it. [frames, derived]
 - Place the peak where the damage lands, not at the end of the effect.
   Everything after the peak is the consequence of the hit. [inferred]
+- So the rise runs before the damage, and the effect's first frame comes
+  6 to 8 frames before it. A sweep layer, such as a trail that draws the
+  swing, carries that rise. The burst layers, such as the flash, the
+  impact shape and the sparks, start on the damage and reach full opacity
+  in 1 to 3 frames ([attack-feel.md](attack-feel.md)). Without a sweep
+  layer, the effect rises in those 1 to 3 frames. Its rise-to-fall ratio
+  then falls under 1.0, and the effect blinks. [derived, inferred]
+- After the peak on the damage, the effect runs another 22 to 26 frames,
+  0.37 to 0.43 s. [derived]
 - One effect repeats on a cycle of 106 frames, 1.77 s, with a spread of
   one frame over five repeats. When the same effect plays again, reuse its
   numbers instead of retuning each repeat. [frames]
@@ -54,7 +63,8 @@ and the reels hold no effect between them:
 | A charge or an ambient field: a beam, a tornado, an aura | 4.4 to 5.4 | 4.43, 5.40 |
 
 - For an impact, bring the brightness to its peak in 6 to 8 frames and
-  take 5 to 6 frames to fall to half. [frames]
+  take 5 to 6 frames to fall to half. In a hit, the sweep layer carries
+  that rise before the damage. [frames]
 - For a charge, take 27 to 31 frames to rise and 5 to 7 to fall. A charge
   that falls as slowly as it rises reads as a lamp, not as a release.
   [frames]
@@ -125,6 +135,12 @@ and the reels hold no effect between them:
   *Destroy on complete* on the longer of the two. Set the rise on the
   *Size* tween to 2 frames or less, as the area rule above says.
   ([pitfalls: Tween](../behaviors/tween.md)) [inferred]
+- Create the sweep layer `RiseFrames / 60` before the damage, at opacity
+  0. Tween its *Opacity* to 100 over the rise. On the damage, start its
+  fall with a second *Opacity* tween, which stops the rising one, so the
+  peak lands on the tick of the damage. Create the burst layers in the
+  same tick. For a melee hit, [attack-feel.md](attack-feel.md), "Hit
+  effects and damage numbers", gives the events. [inferred]
 - Give the debris its own object and its own Tween, with a life 10 to 11
   frames longer than the solid shape. Do not run both from one Tween: the
   handover needs the two lives to end apart. [inferred]
