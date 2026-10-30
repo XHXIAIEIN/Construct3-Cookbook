@@ -221,3 +221,7 @@ fill inside it, with the fill's origin on the left. `bar_types()` and
 `bar_images()` make the two Tiled Backgrounds (9-patches with `caps=True`).
 The value drives one action:
 `set_width(fill, bar_width(value, maximum, LENGTH))` or `tween_width()`.
+
+A name beside the bar, as `labelled_bar()` places it, is centred on the
+bar by its letters, not its box: [menus.md](menus.md) "A label on a
+button".
