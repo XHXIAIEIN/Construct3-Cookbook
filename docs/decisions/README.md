@@ -30,6 +30,7 @@ line, a line has no record, or the order differs, and prints the expected
 lines.
 
 - [Observations Name the Release They Were Made On](observed-releases.md) — 2026-10-30
+- [Pixel-Art Effects Read from an Open Source Effect Library](pixel-art-vfx.md) — 2026-10-30
 - [Effect Timing Counts Read from Recorded Frames](vfx-timing.md) — 2026-10-22
 - [The Guides Are Named by Construct's Own Ids, Categories and Manual Pages](guides-layout.md) — 2026-10-21
 - [Design and Style Prompts Keep What Every Task Reads](prompt-references-by-task.md) — 2026-09-30

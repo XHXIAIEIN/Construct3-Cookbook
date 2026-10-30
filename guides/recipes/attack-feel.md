@@ -226,7 +226,8 @@ the schemas. Unless the rule says so, no preview has played it.
   4. In the same trigger, create the burst layers, such as the flash, the
      impact shape and the sparks. Bring each one to full opacity in the
      first 10 % of its life, 1 to 3 frames at 60 fps. Fade it over the
-     other 90 %.
+     other 90 %. In a pixel-art game, step it through animation frames and
+     fade only its glow ([pixel-art-vfx.md](pixel-art-vfx.md)).
 
   The lengths of 0.2 to 0.5 s above count from the damage. When the attack
   speed changes, keep the rise and move only its start. [derived,

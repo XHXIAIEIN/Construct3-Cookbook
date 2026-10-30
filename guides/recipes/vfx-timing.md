@@ -5,7 +5,9 @@ agree on one beat. This page gives the frame counts of that beat and the
 Construct way to build each. For the wind-up, the animation and the sounds
 of the attack that the effect belongs to, read
 [attack-feel.md](attack-feel.md). For the shake, the hit stop and the
-squash around it, read [feel.md](feel.md).
+squash around it, read [feel.md](feel.md). In a pixel-art game, also read
+[pixel-art-vfx.md](pixel-art-vfx.md): it fades the shapes by steps and
+keeps the additive blend for the glow.
 
 The numbers come from the decoded frames of seven published effect reels:
 4,468 frames at 60 fps, so 16.7 ms a frame, from 2.4 s to 27.9 s each.
@@ -146,7 +148,9 @@ and the reels hold no effect between them:
   handover needs the two lives to end apart. [inferred]
 - Set the effect's *Blend mode* to *Additive* on the solid shape and leave
   the debris normal, so the shape adds to the background and the specks
-  keep their own colour. [inferred]
+  keep their own colour. In a pixel-art game, keep the shape normal and
+  put the glow on its own additive sprite
+  ([pixel-art-vfx.md](pixel-art-vfx.md)). [inferred]
 - For a charge, drive the brightness with a Tween (value) channel that
   reaches 1 at 27 to 31 frames and falls in 5 to 7, and read the channel
   into the layer's opacity every tick. So a second charge starts while the
