@@ -18,6 +18,11 @@ shapes in art px. Each rule ends with the kind of its evidence:
   not how a player reads it.
 - `derived`: computed from the code's numbers, at 60 fps.
 - `inferred`: the Construct build of a rule, a starting point to tune.
+- `observed`: what a probe project that builds the impact showed in a
+  Construct preview. The probe draws 2 layout px per art px, with the
+  project properties *Sampling* Nearest, *Pixel rounding* on and
+  *Fullscreen mode* Integer scale outer. Its palette is the ramp, the
+  backdrop and the target's grey.
 
 ## Fade by steps, not by opacity
 
@@ -43,11 +48,18 @@ shapes in art px. Each rule ends with the kind of its evidence:
 - Construct has no dither effect: its effects include Pixellate and
   Posterize but no dither [schema: c3-schemas/_index.json]. So draw the
   dither steps as frames of the animation, and step the animation instead
-  of tweening *Opacity*. [inferred]
+  of tweening *Opacity*. Frames drawn with opaque pixels then add no
+  colour outside the ramp. [observed in a probe project, r506.3 preview, 2026-10-30: the
+  impact's 11 frames with the ring's dither drawn in; with the glow
+  hidden, frames 1, 2 and 5 held no colour outside the palette in the
+  208 × 208 px around the burst]
 - To step the hue without new frames, draw the frames in white and run
   *Set color* with `HexColor("#RRGGBB")` of the ramp's next colour. The
   colour is a tint, so white shows the image's own colours.
-  [manual: plugin-reference/common-features/common-actions.md "Set color"]
+  [manual: plugin-reference/common-features/common-actions.md "Set color";
+  observed in a probe project, r506.3 preview, 2026-10-30: a white spark
+  tinted with `HexColor("#fff3a6")` read 255, 243, 166 in `colorRgb` and
+  showed that colour on screen]
 
 ## The colour layer and the light layer
 
@@ -57,13 +69,25 @@ shapes in art px. Each rule ends with the kind of its evidence:
   shape itself is never additive. [code]
 - So in Construct, put the shapes on a layer with the *Normal* blend mode.
   Put each glow on its own soft round sprite with the *Additive* blend
-  mode, and tween only the glow's *Opacity*. An additive shape adds to the
-  background, so its pixels leave the palette. [inferred]
+  mode, and tween only the glow's *Opacity*. The glow lifts the pixels
+  under it off the palette. [observed in a probe project, r506.3 preview, 2026-10-30:
+  in frames 1, 2 and 5, 7,500 to 8,800 of the 43,264 px around the burst
+  left the palette with the two glows shown, and none with them hidden]
+- Keep the shapes themselves *Normal*. An additive shape adds to the
+  background, so its pixels leave the palette wherever it is drawn.
+  [inferred]
 - End a hit's glow faster than its debris. The glow of an impact falls as
   `exp(-t / 0.05)`, so to a twentieth in 9 frames. The glow of a muzzle
   flash falls as `exp(-t / 0.03)`, in 5 frames. An explosion adds a white
   glow of 0.08 s and a warm glow of 0.7 s, whose strength falls with the
   square of its remaining life. [code, derived]
+- To fade a glow as `exp(-t / τ)`, tween its *Opacity* to 0 with the ease
+  *Out Exponential* over `10 × τ × ln 2` seconds, 0.35 s for the impact.
+  The tween then follows the curve. [observed in a probe project, r506.3 preview, 2026-10-30:
+  the two glows, tweened from 90 and from 70 over 0.3466 s, stayed
+  within 0.9 opacity points of `90 × exp(-t / 0.05)` and
+  `70 × exp(-t / 0.05)` in about 100 samples of each of six impacts]
+- So the muzzle flash's glow, with τ of 0.03, takes 0.21 s. [derived]
 
 ## Key frames for the burst
 
@@ -84,9 +108,23 @@ shapes in art px. Each rule ends with the kind of its evidence:
 - This agrees with "The area's first frame" in
   [vfx-timing.md](vfx-timing.md): the burst covers its area on its first
   frame. [derived]
+- The impact's rise-to-fall ratio is 0 to 0.17, below the impact row's
+  1.0 to 2.0 in [vfx-timing.md](vfx-timing.md). It rises in 0 or 1
+  frames, holds its peak for 2 to 4, falls to half in 6 to 8 and to a
+  twentieth in 5 to 8 more. That page's "The four parts of one effect"
+  predicts a ratio under 1.0 for an effect without a sweep layer.
+  [observed in a probe project, r506.3 preview, 2026-10-30: `measure_timing.py` on
+  six impacts, recorded at a time scale of 0.1 and resampled to 60 fps of
+  game time]
 - In Construct, make the burst a Sprite whose animation holds those
   frames at speed 60 with *Loop* off, and destroy it in *On finished*.
-  [inferred]
+  The impact's burst has 11 frames, because the effect draws nothing from
+  0.2 s on. In a preview that ticks at 143 Hz, frame k first shows at
+  `(k - 1) / 60` s, and the burst is gone after its 11th frame.
+  [observed in a probe project, r506.3 preview, 2026-10-30: frame k first showed 0 to
+  0.3 frames after `(k - 1) / 60` s, within the recording's sampling
+  step, and the burst was gone 11.0 to 11.2 frames after its creation, in
+  six impacts]
 
 ## Behind and in front of the character
 
@@ -111,9 +149,38 @@ shapes in art px. Each rule ends with the kind of its evidence:
 - A spark lives 0.05 to 0.15 s at a muzzle, 0.1 to 0.3 s at an impact,
   0.12 to 0.35 s off a slash and 0.18 to 0.7 s in an explosion. [code]
 - In Construct, give a spark Sprite the Bullet behavior with *Set gravity*
-  855. Every tick, set its angle to `Bullet.AngleOfMotion`, its width to
-  the streak length and its speed to `Bullet.Speed * (1 - 2.2 * dt)`.
-  [inferred]
+  855, and keep the Bullet's *Set angle* property on, so the streak
+  points along its motion. Every tick, set its width to the streak length
+  and its speed to `Bullet.Speed * (1 - 2.2 * dt)`. The spark then moves
+  as the code moves it. [observed in a probe project, r506.3 preview, 2026-10-30: over
+  the first 85 ms, while all 18 sparks of an impact were alive, each
+  spark's speed stayed within 1.2 px/s and its position within 1.4 px of
+  the code's update run from the same starting velocity, in six impacts;
+  its *Angle* equalled `Bullet.AngleOfMotion` on every recorded frame
+  after its first]
+- Set a new spark's angle, width and colour in the event that creates it,
+  not only in the *Every tick* event. Without them its first frame shows
+  the white image at angle 0. A created instance is not picked by another
+  event until its top-level event ends, as
+  [how-events-work.md](../primitives/events/how-events-work.md) says, and
+  the Bullet first turns it on the next tick. [observed in a probe project, r506.3 preview, 2026-10-30:
+  with the *Every tick* event and the spawn in one group, a frame
+  0.1 ms after an impact's creation showed its 18 sparks white, 2 px wide
+  and at angle 0; with the three actions added to the spawn, no recorded
+  frame did]
+- A rotated sprite is drawn on the screen's pixels, not on the art grid.
+  At 2 layout px per art px, a spark's streak has edges inside an art px,
+  while the burst's frames stay on the grid. [observed in a probe project, r506.3 preview, 2026-10-30:
+  under the *High* fullscreen quality, 16 to 128 cells of 2 × 2
+  screen px, one art px each, held two colours in each screenshot, all of
+  them on sparks]
+- The *Low* fullscreen quality renders at the viewport's size and then
+  stretches the result. *Optimize for pixel art* turns it on. [manual:
+  project-primitives/projects.md "Fullscreen quality",
+  interface/dialogs/new-project.md "Optimize for pixel art"]
+- So to keep a rotated streak on the grid, draw the game at 1 layout px
+  per art px with the *Low* fullscreen quality, and halve this page's
+  positions and speeds. [inferred]
 - Spawn the next particle where one ends. In an explosion:
   - 45 to 60 % of the fire bits leave smoke where they end.
   - A burning brand trails fire and lights a short blaze where it lands.

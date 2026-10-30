@@ -19,6 +19,7 @@ Each rule ends with the kind of its evidence:
 - `derived`: computed from the counts.
 - `inferred`: a reading that the frames do not state, so a starting point
   to tune.
+- `observed`: what a probe project showed in a Construct preview.
 
 Count in frames, not seconds. Every key moment of the reels falls on a
 whole frame, with a remainder under 0.1 ms, so their times were set on a
@@ -46,6 +47,9 @@ frame grid rather than drawn as a continuous curve. A frame is 16.7 ms at
   in 1 to 3 frames ([attack-feel.md](attack-feel.md)). Without a sweep
   layer, the effect rises in those 1 to 3 frames. Its rise-to-fall ratio
   then falls under 1.0, and the effect blinks. [derived, inferred]
+- A pixel-art impact built without a sweep layer has a rise-to-fall ratio
+  of 0 to 0.17 ([pixel-art-vfx.md](pixel-art-vfx.md)). [observed in a
+  probe project, r506.3 preview, 2026-10-30: six impacts]
 - After the peak on the damage, the effect runs another 22 to 26 frames,
   0.37 to 0.43 s. [derived]
 - One effect repeats on a cycle of 106 frames, 1.77 s, with a spread of
