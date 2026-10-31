@@ -63,8 +63,8 @@ Construct-Example-Projects, 2026-09-18]
   its scope and its record. Read the rule
   there; this page names it by its id and does not restate it.
   - The look that the user gives comes first. With it, only the rules of
-    scope `every-look` hold. Without it, the game takes paper and ink, the
-    rules of scope `paper-and-ink`.
+    scope `every-look` hold. Without it, the game takes the default look,
+    the rules of scope `default-look`.
   - Colour: `colour.palette-only`, `colour.structure`,
     `colour.accent-contrast`, `palette.greys`.
   - Text: `text.contrast`, `type.scale`, `type.min-size`, `type.sizes`,
@@ -72,9 +72,10 @@ Construct-Example-Projects, 2026-09-18]
   - Grid and screen: `grid.unit`, `grid.shape-size`,
     `grid.world-placement`, `grid.runtime-spawn`, `screen.fill`,
     `screen.safe-area`, `pixel-art.sampling`.
-  - HUD and layout: `hud.paper`, `touch.target`, `layout.proximity`,
-    `layout.balance`, `layout.fill`, `layout.spread`, `layer.z-order`.
-  - Paper and ink's shapes: `subject.size`, `subject.player-shape`,
+  - HUD and layout: `hud.default`, `hud.tag-plain`, `touch.target`,
+    `layout.proximity`, `layout.balance`, `layout.fill`, `layout.spread`,
+    `layer.z-order`.
+  - The default look's shapes: `subject.size`, `subject.player-shape`,
     `lines.areas`, `backdrop.sheet`, `pattern.areas`, `pointer.colours`,
     `motion.hit`.
   - Art: `art.routes`, `art.roles`, `art.ids`, `art.frames`,
