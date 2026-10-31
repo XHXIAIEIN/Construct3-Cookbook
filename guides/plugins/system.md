@@ -408,6 +408,33 @@ Sources and the rule for adding an entry are in the index,
   *On start of layout*, *Restart layout* at time scale 0 left the time
   scale at 0, the countdown at 60 and the player unable to move]
 
+- *Restart layout* and *Go to layout* keep the state of each layer of a
+  layout: the visibility, opacity, scale and interactivity that *Set layer
+  visible*, *Set layer opacity*, *Set layer scale* and *Set layer
+  interactive* gave it. Only the first run of a layout starts its layers
+  with their properties. A layout that runs again, after a restart or after
+  a visit to another layout, starts with its layers as its last run left
+  them. So a pause menu that restarts the layout leaves its own layer shown
+  over the new run, and the playfield layer that it made non-interactive
+  ignores every tap. Under *On start of layout*, set each layer that events
+  change to its starting state: hide the menu layer and make the playfield
+  layer interactive. [manual: system-reference/system-actions.md "Restart
+  layout" resets the event groups and names no layer state;
+  project-primitives/layers.md "Initially visible", "Initially
+  interactive"; runtime: r506.3 `preview/layouts/layout.js`,
+  `_StartRunning` resets the layout's size and scroll and no layer state,
+  and `preview/layouts/layer.js` `_End` destroys the layer's instances and
+  keeps its state; observed in a game project, r506.3 preview, 2026-11-01:
+  after a pause menu's Restart, the menu layer stayed visible at opacity 1
+  and the playfield layer stayed non-interactive; observed in a minimal
+  project, r506.3 preview, 2026-11-01: a layer hidden at start, which
+  events showed at opacity 40 and scale 2 while they made a second layer
+  non-interactive, was still visible at opacity 0.4 and scale 2, with the
+  second layer non-interactive, after *Restart layout*, after *Go to
+  layout* to the same layout, and after *Go to layout* to a second layout
+  and back. The second layout started with its own layers in their initial
+  state]
+
 - *Go to layout (by name)* with a name that no layout has does nothing. It
   raises no error and leaves the current layout running, so a mistyped name
   or a level button whose layout is not made yet looks like a dead button.
