@@ -189,6 +189,7 @@ If the events use a System condition, action or expression, read [plugins/system
 - *Sort Z order* sorts by an instance variable and puts the instances back into the Z places they held, so no instance changes layer. For a depth sort, put the sorting objects in one family. Every tick, set its variable to the feet's Y, then sort.
 - If only events create an object, it loads its images at creation and draws nothing until they arrive. So a screen-sized picture shows late. Call *Load object images* for it in *On start of layout*.
 - *Restart layout* and *Go to layout* keep every global variable, every static local and the time scale at its current value. So a restart from a pause leaves the game frozen. Run *Set time scale* 1 under *On start of layout*.
+- *Restart layout* and *Go to layout* keep each layer's visibility, opacity, scale and interactivity, so a restart from a pause menu leaves the menu shown and the playfield ignoring taps. Under *On start of layout*, hide the menu layer and make the playfield layer interactive.
 - *Go to layout (by name)* with a name that no layout has does nothing and raises no error. Open only the layouts that exist, and lock or hide the buttons for the others.
 
 ### Common to all objects

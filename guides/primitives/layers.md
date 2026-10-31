@@ -66,7 +66,8 @@ Sources and the rule for adding an entry are in the index,
   in one layout, it is visible and interactive in the next. An instance
   moved or faded on it is back as placed. Keep what the layer shows in
   global variables, and set it on the layer under *On start of layout* in
-  every layout that uses the layer.
+  every layout that uses the layer. What a restart or a return to the same
+  layout keeps of a layer's state is on [System](../plugins/system.md).
   [manual: project-primitives/layers.md "Global layers", the initial
   objects and the properties are shared;
   project-primitives/objects/instances.md "Global", all instances are
