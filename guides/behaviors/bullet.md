@@ -49,3 +49,15 @@ Sources and the rule for adding an entry are in the index,
   Bullet objects their events create have Destroy outside, and all but four
   of the rest have Fade, Wrap or Tween, are destroyed or placed again by
   events, or hit a Solid]
+
+- A Bullet moves by its speed times `dt` in each tick: at 1200 px/s and 60
+  ticks a second, it jumps 20 px. A wall thinner than that jump can fall
+  between two positions, and neither *On collision* nor *Is overlapping*
+  detects it. Give a fast projectile the behavior's *Step* property. The
+  bullet then moves in small increments and fires *On step* at each one.
+  In *On step*, test *Is overlapping* with the wall, then *Destroy* the
+  bullet. To leave the bullet at the first position that touches the wall,
+  for an impact effect, run *Stop stepping* instead. [manual:
+  behavior-reference/bullet.md "Stepping bullets", "Step", "On step",
+  "Stop stepping"; official example bullet-stepping, which fires the same
+  bullets with and without *Step* at thin barriers]

@@ -206,6 +206,7 @@ If the events use a condition, action or expression that every object has (hiera
 - *Move to top* moves only the instance, and leaves its hierarchy children where they are. Move each part.
 - *Set color* multiplies. Draw a tinted part white, and keep highlights on an untinted child.
 - The instances of a created hierarchy run *On created* in no fixed order. Initialise the hierarchy in *On hierarchy ready* of its root, which fires after all of them have run *On created*.
+- *On collision* fires once for each pair of instances when they start to overlap, also for an instance created over another, and not again until they separate. For damage that repeats while a player stays inside an enemy, test *Is overlapping* together with the invincibility time.
 
 ### Advanced Random
 
@@ -286,6 +287,7 @@ If the events use Bullet, read [behaviors/bullet.md](behaviors/bullet.md).
 - Bullet *Bounce off object* moves the ball out of the object at once. So an *On collision* with that object in a later event of the same tick does not run. Put the feedback events above the event that bounces.
 - A Bullet's angle of motion and the object's angle are two separate values. At speed 0, *Set angle of motion* does nothing, and *Set speed* from 0 moves the object right. Set the speed first, then the angle of motion.
 - A fired bullet that misses flies on outside the layout forever, because its hit events destroy only the bullets that hit. Give it the Destroy outside behavior.
+- A fast Bullet can jump over a thin wall between two ticks. Give it the *Step* property, and test *Is overlapping* in *On step*.
 
 ### Follow
 

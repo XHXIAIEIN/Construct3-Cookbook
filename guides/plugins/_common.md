@@ -125,3 +125,22 @@ Sources and the rule for adding an entry are in the index,
   [manual: plugin-reference/common-features/common-conditions.md "On
   hierarchy ready"; scripting-reference/object-interfaces/iworldinstance.md
   "hierarchyready"; none of the 524 official examples uses the condition]
+
+- *On collision with another object* fires once for each pair of
+  instances, when they start to overlap, and not again until they separate.
+  It also fires for an instance created over another, and for instances
+  placed overlapping in the layout. So damage dealt in *On collision* hits
+  a player who stays inside an enemy only once. After the invincibility
+  time ends, the overlap goes on and no hit follows. Test *Is overlapping*
+  together with the invincibility time instead
+  ([feel.md](../recipes/feel.md), "Invincibility after a hit"). For a
+  melee hitbox, the same rule gives one hit for each target and each
+  hitbox instance. A target that leaves the hitbox and enters it again
+  during the swing is hit again
+  ([feel.md](../recipes/feel.md), "A melee swing that hits each target
+  once"). [manual: plugin-reference/common-features/common-conditions.md
+  "On collision with another object"; observed in a probe project, r506.3
+  preview, 2026-11-01: a hitbox created over two enemies logged each of
+  them once, logged a third once when it moved in, logged nothing more
+  while all three stayed under it for 0.4 s, and logged an enemy again
+  that left and came back; a second hitbox logged all three again]
