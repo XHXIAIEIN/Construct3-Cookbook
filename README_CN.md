@@ -6,25 +6,25 @@ Construct3-Cookbook 是 [Construct3-Agent-Skills](https://github.com/XHXIAIEIN/C
 
 ## 安装
 
-### 使用安装脚本克隆
+### 通过 skill 设置
 
-Construct3-Agent-Skills 自带一个安装脚本，会把本仓库和 skill 读取的其他仓库一起克隆下来。在 Construct3-Agent-Skills 的克隆中运行：
+Construct3-Agent-Skills 的 skill 从克隆中读取本仓库。skill 的 `setup.py` 会检查本仓库和 skill 读取的其他仓库是否已克隆，并为每个缺少的仓库打印克隆到主文件夹的命令。主文件夹是 `~/Construct3`，或环境变量 `CONSTRUCT3_HOME` 指定的文件夹。
+
+如果 skill 是作为 Claude Code 插件安装的，让 Claude 把 Construct3 设置好即可。Claude 会运行 `setup.py`，在你同意后克隆缺少的仓库。在 Construct3-Agent-Skills 的克隆中，`bootstrap.py` 会执行同样的克隆命令：
 
 ```bash
 python scripts/bootstrap.py
 ```
 
-脚本会把缺少的仓库克隆到存放 Construct3-Agent-Skills 的文件夹中，已有的克隆保持不变。脚本可以随时重新运行，以补上缺少的克隆。
+两个脚本都不会改动已有的克隆，可以随时重新运行。
 
 ### 手动克隆
 
-如果不使用安装脚本，将本仓库克隆到名为 `Construct3-Cookbook` 的文件夹，并与 Construct3-Agent-Skills 或 Construct3-RAG 的克隆放在同一目录下。放在此位置时，skill 无需额外配置即可找到它。
+将本仓库克隆到主文件夹中名为 `Construct3-Cookbook` 的文件夹。放在此位置时，skill 无需额外配置即可找到它。
 
 ```bash
-git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <parent-folder>/Construct3-Cookbook
+git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook ~/Construct3/Construct3-Cookbook
 ```
-
-将 `<parent-folder>` 替换为存放 Construct3-Agent-Skills 克隆的文件夹。
 
 ### 使用自定义位置
 
@@ -35,19 +35,21 @@ git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <parent-fol
 | 1 | `search_guides.py` 的 `--cookbook` 选项 | `--cookbook D:/GitHub/Construct3-Cookbook` |
 | 2 | 环境变量 `CONSTRUCT3_COOKBOOK` | `CONSTRUCT3_COOKBOOK=D:/GitHub/Construct3-Cookbook` |
 | 3 | 游戏项目 `AGENTS.md` 或 `CLAUDE.md` 中的一行 | `- Construct3-Cookbook: D:/GitHub/Construct3-Cookbook` |
-| 4 | 默认位置 | 与 Construct3-RAG 或 Construct3-Agent-Skills 克隆同级的 `Construct3-Cookbook` 文件夹 |
+| 4 | 主文件夹 | `~/Construct3/Construct3-Cookbook` |
+| 5 | 其他克隆旁边 | 与 skill 所用的 Construct3-Agent-Skills 或 Construct3-RAG 克隆同级的 `Construct3-Cookbook` 文件夹 |
+| 6 | Claude Code 插件缓存中插件的旁边 | 缓存里与插件文件夹并列的 `Construct3-Cookbook` 文件夹 |
 
 skill 的 `install.py` 会把方式 3 的那一行写入游戏项目 `AGENTS.md` 的 Construct 3 区块。
 
 > [!NOTE]
-> 如果 `search_guides.py` 或 `check_project.py` 找不到克隆，会打印需要执行的 `git clone` 命令，并照常完成其余工作。
+> 如果 `search_guides.py` 或 `check_project.py` 找不到克隆，会指向 skill 的 `setup.py`（它会打印克隆命令），并照常完成其余工作。
 
 ### 更新指引
 
-在克隆中拉取最新内容：
+当克隆落后于上游、且没有自己的改动时，skill 的 `check_project.py` 会自动拉取。也可以手动拉取：
 
 ```bash
-git -C <parent-folder>/Construct3-Cookbook pull
+git -C ~/Construct3/Construct3-Cookbook pull
 ```
 
 ## 仓库结构

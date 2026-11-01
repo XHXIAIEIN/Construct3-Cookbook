@@ -6,25 +6,25 @@ Construct3-Cookbook is the companion guide collection for [Construct3-Agent-Skil
 
 ## Installation
 
-### Clone with the setup script
+### Set up with the skill
 
-Construct3-Agent-Skills includes a setup script that clones this repository together with the other repositories the skill reads. Run it from your Construct3-Agent-Skills clone:
+The skill of Construct3-Agent-Skills reads this repository from a clone. Its `setup.py` checks for this clone and for the other repositories the skill reads, and prints the command that clones each missing one into the home folder. The home folder is `~/Construct3`, or the folder that the `CONSTRUCT3_HOME` environment variable names.
+
+If the skill is installed as a Claude Code plugin, ask Claude to set Construct3 up. Claude runs `setup.py` and clones the missing repositories after you agree. From a Construct3-Agent-Skills clone, `bootstrap.py` runs the same clone commands:
 
 ```bash
 python scripts/bootstrap.py
 ```
 
-The script clones each missing repository into the folder that contains Construct3-Agent-Skills and leaves existing clones unchanged. You can run the script again at any time to add a missing clone.
+Both scripts leave existing clones unchanged, so you can run them again at any time.
 
 ### Clone manually
 
-To clone this repository without the setup script, clone it into a folder named `Construct3-Cookbook` next to your Construct3-Agent-Skills or Construct3-RAG clone. The skill finds a clone in this location without further configuration.
+Clone this repository into a folder named `Construct3-Cookbook` in the home folder. The skill finds it there without further configuration.
 
 ```bash
-git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook <parent-folder>/Construct3-Cookbook
+git clone --depth 1 https://github.com/XHXIAIEIN/Construct3-Cookbook ~/Construct3/Construct3-Cookbook
 ```
-
-Replace `<parent-folder>` with the folder that contains your Construct3-Agent-Skills clone.
 
 ### Use a custom location
 
@@ -35,19 +35,21 @@ To keep the clone in another folder, point the skill to it with one of the metho
 | 1 | The `--cookbook` option of `search_guides.py` | `--cookbook D:/GitHub/Construct3-Cookbook` |
 | 2 | The `CONSTRUCT3_COOKBOOK` environment variable | `CONSTRUCT3_COOKBOOK=D:/GitHub/Construct3-Cookbook` |
 | 3 | A line in the game project's `AGENTS.md` or `CLAUDE.md` | `- Construct3-Cookbook: D:/GitHub/Construct3-Cookbook` |
-| 4 | The default location | A `Construct3-Cookbook` folder next to the Construct3-RAG or Construct3-Agent-Skills clone |
+| 4 | The home folder | `~/Construct3/Construct3-Cookbook` |
+| 5 | Beside the other clones | A `Construct3-Cookbook` folder next to the Construct3-Agent-Skills clone or the Construct3-RAG clone that the skill uses |
+| 6 | Beside the plugin in Claude Code's plugin cache | A `Construct3-Cookbook` folder beside the plugin's folder in that cache |
 
 The skill's `install.py` writes the line for method 3 into the Construct 3 block of the game project's `AGENTS.md`.
 
 > [!NOTE]
-> If `search_guides.py` or `check_project.py` cannot find a clone, it prints the `git clone` command to run and completes the rest of its work.
+> If `search_guides.py` or `check_project.py` cannot find a clone, it names the skill's `setup.py`, which prints the clone command, and completes the rest of its work.
 
 ### Update the guides
 
-Pull the latest changes in your clone:
+The skill's `check_project.py` pulls the clone when it is behind its upstream and holds no work of its own. To pull it yourself:
 
 ```bash
-git -C <parent-folder>/Construct3-Cookbook pull
+git -C ~/Construct3/Construct3-Cookbook pull
 ```
 
 ## Repository structure
