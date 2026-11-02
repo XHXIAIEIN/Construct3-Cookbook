@@ -45,7 +45,7 @@ Construct-Example-Projects, 2026-09-18]
 
 ## Viewport, look and HUD
 
-- A generated game fills the screen at any aspect ratio (`screen.fill`),
+- A generated game fills the screen at any aspect ratio,
   so the screen shows more than the viewport on its longer side, and a HUD
   element held to an edge carries the Anchor behavior for that edge
   ([coordinates-and-angles.md](../primitives/objects/instances.md)). A
@@ -56,30 +56,8 @@ Construct-Example-Projects, 2026-09-18]
   template's `SCREEN_PAD` past the layout ([input.md](../plugins/touch.md)).
   A one-screen game's layout is the viewport's size, with *Unbounded
   scrolling* on, so that the game stays centred with the HUD.
-- The look of a game that the skill generates is held by the rules of the
-  skill's
-  [look manifest](https://github.com/XHXIAIEIN/Construct3-Agent-Skills/blob/main/plugin/skills/construct3-agent-plugin/assets/look-manifest.json).
-  Each rule has an id, its value or the template setting that holds it,
-  its scope and its record. Read the rule
-  there; this page names it by its id and does not restate it.
-  - The look that the user gives comes first. With it, only the rules of
-    scope `every-look` hold. Without it, the game takes the default look,
-    the rules of scope `default-look`.
-  - Colour: `colour.palette-only`, `colour.structure`,
-    `colour.accent-contrast`, `palette.greys`.
-  - Text: `text.contrast`, `type.scale`, `type.min-size`, `type.sizes`,
-    `type.inter`, `type.pixel-font`.
-  - Grid and screen: `grid.unit`, `grid.shape-size`,
-    `grid.world-placement`, `grid.runtime-spawn`, `screen.fill`,
-    `screen.safe-area`, `pixel-art.sampling`.
-  - HUD and layout: `hud.default`, `hud.tag-plain`, `touch.target`,
-    `layout.proximity`, `layout.balance`, `layout.fill`, `layout.spread`,
-    `layer.z-order`.
-  - The default look's shapes: `subject.size`, `subject.player-shape`,
-    `lines.areas`, `backdrop.sheet`, `pattern.areas`, `pointer.colours`,
-    `motion.hit`.
-  - Art: `art.routes`, `art.roles`, `art.ids`, `art.frames`,
-    `art.contrast`.
+- The skill's generator template starts a game from its palette, text sizes
+  and motion values. A game changes them as it needs.
 - A line 1 px thick drops out on some rows when the screen draws the
   viewport smaller than its size. So draw a rule at least as thick as the
   viewport's height divided by the screen's height, rounded up. In a

@@ -62,9 +62,7 @@ sit centred.
   sixth of its height from the centre of its box.
 
 The skill's generator template does this in `button()`, `toggle()` and
-the other controls, `labelled_bar()` and the stage band of `band_text()`,
-and its `review_look.py` reports a label off its shape's centre as
-`optical`.
+the other controls, `labelled_bar()` and the stage band of `band_text()`.
 
 [runtime: r506.3 `lib/gfx/text.js`; observed in a test project, r506.3
 preview at 1280×720 in system-ui and at 640×360 in Fusion Pixel 8 px,
