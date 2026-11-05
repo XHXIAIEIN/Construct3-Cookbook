@@ -155,3 +155,11 @@ Sources and the rule for adding an entry are in the index,
   dims 1400×2000 on a 430×932 *Scale outer* design area left both sides of
   a wide window uncovered, and taps there did not close the popup; dims at
   8000×8000 and the touch test above fixed both]
+
+- A page element over the canvas keeps its input from Touch when its listeners
+  stop the propagation of the pointer, mouse and touch events. So a debug panel
+  drawn in the page takes its own taps, and the buttons under it stay still.
+  A script reaches the page when the project's `useWorker` is `"dom"`.
+  [observed in a game project, r506.3 preview, 2026-11-04: a tap on an element
+  over a button left the button's count unchanged, and a tap with the element
+  moved away changed it]
