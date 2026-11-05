@@ -144,3 +144,11 @@ Sources and the rule for adding an entry are in the index,
   function, lowercases the map name and the string, and warns "call
   ignored" for each case above; `MapFunction` warns "already in map;
   overwriting entry"]
+
+- A function in a deactivated group raises no error and returns 0 or an empty
+  string. So a value that other sheets read, such as a level cap, turns to 0
+  when its group is off. Keep a function that other sheets read in a group
+  that stays on, and let it return a neutral value while its feature is off.
+  [observed in a game project, r506.3 preview, 2026-11-04: with six groups
+  deactivated at the start, each of their functions read 0 or an empty string,
+  and a summoned piece came out at level 0]

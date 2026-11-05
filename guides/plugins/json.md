@@ -44,3 +44,11 @@ Sources and the rule for adding an entry are in the index,
   and then calls `_TriggerComplete` for each request, `OnComplete` compares
   the tag; observed in a game project, r504, 2026-10-06: four data files
   requested with one tag, merged this way before the first level]
+
+- `setJsonDataCopy` of a JSON instance takes effect at once: a function that
+  reads the path returns the new value right after the call. So a script can
+  change the tuning data while the game runs. Hand the changed object back
+  with this call, because `getJsonDataCopy` returns a copy and a change to it
+  alone changes nothing. [manual: scripting/scripting-reference/plugin-interfaces/json.md
+  "getJsonDataCopy"; observed in a game project, r506.3 preview, 2026-11-04:
+  a function that reads a cap went from 7 to 3 in the same script step]

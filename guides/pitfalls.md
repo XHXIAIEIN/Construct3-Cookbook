@@ -35,6 +35,7 @@ If the events depend on what the manual's "How events work" page covers, read [p
 - A destroyed child still counts as a child until the top-level event ends. Count the children from a later top-level event, or with *Pick children* and `PickedCount`.
 - Each condition keeps only the instances that pass it. So `Column = 0` followed by `Column = 1` never holds, and `Value ≠ 0` means any instance, not all. Narrow once, then compare `PickedCount`.
 - If you deactivate a group, its events stop, but its behaviors, timers and tweens keep running. So a deactivated group does not pause the game.
+- The script API cannot switch a group. Call a function that holds *Set group active* through `runtime.callFunction`.
 - Until the top-level event ends, only UID, *Pick children* and `Count` find a created instance outside its own event. So call a function that acts on the older instances before the creation, or set the created instance's values while it is picked. If nothing runs later, put *Wait 0* before the step.
 
 ### Containers
@@ -76,6 +77,7 @@ If the events depend on what the manual's "Functions" page covers, read [primiti
 - A function without parameters is called without parentheses: `Functions.name`, not `Functions.name()`.
 - To replace a call by a string from the deprecated Function plugin, use a function map of built-in functions. Run *Map function to string*, then *Call mapped function* with the string, or `Functions.CallMapped` for a value.
 - *Call mapped function* forwards parameters from its index only to a mapped function. The default function gets every parameter from 0. If a call finds nothing to run, it only prints a warning in the console. Give the default function the caller's whole parameter list.
+- A function in a deactivated group returns 0 or an empty string, with no error. Keep a function that other sheets read in a group that stays on.
 
 ### Event sheet includes
 
@@ -131,7 +133,7 @@ If the events depend on what the manual's "Layers" page covers, read [primitives
 If the events depend on what the manual's "Templates" page covers, read [primitives/objects/templates.md](primitives/objects/templates.md).
 
 - If a part is in both the parent's container and its template hierarchy, it is created once. Put it in both, so that it is picked with the parent and follows it.
-- An instance created at runtime copies an existing instance or template. Without one, its behavior properties read 0. Keep one instance per object in a layout that never runs.
+- An instance created at runtime copies an existing instance or template. Without one, its behavior properties read 0. Keep one instance in a layout that never runs, unless the object is a Sprite with no behaviors and no effects.
 - A replica starts each following property with the template's value, and *Apply template* turns own values back into the template's. Set a per-replica variable such as a rest y from events in *On start of layout*.
 - *TemplateName* of a replica reads its template's name, so events can branch on the kind without an instance variable.
 
@@ -235,6 +237,7 @@ If the events use JSON, read [plugins/json.md](plugins/json.md).
 - JSON `Type(path)` is `"undefined"` for a missing path, so it can test presence inside an expression.
 - JSON reads a dot in a path as a step into a nested key. Escape a dot inside a key as `\.` in the path, or keep dots out of keys. A Dictionary reads keys whole.
 - JSON has no merge. To merge data files, run *For each* at `""`, and *Set JSON* `GetAsCompactString(CurrentKey)` per top-level key. Requests that share one AJAX tag each fire *On completed* with their own `LastData`, so count them down.
+- `setJsonDataCopy` takes effect at once, so a script can change the data while the game runs.
 
 ### Particles
 

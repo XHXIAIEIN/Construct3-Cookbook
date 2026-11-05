@@ -86,6 +86,12 @@ Sources and the rule for adding an entry are in the index,
   the game. [manual: system-reference/system-actions.md
   "Set group active"; examples: every pause is *Set time scale* 0]
 
+- The script API has no member that reads or sets a group's activation. A
+  script that switches a group calls a function whose event holds *Set group
+  active*, through `runtime.callFunction`. [schema: c3-ts-defs, no group
+  member on `IRuntime`; observed in a game project, r506.3 preview,
+  2026-11-04: a debug panel's script switched groups through such a function]
+
 - A created instance is picked in its own event and that event's sub-events,
   and *Pick by unique ID* finds it anywhere. No other condition (*Pick all*,
   *Pick random instance*, *Compare instance variable*, overlap) finds it among

@@ -16,9 +16,13 @@ Sources and the rule for adding an entry are in the index,
   or from the named template. An object with no instance in any layout is
   still created, with its image and size, but its behavior properties read
   0. So a Bullet created that way has speed 0 and never moves, while the
-  addon's default is 400. Keep one template instance of each
-  runtime-created object in a layout that never runs.
-  [same; observed in a minimal project, r504 preview,
+  addon's default is 400. A Sprite with no behaviors and no effects reads as
+  a placed one does: visible, with collisions on and its first animation.
+  Keep one template instance of each other runtime-created object in a
+  layout that never runs.
+  [same; observed in a game project, r506.3 preview, 2026-11-05: two such
+  Sprites and a placed one, created by a script, read the same; observed in
+  a minimal project, r504 preview,
   2026-10-02: the Laser of the official example families, its one layout
   instance removed, was created 52×27 and visible with Bullet speed 0; with
   the instance kept, speed 400]
